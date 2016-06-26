@@ -1,0 +1,120 @@
+RM=rm -fv
+ifndef ARCH
+ARCH=none
+endif # !ARCH
+ifeq ($(CPU),x64) # Xeon
+AR=xiar
+ARFLAGS=-qnoipo -lib rsv
+CC=icc
+C11FLAGS=-DUSE_INTEL -std=c11 -fexceptions
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -xHost
+DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -w3 -diag-disable=2547,10397
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+else # DEBUG
+OPTFLAGS=-O0 -xHost
+ifeq ($(ARCH),MACINT)
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
+else # Linux
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
+endif # ?MACINT
+FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+endif # ?NDEBUG
+LIBFLAGS=-mkl -pthread
+else ifeq ($(CPU),x100) # Knights Corner
+AR=xiar
+ARFLAGS=-qnoipo -lib rsv
+CC=icc
+C11FLAGS=-DUSE_INTEL -DUSE_KNC -std=c11 -mmic -fexceptions
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG)
+DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=2547,10397
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+else # DEBUG
+OPTFLAGS=-O0
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -w3 -traceback -diag-disable=2547,10397
+FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+endif # ?NDEBUG
+LIBFLAGS=-mkl -pthread
+else # not supported
+AR=
+ARFLAGS=
+CC=
+C11FLAGS=
+OPTFLAGS=
+DGBFLAGS=
+FPUFLAGS=
+LIBFLAGS=
+endif # ?CPU
+CFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUFLAGS)
+
+SRC=\
+vn_align.c  \
+vn_alloc.c  \
+vn_assert.c \
+vn_attrs.c  \
+vn_blas.c   \
+vn_bmp.c    \
+vn_error.c  \
+vn_lapack.c \
+vn_lib.c    \
+vn_mtxvis.c \
+vn_simd.c   \
+vn_timer.c  \
+vn_types.c
+
+OBJS=$(SRC:.c=.o)
+HDRS=$(SRC:.c=.h)
+LIBS=libvn.a
+
+all: ../$(LIBS)
+
+help:
+	@echo "make [CPU=x64|x100|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+
+../$(LIBS): $(OBJS) GNUmakefile
+	$(AR) $(ARFLAGS) $@ $(OBJS)
+
+vn_align.o: vn_align.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_alloc.o: vn_alloc.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_assert.o: vn_assert.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_attrs.o: vn_attrs.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_blas.o: vn_blas.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_bmp.o: vn_bmp.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_error.o: vn_error.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_lapack.o: vn_lapack.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_lib.o: vn_lib.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_mtxvis.o: vn_mtxvis.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -diag-disable=1572 -c $<
+
+vn_simd.o: vn_simd.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_timer.o: vn_timer.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+vn_types.o: vn_types.c $(HDRS) GNUmakefile
+	$(CC) $(CFLAGS) -c $<
+
+clean:
+	-$(RM) *.optrpt
+	-$(RM) $(OBJS)
+	-$(RM) ../$(LIBS)
