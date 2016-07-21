@@ -1,6 +1,7 @@
+SHELL=/bin/bash
 RM=rm -fv
 ifndef WP
-WP=10
+WP=16
 endif # !WP
 ifndef ARCH
 ARCH=none
@@ -9,7 +10,7 @@ ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 FC=ifort
-FORFLAGS=-DUSE_INTEL -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -i8 -fexceptions -standard-semantics
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
@@ -28,7 +29,7 @@ else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_KNC -mmic -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_KNC -mmic -i8 -fexceptions -standard-semantics
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
@@ -43,7 +44,7 @@ else ifeq ($(CPU),pwr8) # Power8
 AR=ar
 ARFLAGS=rsv
 FC=xlf2008_r
-FORFLAGS=-WF,-DUSE_IBM -qnosave -qsclk=micro # -WF,-qfpp
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro # -WF,-qfpp
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qtune=pwr8:smt8
 DBGFLAGS=-WF,-DNDEBUG
@@ -58,7 +59,7 @@ else # GNU Fortran
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-DUSE_GNU -fexceptions -frecursive # -std=f2008ts
+FORFLAGS=-DUSE_GNU -fdefault-integer-8 -fexceptions -frecursive
 ifdef NDEBUG
 ifeq ($(ARCH),MACINT)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q

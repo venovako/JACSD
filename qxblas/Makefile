@@ -17,7 +17,7 @@ FC=mpiifort.bat -check_mpi -debug
 FC=ifort.exe
 !ENDIF # ?USE_MPI
 
-FORFLAGS=/nologo /fpp /DUSE_INTEL /Qopenmp /standard-semantics
+FORFLAGS=/nologo /fpp /DUSE_INTEL /4I8 /Qopenmp /standard-semantics
 LIBS=qxblas.lib
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost

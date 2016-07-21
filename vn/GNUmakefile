@@ -1,3 +1,4 @@
+SHELL=/bin/bash
 RM=rm -fv
 ifndef ARCH
 ARCH=none

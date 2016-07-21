@@ -11,62 +11,32 @@
 #endif /* ?__cplusplus */
 #endif /* ?EXTERN_C */
 
-#ifdef JSTRAT_ROWCYC
-#error JSTRAT_ROWCYC already defined
-#else /* !JSTRAT_ROWCYC */
-#define JSTRAT_ROWCYC 0
-#endif /* ?JSTRAT_ROWCYC */
-
-#ifdef JSTRAT_COLCYC
-#error JSTRAT_COLCYC already defined
-#else /* !JSTRAT_COLCYC */
-#define JSTRAT_COLCYC 1
-#endif /* ?JSTRAT_COLCYC */
-
-#ifdef JSTRAT_MANEB2
-#error JSTRAT_MANEB2 already defined
-#else /* !JSTRAT_MANEB2 */
-#define JSTRAT_MANEB2 2
-#endif /* ?JSTRAT_MANEB2 */
-
-#ifdef JSTRAT_MECOMM
-#error JSTRAT_MECOMM already defined
-#else /* !JSTRAT_MECOMM */
-#define JSTRAT_MECOMM 3
-#endif /* ?JSTRAT_MECOMM */
+#ifdef _WIN32
+typedef long long integer;
+#else /* POSIX */
+typedef long integer;
+#endif /* ?_WIN32 */
 
 typedef struct {
-  int id, n;
+  integer id, n;
 } jstrat_common;
 
 typedef struct {
-  int id, n, p, q;
+  integer id, n, p, q;
 } jstrat_rolcyc;
 
 typedef struct {
-  int id, n, stp, swp;
-  const int *tbl; /* start of table */
-  const int *nxt; /* iterator */
+  integer id, n, stp, swp;
+  const integer *tbl; /* start of table */
+  const integer *nxt; /* iterator */
 } jstrat_maneb2;
 
 /* C interface */
-EXTERN_C int jstrat_init(jstrat_common *const js, const int id, const int n);
-EXTERN_C int jstrat_next(jstrat_common *const js, int *const arr);
+EXTERN_C integer jstrat_init(jstrat_common *const js, const integer id, const integer n);
+EXTERN_C integer jstrat_next(jstrat_common *const js, integer *const arr);
 
 /* Fortran interface */
-EXTERN_C void
-#ifdef _WIN32
-JSTRAT_INIT
-#else /* POSIX */
-jstrat_init_
-#endif /* ?_WIN32 */
-(jstrat_common *const js, const int *const id_, const int *const n_, int *const info_);
-EXTERN_C void
-#ifdef _WIN32
-JSTRAT_NEXT
-#else /* POSIX */
-jstrat_next_
-#endif /* ?_WIN32 */
-(jstrat_common *const js, int *const arr, int *const info_);
+EXTERN_C void jstrat_init_f(jstrat_common *const js, const integer *const id_, const integer *const n_, integer *const info_);
+EXTERN_C void jstrat_next_f(jstrat_common *const js, integer *const arr, integer *const info_);
 
 #endif /* !JSTRAT_H */

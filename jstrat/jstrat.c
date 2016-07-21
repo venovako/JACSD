@@ -32,104 +32,98 @@
 #include <string.h>
 #endif /* ?__cplusplus */
 
-int jstrat_init(jstrat_common *const js, const int id, const int n)
+integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
 {
   if (!js)
-    return -1;
-  if (id < 0)
-    return -2;
-  if (n < 2)
-    return -3;
+    return (integer)-1;
+  if (id < (integer)0)
+    return (integer)-2;
+  if (n < (integer)2)
+    return (integer)-3;
 
-  if ((id & ~1) == 0) { /* row/col-cyclic */
+  if ((id & ~(integer)1) == (integer)0) { /* row/col-cyclic */
     (void)memset(js, 0, sizeof(jstrat_rolcyc));
   }
-  else if ((id & ~1) == 2) { /* Mantharam-Eberlein */
-    const int *cur;
+  else if ((id & ~(integer)1) == (integer)2) { /* Mantharam-Eberlein */
+    const integer *cur;
 
-    if (n == 2)
+    if (n == (integer)2)
       cur = &(ME0002[0][0][0]);
-    else if (n == 4)
+    else if (n == (integer)4)
       cur = &(ME0004[0][0][0]);
-    else if (n == 6)
+    else if (n == (integer)6)
       cur = &(ME0006[0][0][0]);
-    else if (n == 8)
+    else if (n == (integer)8)
       cur = &(ME0008[0][0][0]);
-    else if (n == 10)
+    else if (n == (integer)10)
       cur = &(ME0010[0][0][0]);
-    else if (n == 12)
+    else if (n == (integer)12)
       cur = &(ME0012[0][0][0]);
-    else if (n == 14)
+    else if (n == (integer)14)
       cur = &(ME0014[0][0][0]);
-    else if (n == 16)
+    else if (n == (integer)16)
       cur = &(ME0016[0][0][0]);
-    else if (n == 18)
+    else if (n == (integer)18)
       cur = &(ME0018[0][0][0]);
-    else if (n == 20)
+    else if (n == (integer)20)
       cur = &(ME0020[0][0][0]);
-    else if (n == 22)
+    else if (n == (integer)22)
       cur = &(ME0022[0][0][0]);
-    else if (n == 24)
+    else if (n == (integer)24)
       cur = &(ME0024[0][0][0]);
-    else if (n == 26)
+    else if (n == (integer)26)
       cur = &(ME0026[0][0][0]);
-    else if (n == 28)
+    else if (n == (integer)28)
       cur = &(ME0028[0][0][0]);
-    else if (n == 30)
+    else if (n == (integer)30)
       cur = &(ME0030[0][0][0]);
-    else if (n == 32)
+    else if (n == (integer)32)
       cur = &(ME0032[0][0][0]);
-    else if (n == 34)
+    else if (n == (integer)34)
       cur = &(ME0034[0][0][0]);
-    else if (n == 36)
+    else if (n == (integer)36)
       cur = &(ME0036[0][0][0]);
-    else if (n == 38)
+    else if (n == (integer)38)
       cur = &(ME0038[0][0][0]);
-    else if (n == 40)
+    else if (n == (integer)40)
       cur = &(ME0040[0][0][0]);
-    else if (n == 42)
+    else if (n == (integer)42)
       cur = &(ME0042[0][0][0]);
-    else if (n == 44)
+    else if (n == (integer)44)
       cur = &(ME0044[0][0][0]);
-    else if (n == 48)
+    else if (n == (integer)48)
       cur = &(ME0048[0][0][0]);
-    else if (n == 52)
+    else if (n == (integer)52)
       cur = &(ME0052[0][0][0]);
-    else if (n == 56)
+    else if (n == (integer)56)
       cur = &(ME0056[0][0][0]);
-    else if (n == 60)
+    else if (n == (integer)60)
       cur = &(ME0060[0][0][0]);
-    else if (n == 64)
+    else if (n == (integer)64)
       cur = &(ME0064[0][0][0]);
-    else if (n == 128)
+    else if (n == (integer)128)
       cur = &(ME0128[0][0][0]);
-    else if (n == 256)
+    else if (n == (integer)256)
       cur = &(ME0256[0][0][0]);
-    else if (n == 512)
+    else if (n == (integer)512)
       cur = &(ME0512[0][0][0]);
-    else if (n == 1024)
+    else if (n == (integer)1024)
       cur = &(ME1024[0][0][0]);
     else
-      return -3;
+      return (integer)-3;
 
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)memset(js, 0, sizeof(jstrat_maneb2));
     me2->nxt = me2->tbl = cur;
   }
   else
-    return -2;
+    return (integer)-2;
 
   js->id = id;
   js->n = n;
-  return 0;
+  return (integer)0;
 }
 
-void
-#ifdef _WIN32
-JSTRAT_INIT
-#else /* POSIX */
-jstrat_init_
-#endif /* ?_WIN32 */
-(jstrat_common *const js, const int *const id_, const int *const n_, int *const info_)
+void jstrat_init_f(jstrat_common *const js, const integer *const id_, const integer *const n_, integer *const info_)
 {
   assert(id_);
   assert(n_);
@@ -137,98 +131,98 @@ jstrat_init_
   *info_ = jstrat_init(js, *id_, *n_);
 }
 
-int jstrat_next(jstrat_common *const js, int *const arr)
+integer jstrat_next(jstrat_common *const js, integer *const arr)
 {
   if (!js)
-    return -1;
+    return (integer)-1;
   if (!arr)
-    return -2;
+    return (integer)-2;
 
-  int info;
-  if (js->id == 0) { /* row-cyclic */
+  integer info;
+  if (js->id == (integer)0) { /* row-cyclic */
     jstrat_rolcyc *const row = (jstrat_rolcyc*)js;
-    int (*const pairs)[2] = (int (*)[2])arr;
+    integer (*const pairs)[2] = (integer (*)[2])arr;
 
     if (++(row->q) >= (row->n)) {
-      if (++(row->p) >= (row->n - 1)) {
-        row->p = 0;
-        row->q = 1;
+      if (++(row->p) >= (row->n - (integer)1)) {
+        row->p = (integer)0;
+        row->q = (integer)1;
       }
       else
-        row->q = row->p + 1;
+        row->q = row->p + (integer)1;
     }
     pairs[0][0] = row->p;
     pairs[0][1] = row->q;
 
-    info = 1;
+    info = (integer)1;
   }
-  else if (js->id == 1) { /* column-cyclic */
+  else if (js->id == (integer)1) { /* column-cyclic */
     jstrat_rolcyc *const col = (jstrat_rolcyc*)js;
-    int (*const pairs)[2] = (int (*)[2])arr;
+    integer (*const pairs)[2] = (integer (*)[2])arr;
 
     if (++(col->p) >= (col->q)) {
       if (++(col->q) >= (col->n)) {
-        col->p = 0;
-        col->q = 1;
+        col->p = (integer)0;
+        col->q = (integer)1;
       }
       else
-        col->p = 0;
+        col->p = (integer)0;
     }
 
     pairs[0][0] = col->p;
     pairs[0][1] = col->q;
 
-    info = 1;
+    info = (integer)1;
   }
-  else if (js->id == 2) { /* Mantharam-Eberlein, no comm */
+  else if (js->id == (integer)2) { /* Mantharam-Eberlein, no comm */
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)js;
-    int (*const pairs)[2] = (int (*)[2])arr;
+    integer (*const pairs)[2] = (integer (*)[2])arr;
 
-    const int n_2 = me2->n >> 1;
-    for (int i = 0; i < n_2; ++i) {
-      for (int k = 0; k < 2; ++k) {
+    const integer n_2 = me2->n >> 1;
+    for (integer i = (integer)0; i < n_2; ++i) {
+      for (integer k = (integer)0; k < (integer)2; ++k) {
         pairs[i][k] = *(me2->nxt);
         ++(me2->nxt);
       }
     }
 
-    if (++(me2->stp) >= (me2->n - 1)) {
-      me2->stp = 0;
+    if (++(me2->stp) >= (me2->n - (integer)1)) {
+      me2->stp = (integer)0;
       ++(me2->swp);
       me2->nxt = me2->tbl;
     }
 
     info = n_2;
   }
-  else if (js->id == 3) { /* Mantharam-Eberlein */
+  else if (js->id == (integer)3) { /* Mantharam-Eberlein */
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)js;
-    int (*const pairs)[2][2] = (int (*)[2][2])arr;
+    integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
 
-    const int *const cur = me2->nxt;
-    const int n_2 = me2->n >> 1;
-    for (int i = 0; i < n_2; ++i) {
-      for (int k = 0; k < 2; ++k) {
+    const integer *const cur = me2->nxt;
+    const integer n_2 = me2->n >> 1;
+    for (integer i = (integer)0; i < n_2; ++i) {
+      for (integer k = (integer)0; k < (integer)2; ++k) {
         pairs[i][0][k] = *(me2->nxt);
         ++(me2->nxt);
       }
     }
 
-    if (++(me2->stp) >= (me2->n - 1)) {
-      me2->stp = 0;
+    if (++(me2->stp) >= (me2->n - (integer)1)) {
+      me2->stp = (integer)0;
       ++(me2->swp);
       me2->nxt = me2->tbl;
     }
 
     /* communication */
-    for (int i = 0; i < me2->n; ++i) {
-      for (int j = 0; j < me2->n; ++j) {
+    for (integer i = (integer)0; i < me2->n; ++i) {
+      for (integer j = (integer)0; j < me2->n; ++j) {
         /* cur[i] sent to nxt[j] */
         if (cur[i] == (me2->nxt)[j]) {
-          const int k_1 = i & 1;
-          const int k_2 = i >> 1;
-          const int l_1 = j & 1;
-          const int l_2 = j >> 1;
-          const int snd = l_2 + 1;
+          const integer k_1 = i & (integer)1;
+          const integer k_2 = i >> 1;
+          const integer l_1 = j & (integer)1;
+          const integer l_2 = j >> 1;
+          const integer snd = l_2 + (integer)1;
           pairs[k_2][1][k_1] = (l_1 ? snd : -snd);
         }
       }
@@ -237,31 +231,25 @@ int jstrat_next(jstrat_common *const js, int *const arr)
     info = n_2;
   }
   else
-    info = 0;
+    info = (integer)0;
 
   return info;
 }
 
-void
-#ifdef _WIN32
-JSTRAT_NEXT
-#else /* POSIX */
-jstrat_next_
-#endif /* ?_WIN32 */
-(jstrat_common *const js, int *const arr, int *const info_)
+void jstrat_next_f(jstrat_common *const js, integer *const arr, integer *const info_)
 {
   assert(info_);
-  if ((*info_ = jstrat_next(js, arr)) > 0) {
-    if (js->id < 3) {
-      int (*const pairs)[2] = (int (*)[2])arr;
-      for (int i = 0; i < *info_; ++i)
-        for (int k = 0; k < 2; ++k)
+  if ((*info_ = jstrat_next(js, arr)) > (integer)0) {
+    if (js->id < (integer)3) {
+      integer (*const pairs)[2] = (integer (*)[2])arr;
+      for (integer i = (integer)0; i < *info_; ++i)
+        for (integer k = (integer)0; k < (integer)2; ++k)
           ++(pairs[i][k]);
     }
     else {
-      int (*const pairs)[2][2] = (int (*)[2][2])arr;
-      for (int i = 0; i < *info_; ++i)
-        for (int k = 0; k < 2; ++k)
+      integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
+      for (integer i = (integer)0; i < *info_; ++i)
+        for (integer k = (integer)0; k < (integer)2; ++k)
           ++(pairs[i][0][k]);
     }
   }
