@@ -37,7 +37,7 @@ LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(M
 !ENDIF # ?NDEBUG
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 
 help:
 	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -60,6 +60,24 @@ xDJAC2.exe: xDJAC2.obj CSD.obj $(LIBS) Makefile
 xDJAC2.obj: xDJAC2.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c xDJAC2.F90
 
+xCSGEN.exe: xCSGEN.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xCSGEN.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xCSGEN.obj: xCSGEN.F90 qx_wp.fi csd.mod Makefile
+	$(FC) $(FCFLAGS) /c xCSGEN.F90
+
+xLACSD.exe: xLACSD.obj BSCSD.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xLACSD.obj BSCSD.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xLACSD.obj: xLACSD.F90 bscsd.mod Makefile
+	$(FC) $(FCFLAGS) /c xLACSD.F90
+
+xJCSD.exe: xJCSD.obj JCSD.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xJCSD.obj JCSD.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xJCSD.obj: xJCSD.F90 jcsd.mod Makefile
+	$(FC) $(FCFLAGS) /c xJCSD.F90
+
 jstrat.lib: Makefile
 !IFDEF NDEBUG
 	pushd jstrat && $(MAKE) NDEBUG=$(NDEBUG) && popd
@@ -73,6 +91,12 @@ qx_wp.fi qxblas.lib: Makefile
 !ELSE # DEBUG
 	pushd qxblas && $(MAKE) WP=$(WP) && popd
 !ENDIF # ?NDEBUG
+
+BSCSD.obj bscsd.mod: BSCSD.F90 csd.mod Makefile
+	$(FC) $(FCFLAGS) /c BSCSD.F90
+
+JCSD.obj jcsd.mod: JCSD.F90 csd.mod Makefile
+	$(FC) $(FCFLAGS) /c JCSD.F90
 
 CSD.obj csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 Makefile
 	$(FC) $(FCFLAGS) /c CSD.F90

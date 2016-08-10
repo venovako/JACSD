@@ -6,7 +6,7 @@ endif # !WP
 ifndef ARCH
 ARCH=none
 endif # !ARCH
-LIBS=libjstrat.a libqxblas.a
+LIBS=libjstrat.a libqxblas.a # libvn.a
 ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
@@ -31,9 +31,9 @@ FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -n
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
 ifeq ($(ARCH),MACINT)
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
 else # Linux
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
 endif # ?MACINT
 else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
@@ -54,7 +54,7 @@ DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug in
 FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
 else ifeq ($(CPU),pwr8) # Power8
 AR=ar
 ARFLAGS=rsv
@@ -73,8 +73,9 @@ OPTFLAGS=-O0 -qmaxmem=-1 -qtune=pwr8:smt8
 DBGFLAGS=-g
 FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
-LIBFLAGS=-I.
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/lapack -ltmglib -llapack -lrefblas
+LIBFLAGS=-WF,-DUSE_ESSL -I.
+LDFLAGS=-L. -ljstrat -lqxblas -L/usr/lib64 -lesslsmp6464 -lessl6464
+#-L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
 else # GNU Fortran
 AR=ar
 ARFLAGS=rsv
@@ -102,11 +103,11 @@ DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
 LIBFLAGS=-I.
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/lapack -ltmglib -llapack -lrefblas
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 
 help:
 	@echo "make [WP=4|8|10|16] [CPU=x64|x100|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -129,6 +130,24 @@ xDJAC2.exe: xDJAC2.o CSD.o $(LIBS) GNUmakefile
 xDJAC2.o: xDJAC2.F90 csd.mod GNUmakefile
 	$(FC) $(FCFLAGS) -c xDJAC2.F90
 
+xCSGEN.exe: xCSGEN.o CSD.o $(LIBS) GNUmakefile
+	$(FC) $(FCFLAGS) xCSGEN.o CSD.o -o$@ $(LDFLAGS)
+
+xCSGEN.o: xCSGEN.F90 qx_wp.fi csd.mod GNUmakefile
+	$(FC) $(FCFLAGS) -c xCSGEN.F90
+
+xLACSD.exe: xLACSD.o BSCSD.o CSD.o $(LIBS) GNUmakefile
+	$(FC) $(FCFLAGS) xLACSD.o BSCSD.o CSD.o -o$@ $(LDFLAGS)
+
+xLACSD.o: xLACSD.F90 bscsd.mod GNUmakefile
+	$(FC) $(FCFLAGS) -c xLACSD.F90
+
+xJCSD.exe: xJCSD.o JCSD.o CSD.o $(LIBS) GNUmakefile
+	$(FC) $(FCFLAGS) xJCSD.o JCSD.o CSD.o -o$@ $(LDFLAGS)
+
+xJCSD.o: xJCSD.F90 jcsd.mod GNUmakefile
+	$(FC) $(FCFLAGS) -c xJCSD.F90
+
 libjstrat.a: GNUmakefile
 ifdef NDEBUG
 	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) && popd
@@ -142,6 +161,19 @@ ifdef NDEBUG
 else # DEBUG
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) ARCH=$(ARCH) && popd
 endif # ?NDEBUG
+
+libvn.a: GNUmakefile
+ifdef NDEBUG
+	pushd vn && $(MAKE) NDEBUG=$(NDEBUG) && popd
+else # DEBUG
+	pushd vn && $(MAKE) && popd
+endif # ?NDEBUG
+
+BSCSD.o bscsd.mod: BSCSD.F90 csd.mod GNUmakefile
+	$(FC) $(FCFLAGS) -c BSCSD.F90
+
+JCSD.o jcsd.mod: JCSD.F90 csd.mod GNUmakefile
+	$(FC) $(FCFLAGS) -c JCSD.F90
 
 CSD.o csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 GNUmakefile
 	$(FC) $(FCFLAGS) -c CSD.F90

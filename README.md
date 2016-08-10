@@ -1,8 +1,9 @@
 # JACSD
 Cosine-Sine Decomposition based on the Jacobi SVD.
 
-A stub for now; only
-multi-precision BLAS (qxblas),
-a strategy library (jstrat),
-and a utility library (vn)
-available.
+Available here (for now):
+* the blocked, shared-memory parallel Jacobi-type SVD,
+* a multi-precision BLAS library (qxblas),
+* a Jacobi strategies library (jstrat),
+* a utility library (vn),
+* and some CS testing code.

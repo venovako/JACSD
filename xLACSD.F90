@@ -1,0 +1,69 @@
+PROGRAM xLACSD
+
+  USE BSCSD
+
+  IMPLICIT NONE
+
+  CALL xTXCSD
+
+CONTAINS
+
+  SUBROUTINE xTXCSD
+
+    IMPLICIT NONE
+
+    INTEGER :: M, P, Q, NT, L, S
+    CHARACTER :: X ! S, D, C, Z
+    CHARACTER(LEN=256) :: FN, RN
+
+    INTRINSIC :: GET_COMMAND_ARGUMENT
+
+    L = 1
+    CALL GET_COMMAND_ARGUMENT(1, X, L, S)
+    IF (S .NE. 0) STOP 'xTXCSD X'
+
+    L = 256
+    CALL GET_COMMAND_ARGUMENT(2, RN, L, S)
+    IF (S .NE. 0) STOP 'xTXCSD M'
+    READ (RN,*) M
+
+    L = 256
+    CALL GET_COMMAND_ARGUMENT(3, RN, L, S)
+    IF (S .NE. 0) STOP 'xTXCSD P'
+    READ (RN,*) P
+
+    L = 256
+    CALL GET_COMMAND_ARGUMENT(4, RN, L, S)
+    IF (S .NE. 0) STOP 'xTXCSD Q'
+    READ (RN,*) Q
+
+    L = 256
+    CALL GET_COMMAND_ARGUMENT(5, RN, L, S)
+    IF (S .NE. 0) STOP 'xTXCSD NT'
+    READ (RN,*) NT
+
+    L = 256
+    CALL GET_COMMAND_ARGUMENT(6, FN, L, S)
+    IF (S .NE. 0) STOP 'xTXCSD FN'
+
+    L = 256
+    CALL GET_COMMAND_ARGUMENT(7, RN, L, S)
+    IF (S .NE. 0) RN = ''
+
+    SELECT CASE (X)
+    CASE ('S','s')
+       CALL STXCSD(M, P, Q, NT, FN, RN, S)
+    CASE ('D','d')
+       CALL DTXCSD(M, P, Q, NT, FN, RN, S)
+    CASE ('C','c')
+       CALL CTXCSD(M, P, Q, NT, FN, RN, S)
+    CASE ('Z','z')
+       CALL ZTXCSD(M, P, Q, NT, FN, RN, S)
+    CASE DEFAULT
+       STOP 'xTXCSD X'
+    END SELECT
+    IF (S .NE. 0) STOP 'xTXCSD'
+
+  END SUBROUTINE xTXCSD
+
+END PROGRAM xLACSD
