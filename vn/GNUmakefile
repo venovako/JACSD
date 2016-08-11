@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 RM=rm -fv
 ifndef ARCH
-ARCH=smt8
+ARCH=none
 endif # !ARCH
 ifeq ($(CPU),x64) # Xeon
 AR=xiar
@@ -42,7 +42,7 @@ AR=ar
 ARFLAGS=rsv
 CC=xlc_r
 C11FLAGS=-qlanglvl=extc1x
-OPTFLAGS=-O -qmaxmem=-1 -qaltivec=le -qtune=pwr8:$(ARCH)
+OPTFLAGS=-O -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
 DGBFLAGS=-DNDEBUG
 FPUFLAGS=-qfloat=nans:spnans:subnormals
 #LIBFLAGS=-L/usr/lib64 -lesslsmp -lessl
