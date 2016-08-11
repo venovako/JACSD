@@ -48,6 +48,7 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by OpenBLAS
 #endif /* ?VN_REAL_KIND */
+VN_EXTERN_C void VN_BLAS_R(syrk)(const char *const UPLO, const char *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
 #endif /* __ICC */
 
 #endif /* !VN_BLAS_H */

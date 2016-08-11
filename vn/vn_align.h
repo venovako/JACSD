@@ -32,7 +32,7 @@
 #ifndef VN_IS_ALIGNED2
 #define VN_IS_ALIGNED2(A, ldA)                                          \
   VN_IS_ALIGNED(A);                                                     \
-  VN_ASSERT(!((ldA) % (VN_ALIGN_BYTES / sizeof(*A))))
+  VN_ASSERT(!((ldA) % (VN_ALIGN_BYTES / sizeof(*(A)))))
 #else /* VN_IS_ALIGNED2 */
 #error VN_IS_ALIGNED2 already defined
 #endif /* !VN_IS_ALIGNED2 */

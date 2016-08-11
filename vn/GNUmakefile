@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 RM=rm -fv
 ifndef ARCH
-ARCH=none
+ARCH=smt8
 endif # !ARCH
 ifeq ($(CPU),x64) # Xeon
 AR=xiar
@@ -10,14 +10,14 @@ CC=icc
 C11FLAGS=-DUSE_INTEL -std=c11 -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
-DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -w3 -diag-disable=2547,10397
+DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -w3 -diag-disable=1572,2547,10397
 FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xHost
 ifeq ($(ARCH),MACINT)
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=1572,2547,10397
 else # Linux
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=1572,2547,10397
 endif # ?MACINT
 FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
@@ -29,23 +29,24 @@ CC=icc
 C11FLAGS=-DUSE_INTEL -DUSE_KNC -std=c11 -mmic -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
-DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=2547,10397
+DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=1572,2547,10397
 FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -w3 -traceback -diag-disable=2547,10397
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -w3 -traceback -diag-disable=1572,2547,10397
 FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-mkl -pthread
-else # not supported
-AR=
-ARFLAGS=
-CC=
-C11FLAGS=
-OPTFLAGS=
-DGBFLAGS=
-FPUFLAGS=
-LIBFLAGS=
+else # IBM POWER8LE
+AR=ar
+ARFLAGS=rsv
+CC=xlc_r
+C11FLAGS=-qlanglvl=extc1x
+OPTFLAGS=-O -qmaxmem=-1 -qaltivec=le -qtune=pwr8:$(ARCH)
+DGBFLAGS=-DNDEBUG
+FPUFLAGS=-qfloat=nans:spnans:subnormals
+#LIBFLAGS=-L/usr/lib64 -lesslsmp -lessl
+LIBFLAGS= #-L/usr/lib64 -lesslsmp6464 -lessl6464
 endif # ?CPU
 CFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUFLAGS)
 
@@ -104,7 +105,7 @@ vn_lib.o: vn_lib.c $(HDRS) GNUmakefile
 	$(CC) $(CFLAGS) -c $<
 
 vn_mtxvis.o: vn_mtxvis.c $(HDRS) GNUmakefile
-	$(CC) $(CFLAGS) -diag-disable=1572 -c $<
+	$(CC) $(CFLAGS) -c $<
 
 vn_simd.o: vn_simd.c $(HDRS) GNUmakefile
 	$(CC) $(CFLAGS) -c $<
