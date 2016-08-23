@@ -60,10 +60,10 @@ AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpfort
-FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig:ref -WF,-qfpp -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signedzerointr
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -WF,-qfpp -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signedzerointr
 else # no MPI
 FC=xlf2008_r
-FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig:ref
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig
 endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qtune=pwr8:smt8 -qhot=level=2:vector -qipa=level=2:partition=large -qprefetch=aggressive
