@@ -45,8 +45,8 @@ C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
 OPTFLAGS=-O -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
 DGBFLAGS=-DNDEBUG
 FPUFLAGS=-qfloat=nans:spnans:subnormals
-#LIBFLAGS=-L/usr/lib64 -lesslsmp -lessl
-LIBFLAGS= #-L/usr/lib64 -lesslsmp6464 -lessl6464
+#LIBFLAGS=-DUSE_ESSL -L/usr/lib64 -lesslsmp -lessl
+LIBFLAGS=-DUSE_ESSL #-L/usr/lib64 -lesslsmp6464 -lessl6464
 endif # ?CPU
 CFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUFLAGS)
 

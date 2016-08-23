@@ -35,7 +35,7 @@
 #error BLAS(VN_REAL_KIND) not supported by Intel MKL
 #endif /* ?VN_REAL_KIND */
 #else /* !__ICC */
-#ifdef USE_IBM
+#ifdef USE_ESSL
 #if (8 == VN_INTEGER_KIND)
 #ifndef _ESV6464
 #define _ESV6464
@@ -70,7 +70,7 @@ VN_EXTERN_C void VN_BLAS_R(syrk)(const char *const UPLO, const char *const TRANS
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by OpenBLAS
 #endif /* ?VN_REAL_KIND */
-#endif /* USE_IBM */
+#endif /* USE_ESSL */
 #endif /* __ICC */
 
 #endif /* !VN_BLAS_H */
