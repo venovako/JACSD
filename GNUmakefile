@@ -60,20 +60,21 @@ AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpfort
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig:ref -WF,-qfpp -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signedzerointr
 else # no MPI
 FC=xlf2008_r
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig:ref
 endif # ?USE_MPI
-FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp # -WF,-qfpp
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qtune=pwr8:smt8
-DBGFLAGS=-WF,-DNDEBUG
-FPUFLAGS=-qfloat=nans:subnormals
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qtune=pwr8:smt8 -qhot=level=2:vector -qipa=level=2:partition=large -qprefetch=aggressive
+DBGFLAGS=-WF,-DNDEBUG -qinfo=mt:unset
+FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qtune=pwr8:smt8
-DBGFLAGS=-g
+DBGFLAGS=-g -C -qinfo=mt:unset
 FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
-LIBFLAGS=-WF,-DUSE_ESSL -I.
+LIBFLAGS=-qessl -WF,-DUSE_ESSL -I.
 LDFLAGS=-L. -ljstrat -lqxblas -L/usr/lib64 -lesslsmp6464 -lessl6464
 #-L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
 else # GNU Fortran
