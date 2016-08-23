@@ -41,7 +41,7 @@ else # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
-C11FLAGS=-qlanglvl=extc1x
+C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
 OPTFLAGS=-O -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
 DGBFLAGS=-DNDEBUG
 FPUFLAGS=-qfloat=nans:spnans:subnormals
