@@ -41,13 +41,13 @@ else ifeq ($(CPU),pwr8) # Power8
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
-C11FLAGS=-WF,-DUSE_IBM -std=gnu11 -qlanglvl=extc1x
+C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qtune=pwr8:smt8
-DBGFLAGS=-WF,-DNDEBUG
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
+DBGFLAGS=-DNDEBUG
 FPUFLAGS=-qfloat=nans:spnans:subnormals
 else # DEBUG
-OPTFLAGS=-O0 -qmaxmem=-1 -qtune=pwr8:smt8
+OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
 DBGFLAGS=-g
 FPUFLAGS=-qfloat=nans:spnans:subnormals
 endif # ?NDEBUG

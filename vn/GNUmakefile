@@ -42,9 +42,15 @@ AR=ar
 ARFLAGS=rsv
 CC=xlc_r
 C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
-OPTFLAGS=-O -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
 DGBFLAGS=-DNDEBUG
 FPUFLAGS=-qfloat=nans:spnans:subnormals
+else # DEBUG
+OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
+DBGFLAGS=-g
+FPUFLAGS=-qfloat=nans:spnans:subnormals
+endif # ?NDEBUG
 #LIBFLAGS=-DUSE_ESSL -L/usr/lib64 -lesslsmp -lessl
 LIBFLAGS=-DUSE_ESSL #-L/usr/lib64 -lesslsmp6464 -lessl6464
 endif # ?CPU
