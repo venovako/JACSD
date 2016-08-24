@@ -180,6 +180,15 @@ CSD.o csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR
 	$(FC) $(FCFLAGS) -c CSD.F90
 
 clean:
+ifdef NDEBUG
+	pushd vn && $(MAKE) NDEBUG=$(NDEBUG) clean && popd
+	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) clean && popd
+	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) clean && popd
+else # DEBUG
+	pushd vn && $(MAKE) clean && popd
+	pushd jstrat && $(MAKE) CPU=$(CPU) ARCH=$(ARCH) clean && popd
+	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) ARCH=$(ARCH) clean && popd
+endif # ?NDEBUG
 	-$(RM) *.exe
 	-$(RM) *.mod
 	-$(RM) *.o

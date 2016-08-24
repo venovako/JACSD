@@ -102,6 +102,13 @@ CSD.obj csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NT
 	$(FC) $(FCFLAGS) /c CSD.F90
 
 clean:
+!IFDEF NDEBUG
+	pushd jstrat && $(MAKE) NDEBUG=$(NDEBUG) clean && popd
+	pushd qxblas && $(MAKE) WP=$(WP) NDEBUG=$(NDEBUG) clean && popd
+!ELSE # DEBUG
+	pushd jstrat && $(MAKE) clean && popd
+	pushd qxblas && $(MAKE) WP=$(WP) clean && popd
+!ENDIF # ?NDEBUG
 	-$(RM) *.exe
 	-$(RM) *.mod
 	-$(RM) *.obj
