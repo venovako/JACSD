@@ -89,7 +89,7 @@ SUBROUTINE MYDJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, NBSIZE, NBSIZ2, L
   DOUBLE PRECISION, POINTER :: G0J(:,:),G1J(:,:), V0J(:,:),V1J(:,:)
   INTEGER :: JS(JSMLEN), LROT(2), STEPS, CYC, STP, BLASNT, PAIR, I,J, NC1,IFC1, NC2,IFC2, U
 
-  INTEGER, INTRINSIC :: MOD !! , IANY
+  INTEGER, INTRINSIC :: MOD
 #ifndef USE_ESSL
   EXTERNAL :: DLACPY, DLASET
 #endif
@@ -189,7 +189,7 @@ SUBROUTINE MYDJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, NBSIZE, NBSIZ2, L
                 WORK(1,PAIR),LWORK, IWORK(1,PAIR),LIWORK, LROTP(1,PAIR),INFOP(1,PAIR))
 
            IF (INFOP(1,PAIR) .EQ. -1) THEN ! no-op
-              INFOP(1,PAIR) = 0
+              CONTINUE ! INFOP(1,PAIR) = 0
            ELSE IF (INFOP(1,PAIR) .EQ. 0) THEN ! swap ptr
               BLKPTR(G0,I) = TRANSFER(C_LOC(G1I),0)
               BLKPTR(G1,I) = TRANSFER(C_LOC(G0I),0)
@@ -200,26 +200,18 @@ SUBROUTINE MYDJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, NBSIZE, NBSIZ2, L
               BLKPTR(G1,J) = TRANSFER(C_LOC(G0J),0)
               BLKPTR(V0,J) = TRANSFER(C_LOC(V1J),0)
               BLKPTR(V1,J) = TRANSFER(C_LOC(V0J),0)
+           ELSE
+              !$OMP CRITICAL
+              INFO(1) = 4 * PAIR
+              INFO(2) = INFOP(2,PAIR)
+              !$OMP END CRITICAL
            END IF
-           !! INFOP(2,PAIR) = 0
         END DO
         !$OMP END DO
         BLASNT = BLAS_SET_NUM_THREADS(BLASNT)
         !$OMP END PARALLEL
 
-        !! INFO(2) = IANY(INFOP)
-        !! IF (INFO(2) .NE. 0) THEN
-        !!    INFO(1) = 4
-        !!    RETURN
-        !! END IF
-
-        DO PAIR = 1, NPAIRS
-           IF (INFOP(1,PAIR) .NE. 0) THEN
-              INFO(1) = 4
-              INFO(2) = INFOP(2,PAIR)
-              RETURN
-           END IF
-        END DO
+        IF (INFO(1) .NE. 0) RETURN
 
      END DO ! STP
 
