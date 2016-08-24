@@ -93,7 +93,6 @@ FUNCTION QLARAN(ISEED)
 !     ..
 !     .. Intrinsic Functions ..
   INTEGER, INTRINSIC :: MOD
-  REAL(WP), INTRINSIC :: REAL
 !     ..
 !     .. Executable Statements ..
 1 CONTINUE
@@ -121,7 +120,7 @@ FUNCTION QLARAN(ISEED)
 !
 !     convert 48-bit integer to a real number in the interval (0,1)
 !
-  RNDOUT = R*(REAL(IT1,WP)+R*(REAL(IT2,WP)+R*(REAL(IT3,WP)+R*(REAL(IT4,WP)))))
+  RNDOUT = R*(IT1+R*(IT2+R*(IT3+R*IT4)))
 !
   IF (RNDOUT .EQ. ONE) THEN
 !        If a real number has n bits of precision, and the first
