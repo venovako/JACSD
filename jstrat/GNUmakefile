@@ -43,13 +43,13 @@ ARFLAGS=rsv
 CC=xlc_r
 C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-DNDEBUG
-FPUFLAGS=-qfloat=nans:spnans:subnormals
+FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 else # DEBUG
-OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qtune=pwr8:smt8
-DBGFLAGS=-g
-FPUFLAGS=-qfloat=nans:spnans:subnormals
+OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8
+DBGFLAGS=-g -qcheck
+FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 endif # ?NDEBUG
 LIBFLAGS=
 else # GNU/Clang

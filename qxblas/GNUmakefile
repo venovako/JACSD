@@ -46,11 +46,11 @@ ARFLAGS=rsv
 FC=xlf2008_r
 FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qtune=pwr8:smt8 -qhot=level=2:vector -qipa=level=2:partition=large -qprefetch=aggressive
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-WF,-DNDEBUG -qinfo=mt:unset
 FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 else # DEBUG
-OPTFLAGS=-O0 -qmaxmem=-1 -qtune=pwr8:smt8
+OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
 DBGFLAGS=-g -C -qinfo=mt:unset
 FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
