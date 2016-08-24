@@ -55,12 +55,12 @@ FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -n
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
-else ifeq ($(CPU),power8)
+else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpfort
-FORFLAGS=-WF,-qfpp -WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signedzerointr
+FORFLAGS=-WF,-qfpp -WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signdzerointr
 else # no MPI
 FC=xlf2008_r
 FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig
@@ -76,12 +76,12 @@ FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
 LIBFLAGS=-WF,-DUSE_OPENBLAS -I.
 LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS/lib -lopenblas_omp
-else ifeq ($(CPU),pwr8) # Power8
+else ifeq ($(CPU),pwr8) # IBM POWER8LE + ESSL
 AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpfort
-FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -WF,-qfpp -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signedzerointr
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -WF,-qfpp -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signdzerointr
 else # no MPI
 FC=xlf2008_r
 FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig
@@ -132,7 +132,7 @@ FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 
 help:
-	@echo "make [WP=4|8|10|16] [CPU=x64|x100|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 xDJAC0.exe: xDJAC0.o CSD.o $(LIBS) GNUmakefile
 	$(FC) $(FCFLAGS) xDJAC0.o CSD.o -o$@ $(LDFLAGS)
