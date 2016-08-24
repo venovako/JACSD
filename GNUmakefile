@@ -55,6 +55,27 @@ FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -n
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
+else ifeq ($(CPU),power8)
+AR=ar
+ARFLAGS=rsv
+ifdef USE_MPI
+FC=mpfort
+FORFLAGS=-WF,-qfpp -WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signedzerointr
+else # no MPI
+FC=xlf2008_r
+FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig
+endif # ?USE_MPI
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
+DBGFLAGS=-WF,-DNDEBUG -qinfo=mt:unset
+FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+else # DEBUG
+OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
+DBGFLAGS=-g -C -qinfo=mt:unset
+FPUFLAGS=-qfloat=nans:subnormals
+endif # ?NDEBUG
+LIBFLAGS=-WF,-DUSE_OPENBLAS -I.
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS/lib -lopenblas_omp
 else ifeq ($(CPU),pwr8) # Power8
 AR=ar
 ARFLAGS=rsv

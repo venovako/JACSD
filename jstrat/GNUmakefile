@@ -37,7 +37,7 @@ DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug in
 FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-pthread
-else ifeq ($(CPU),pwr8) # Power8
+else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
@@ -97,7 +97,7 @@ LIBS=libjstrat.a
 all: ../$(LIBS)
 
 help:
-	@echo "make [CPU=x64|x100|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [CPU=x64|x100|power8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ../$(LIBS): $(OBJS) GNUmakefile
 	$(AR) $(ARFLAGS) $@ $(OBJS)

@@ -40,7 +40,7 @@ DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug in
 FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-threads -I..
-else ifeq ($(CPU),pwr8) # Power8
+else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 FC=xlf2008_r
@@ -181,7 +181,7 @@ OBJS=$(SOURCES:.f90=.o)
 all: ../$(LIBS)
 
 help:
-	@echo "make [WP=4|8|10|16] [CPU=x64|x100|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 prepare:
 	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi

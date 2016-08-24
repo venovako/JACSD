@@ -37,7 +37,22 @@ DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug in
 FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-mkl -pthread
-else # IBM POWER8LE
+else ifeq ($(CPU),power8) # IBM POWER8LE
+AR=ar
+ARFLAGS=rsv
+CC=xlc_r
+C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qhot=level=1:vector -qprefetch=aggressive
+DGBFLAGS=-DNDEBUG
+FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+else # DEBUG
+OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8
+DBGFLAGS=-g -qcheck
+FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+endif # ?NDEBUG
+LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include #-L$(HOME)/OpenBLAS/lib -lopenblas_omp
+else # IBM POWER8LE + ESSL
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
@@ -78,7 +93,7 @@ LIBS=libvn.a
 all: ../$(LIBS)
 
 help:
-	@echo "make [CPU=x64|x100|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [CPU=x64|x100|power8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ../$(LIBS): $(OBJS) GNUmakefile
 	$(AR) $(ARFLAGS) $@ $(OBJS)
