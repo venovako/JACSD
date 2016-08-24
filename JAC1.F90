@@ -86,7 +86,7 @@ SUBROUTINE MYDJAC1(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, NBSIZE, NBSIZ2, L
   DOUBLE PRECISION, POINTER :: G0J(:,:),G1J(:,:), V0J(:,:),V1J(:,:)
   INTEGER :: JS(JSMLEN), LROT(2), STEPS, CYC, STP, BLASNT, PAIR, I,J, NC1,IFC1, NC2,IFC2, U
 
-  INTEGER, INTRINSIC :: IANY, MOD
+  INTEGER, INTRINSIC :: MOD !! , IANY
   EXTERNAL :: DLACPY, DLASET
 
   !DIR$ ASSUME_ALIGNED G:MALIGN_B,V:MALIGN_B, GSH:MALIGN_B,VSH:MALIGN_B, GVB:MALIGN_B, WORK:MALIGN_B,IWORK:MALIGN_B
@@ -196,17 +196,25 @@ SUBROUTINE MYDJAC1(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, NBSIZE, NBSIZ2, L
               BLKPTR(V0,J) = TRANSFER(C_LOC(V1J),0)
               BLKPTR(V1,J) = TRANSFER(C_LOC(V0J),0)
            END IF
-           INFOP(2,PAIR) = 0
+           !! INFOP(2,PAIR) = 0
         END DO
         !$OMP END DO
         BLASNT = BLAS_SET_NUM_THREADS(BLASNT)
         !$OMP END PARALLEL
 
-        INFO(2) = IANY(INFOP)
-        IF (INFO(2) .NE. 0) THEN
-           INFO(1) = 4
-           RETURN
-        END IF
+        !! INFO(2) = IANY(INFOP)
+        !! IF (INFO(2) .NE. 0) THEN
+        !!    INFO(1) = 4
+        !!    RETURN
+        !! END IF
+
+        DO PAIR = 1, NPAIRS
+           IF (INFOP(1,PAIR) .NE. 0) THEN
+              INFO(1) = 4
+              INFO(2) = INFOP(2,PAIR)
+              RETURN
+           END IF
+        END DO
 
      END DO ! STP
 
