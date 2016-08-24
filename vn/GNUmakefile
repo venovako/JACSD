@@ -7,7 +7,7 @@ ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
-C11FLAGS=-DUSE_INTEL -std=c11 -fexceptions
+C11FLAGS=-DUSE_INTEL -DVN_INTEGER_KIND=8 -std=c11 -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -w3 -diag-disable=1572,2547,10397
@@ -26,7 +26,7 @@ else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
-C11FLAGS=-DUSE_INTEL -DUSE_KNC -std=c11 -mmic -fexceptions
+C11FLAGS=-DUSE_INTEL -DUSE_KNC -DVN_INTEGER_KIND=8 -std=c11 -mmic -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=1572,2547,10397
@@ -41,7 +41,7 @@ else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
-C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
+C11FLAGS=-DUSE_IBM -DVN_INTEGER_KIND=8 -qlanglvl=extc1x
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qhot=level=1:vector -qprefetch=aggressive
 DGBFLAGS=-DNDEBUG
@@ -56,7 +56,7 @@ else # IBM POWER8LE + ESSL
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
-C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
+C11FLAGS=-DUSE_IBM -DVN_INTEGER_KIND=8 -qlanglvl=extc1x
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qhot=level=1:vector -qprefetch=aggressive
 DGBFLAGS=-DNDEBUG
