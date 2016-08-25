@@ -54,9 +54,6 @@ OPTFLAGS=-Og -mcpu=power8
 DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_OPENBLAS -I.
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS/lib -lopenblas_omp
-endif # ?NDEBUG
 LIBFLAGS=-I..
 else # GNU Fortran
 AR=ar
