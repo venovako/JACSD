@@ -43,8 +43,8 @@ ARFLAGS=rsv
 CC=gcc
 C11FLAGS=-DUSE_IBM -std=gnu11
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -mcpu=power8
-DBGFLAGS=-DNDEBUG
+OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
 FPUFLAGS=-ffp-contract=fast
 else # DEBUG
 OPTFLAGS=-Og -mcpu=power8

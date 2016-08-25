@@ -46,8 +46,8 @@ ARFLAGS=rsv
 FC=gfortran
 FORFLAGS=-DUSE_IBM -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -mcpu=power8
-DBGFLAGS=-DNDEBUG
+OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
 FPUFLAGS=
 else # DEBUG
 OPTFLAGS=-Og -mcpu=power8
