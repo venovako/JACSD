@@ -44,7 +44,7 @@ else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-DUSE_IBM -std=f2008ts -fall-intrinsics -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
+FORFLAGS=-DUSE_IBM -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -mcpu=power8
 DBGFLAGS=-DNDEBUG

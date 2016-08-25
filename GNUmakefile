@@ -59,7 +59,7 @@ else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-DUSE_IBM -std=f2008ts -fall-intrinsics -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
+FORFLAGS=-DUSE_IBM -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -mcpu=power8
 DBGFLAGS=-DNDEBUG
@@ -101,7 +101,7 @@ FC=mpifort
 else # no MPI
 FC=gfortran
 endif # ?USE_MPI
-FORFLAGS=-DUSE_GNU -std=f2008ts -fall-intrinsics -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
+FORFLAGS=-DUSE_GNU -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 ifeq ($(ARCH),MACINT)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q
