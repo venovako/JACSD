@@ -40,18 +40,18 @@ LIBFLAGS=-pthread
 else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
-CC=xlc_r
-C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
+CC=gcc
+C11FLAGS=-DUSE_IBM -std=gnu11
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qhot=level=1:vector -qprefetch=aggressive
+OPTFLAGS=-O$(NDEBUG) -mcpu=power8
 DBGFLAGS=-DNDEBUG
-FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS=-ffp-contract=fast
 else # DEBUG
-OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8
-DBGFLAGS=-g -qcheck
-FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+OPTFLAGS=-Og -mcpu=power8
+DBGFLAGS=-g
+FPUFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
-LIBFLAGS=
+LIBFLAGS=-pthread
 else # GNU/Clang
 AR=ar
 ARFLAGS=rsv

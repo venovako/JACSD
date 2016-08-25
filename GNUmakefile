@@ -58,23 +58,18 @@ LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core 
 else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
-ifdef USE_MPI
-FC=mpfort
-FORFLAGS=-WF,-qfpp -WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signdzerointr
-else # no MPI
-FC=xlf2008_r
-FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=extended -qassert=contig
-endif # ?USE_MPI
+FC=gfortran
+FORFLAGS=-DUSE_IBM -std=f2008ts -fall-intrinsics -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
-DBGFLAGS=-WF,-DNDEBUG -qinfo=mt:unset
-FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+OPTFLAGS=-O$(NDEBUG) -mcpu=power8
+DBGFLAGS=-DNDEBUG
+FPUFLAGS=
 else # DEBUG
-OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
-DBGFLAGS=-g -C -qinfo=mt:unset
-FPUFLAGS=-qfloat=nans:subnormals
+OPTFLAGS=-Og -mcpu=power8
+DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
+FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
-LIBFLAGS=-WF,-DUSE_OPENBLAS -I.
+LIBFLAGS=-DUSE_OPENBLAS -I.
 LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS/lib -lopenblas_omp
 else ifeq ($(CPU),pwr8) # IBM POWER8LE + ESSL
 AR=ar
@@ -106,7 +101,7 @@ FC=mpifort
 else # no MPI
 FC=gfortran
 endif # ?USE_MPI
-FORFLAGS=-DUSE_GNU -fdefault-integer-8 -fopenmp -fexceptions -frecursive
+FORFLAGS=-DUSE_GNU -std=f2008ts -fall-intrinsics -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 ifeq ($(ARCH),MACINT)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q
