@@ -104,11 +104,11 @@ endif # ?USE_MPI
 FORFLAGS=-DUSE_GNU -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 ifeq ($(ARCH),MACINT)
-OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q
+OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 else # Linux
-OPTFLAGS=-O$(NDEBUG) -march=native
+OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 endif # ?MACINT
-DBGFLAGS=-DNDEBUG
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
 FPUFLAGS=
 else # DEBUG
 ifeq ($(ARCH),MACINT)
