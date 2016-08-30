@@ -47,8 +47,12 @@ INTEGER, PARAMETER :: Z_VEC_LEN = (D_VEC_LEN / 2)
 INTEGER, PARAMETER :: Z_CL1_LEN = (D_CL1_LEN / 2)
 ! Assume L1 data cache line size >= vector length.
 INTEGER, PARAMETER :: CL1_VEC  = (L1D_CLS_B / VEC_BYTES)   ! > 0
+#ifdef USE_INTEL
 ! Align allocatable arrays to a multiple of cache line size.
 INTEGER, PARAMETER :: MALIGN_B = L1D_CLS_B
+#else
+INTEGER, PARAMETER :: MALIGN_B = VEC_BYTES
+#endif
 
 INTEGER, PARAMETER :: L1D_B = (L1D_kB * 1024)
 INTEGER, PARAMETER :: I_L1D = (L1D_B / IWP)
