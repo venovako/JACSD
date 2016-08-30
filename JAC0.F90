@@ -82,7 +82,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
 #ifdef USE_INTEL
            !DIR$ VECTOR ALWAYS,ALIGNED
 #else
-           !$OMP SIMD SIMDLEN(D_VEC_LEN), ALIGNED(APP,AQQ,APQ,C,T,LROT:MALIGN_B)
+           !TODO: $OMP SIMD SIMDLEN(D_VEC_LEN), ALIGNED(APP,AQQ,APQ,C,T,LROT:MALIGN_B)
 #endif
            DO J = 1, D_VEC_LEN
               C(PAIR+J) = SQRT(APP(PAIR+J))
@@ -94,7 +94,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
               END IF
            END DO
 #ifndef USE_INTEL
-           !$OMP END SIMD
+           !TODO: $OMP END SIMD
 #endif
         END DO
         !$OMP END PARALLEL DO
@@ -115,7 +115,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
 #ifdef USE_INTEL
               !DIR$ VECTOR ALWAYS,ALIGNED
 #else
-              !$OMP SIMD SIMDLEN(D_VEC_LEN), ALIGNED(APP,AQQ,APQ,C,T:MALIGN_B)
+              !TODO: $OMP SIMD SIMDLEN(D_VEC_LEN), ALIGNED(APP,AQQ,APQ,C,T:MALIGN_B)
 #endif
               DO J = 1, D_VEC_LEN
                  ! (T(PAIR+J) - C(PAIR+J)) * (T(PAIR+J) + C(PAIR+J))
@@ -135,7 +135,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
                  AQQ(PAIR+J) = AQQ(PAIR+J) - T(PAIR+J) * APQ(PAIR+J)
               END DO
 #ifndef USE_INTEL
-              !$OMP END SIMD
+              !TODO: $OMP END SIMD
 #endif
            END IF
         END DO
