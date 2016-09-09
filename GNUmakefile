@@ -71,7 +71,7 @@ FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_OPENBLAS -I.
 LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
-else ifeq ($(CPU),pwr8) # IBM POWER8LE + ESSL
+else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI

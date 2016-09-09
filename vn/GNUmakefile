@@ -52,7 +52,7 @@ DBGFLAGS=-g
 FPUFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-gcc/include #-L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
-else # IBM POWER8LE + ESSL
+else # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r

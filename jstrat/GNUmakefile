@@ -52,6 +52,21 @@ DBGFLAGS=-g
 FPUFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
 LIBFLAGS=-pthread
+else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
+AR=ar
+ARFLAGS=rsv
+CC=xlc_r
+C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qhot=level=1:vector -qprefetch=aggressive
+DGBFLAGS=-DNDEBUG
+FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+else # DEBUG
+OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8
+DBGFLAGS=-g -qcheck
+FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+endif # ?NDEBUG
+LIBFLAGS=-pthread
 else # GNU/Clang
 AR=ar
 ARFLAGS=rsv
