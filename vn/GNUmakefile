@@ -51,7 +51,7 @@ OPTFLAGS=-Og -mcpu=power8
 DBGFLAGS=-g
 FPUFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include #-L$(HOME)/OpenBLAS/lib -lopenblas_omp
+LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-gcc/include #-L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
 else # IBM POWER8LE + ESSL
 AR=ar
 ARFLAGS=rsv
@@ -67,7 +67,7 @@ DBGFLAGS=-g -qcheck
 FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 endif # ?NDEBUG
 #LIBFLAGS=-DUSE_ESSL -L/usr/lib64 -lesslsmp -lessl
-LIBFLAGS=-DUSE_ESSL #-L/usr/lib64 -lesslsmp6464 -lessl6464
+LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-ibm/include #-DUSE_ESSL #-L/usr/lib64 -lesslsmp6464 -lessl6464
 endif # ?CPU
 CFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUFLAGS)
 

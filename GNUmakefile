@@ -70,7 +70,7 @@ DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_OPENBLAS -I.
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS/lib -lopenblas_omp
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
 else ifeq ($(CPU),pwr8) # IBM POWER8LE + ESSL
 AR=ar
 ARFLAGS=rsv
@@ -90,8 +90,8 @@ OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
 DBGFLAGS=-g -C -qinfo=mt:unset
 FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
-LIBFLAGS=-qessl -WF,-DUSE_ESSL -I.
-LDFLAGS=-L. -ljstrat -lqxblas -L/usr/lib64 -lesslsmp6464 -lessl6464
+LIBFLAGS=-WF,-DUSE_OPENBLAS -I. #-qessl -WF,-DUSE_ESSL -I.
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS-ibm/lib -lopenblas_omp #-L/usr/lib64 -lesslsmp6464 -lessl6464
 #-L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
 else # GNU Fortran
 AR=ar
