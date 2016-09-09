@@ -83,11 +83,11 @@ FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qlanglvl=ext
 endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
-DBGFLAGS=-WF,-DNDEBUG -qinfo=mt:unset
+DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
 FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
-DBGFLAGS=-g -C -qinfo=mt:unset
+DBGFLAGS=-g -C -qinfo=mt #:unset
 FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
 LIBFLAGS=-WF,-DUSE_OPENBLAS -I. #-qessl -WF,-DUSE_ESSL -I.
@@ -181,9 +181,9 @@ endif # ?NDEBUG
 
 libvn.a: GNUmakefile
 ifdef NDEBUG
-	pushd vn && $(MAKE) NDEBUG=$(NDEBUG) && popd
+	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) && popd
 else # DEBUG
-	pushd vn && $(MAKE) && popd
+	pushd vn && $(MAKE) CPU=$(CPU) ARCH=$(ARCH) && popd
 endif # ?NDEBUG
 
 BSCSD.o bscsd.mod: BSCSD.F90 csd.mod GNUmakefile
@@ -197,11 +197,11 @@ CSD.o csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR
 
 clean:
 ifdef NDEBUG
-	pushd vn && $(MAKE) NDEBUG=$(NDEBUG) clean && popd
+	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) clean && popd
 	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) ARCH=$(ARCH) clean && popd
 else # DEBUG
-	pushd vn && $(MAKE) clean && popd
+	pushd vn && $(MAKE) CPU=$(CPU) ARCH=$(ARCH) clean && popd
 	pushd jstrat && $(MAKE) CPU=$(CPU) ARCH=$(ARCH) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) ARCH=$(ARCH) clean && popd
 endif # ?NDEBUG
