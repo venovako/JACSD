@@ -28,4 +28,15 @@
 *.out
 *.app
 
+# Listings
+*.lst
+*.optrpt
+
+# Debug
+*.dSYM
+*.pdb
+
+# Generated files
+*__genmod.f90
+*__genmod.mod
 qx_wp.fi
