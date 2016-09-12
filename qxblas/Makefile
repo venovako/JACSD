@@ -1,8 +1,10 @@
-RM=del /F
-
 !IFNDEF WP
 WP=16
 !ENDIF # !WP
+
+!IFNDEF RM
+RM=del /F
+!ENDIF # !RM
 
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
@@ -17,7 +19,7 @@ FC=mpiifort.bat -check_mpi -debug
 FC=ifort.exe
 !ENDIF # ?USE_MPI
 
-FORFLAGS=/nologo /fpp /DUSE_INTEL /4I8 /Qopenmp /standard-semantics
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /4I8 /Qopenmp /standard-semantics
 LIBS=qxblas.lib
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost

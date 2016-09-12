@@ -1,24 +1,28 @@
+ifndef SHELL
 SHELL=/bin/bash
-RM=rm -fv
+endif # !SHELL
 ifndef ARCH
-ARCH=none
+ARCH=$(shell uname)
 endif # !ARCH
+ifndef RM
+RM=rm -fv
+endif # !RM
 ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
-C11FLAGS=-DUSE_INTEL -std=c11 -fexceptions
+C11FLAGS=-DUSE_INTEL -DUSE_X64 -std=c11 -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -w3 -diag-disable=2547,10397
 FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xHost
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
 else # Linux
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
-endif # ?MACINT
+endif # ?Darwin
 FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-pthread
@@ -41,7 +45,7 @@ else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 CC=gcc
-C11FLAGS=-DUSE_IBM -std=gnu11
+C11FLAGS=-DUSE_GNU -DUSE_PWR8 -std=gnu11
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
@@ -56,7 +60,7 @@ else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
-C11FLAGS=-DUSE_IBM -qlanglvl=extc1x
+C11FLAGS=-DUSE_IBM -DUSE_PWR8 -qlanglvl=extc1x
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qreport -qhot=level=1:vector -qprefetch=aggressive
 DGBFLAGS=-DNDEBUG
@@ -70,37 +74,37 @@ LIBFLAGS=-pthread
 else # GNU/Clang
 AR=ar
 ARFLAGS=rsv
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 CC=clang
-C11FLAGS=-DUSE_CLANG
+C11FLAGS=-DUSE_CLANG -DUSE_X64
 else # Linux
 CC=gcc
-C11FLAGS=-DUSE_GNU -std=gnu99
-endif # ?MACINT
+C11FLAGS=-DUSE_GNU -DUSE_X64 -std=gnu11
+endif # ?Darwin
 ifdef NDEBUG
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -integrated-as
 else # Linux
-OPTFLAGS=-O$(NDEBUG) -march=native
-endif # ?MACINT
-DBGFLAGS=-DNDEBUG
-ifeq ($(ARCH),MACINT)
+OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+endif # ?Darwin
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
+ifeq ($(ARCH),Darwin)
 FPUFLAGS=-ffp-contract=on
 else
 FPUFLAGS=-ffp-contract=fast
-endif # ?MACINT
+endif # ?Darwin
 else # DEBUG
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O0 -march=native -integrated-as
 else # Linux
 OPTFLAGS=-O0 -march=native
-endif # ?MACINT
+endif # ?Darwin
 DBGFLAGS=-g -ftrapv
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 FPUFLAGS=-ffp-contract=on
 else # Linux
 FPUFLAGS=-ffp-contract=fast
-endif # ?MACINT
+endif # ?Darwin
 endif # ?NDEBUG
 LIBFLAGS=
 endif # ?CPU
@@ -112,7 +116,7 @@ LIBS=libjstrat.a
 all: ../$(LIBS)
 
 help:
-	@echo "make [CPU=x64|x100|power8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [CPU=x64|x100|power8|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ../$(LIBS): $(OBJS) GNUmakefile
 	$(AR) $(ARFLAGS) $@ $(OBJS)

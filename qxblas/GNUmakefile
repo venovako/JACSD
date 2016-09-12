@@ -1,27 +1,31 @@
+ifndef SHELL
 SHELL=/bin/bash
-RM=rm -fv
+endif # !SHELL
+ifndef ARCH
+ARCH=$(shell uname)
+endif # !ARCH
 ifndef WP
 WP=16
 endif # !WP
-ifndef ARCH
-ARCH=none
-endif # !ARCH
+ifndef RM
+RM=rm -fv
+endif # !RM
 ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 FC=ifort
-FORFLAGS=-DUSE_INTEL -i8 -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X64 -i8 -fexceptions -standard-semantics
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
 FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xHost
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
 else # Linux
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-endif # ?MACINT
+endif # ?Darwin
 FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-threads -I..
@@ -44,7 +48,7 @@ else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-DUSE_IBM -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
+FORFLAGS=-DUSE_GNU -DUSE_PWR8 -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
@@ -59,7 +63,7 @@ else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
 FC=xlf2008_r
-FORFLAGS=-WF,-DUSE_IBM -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig
+FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
@@ -74,21 +78,21 @@ else # GNU Fortran
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-DUSE_GNU -fdefault-integer-8 -frecursive -fstack-arrays
+FORFLAGS=-DUSE_GNU -DUSE_X64 -fdefault-integer-8 -frecursive -fstack-arrays
 ifdef NDEBUG
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 else # Linux
 OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-endif # ?MACINT
+endif # ?Darwin
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
 FPUFLAGS=
 else # DEBUG
-ifeq ($(ARCH),MACINT)
+ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O0 -march=native -Wa,-q
 else # Linux
 OPTFLAGS=-O0 -march=native
-endif # ?MACINT
+endif # ?Darwin
 DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
@@ -196,7 +200,7 @@ OBJS=$(SOURCES:.f90=.o)
 all: ../$(LIBS)
 
 help:
-	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 prepare:
 	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi

@@ -1,8 +1,10 @@
+!IFNDEF RM
 RM=del /F
+!ENDIF # !RM
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 CC=icl.exe
-C99FLAGS=/nologo /DUSE_INTEL /Qstd=c99 /Qlong-double
+C99FLAGS=/nologo /DUSE_INTEL /DUSE_X64 /Qstd=c99 /Qlong-double
 LIBS=jstrat.lib
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost
