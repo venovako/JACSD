@@ -55,7 +55,9 @@ FUNCTION QXABS1(Z)
 !  =====================================================================
 !
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS,AIMAG,REAL
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: ABS, AIMAG, REAL
+#endif
 !     ..
   QXABS1 = ABS(REAL(Z)) + ABS(AIMAG(Z))
 !
