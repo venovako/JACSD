@@ -122,7 +122,10 @@ SUBROUTINE QLARTG(F, G, CS, SN, R)
   REAL(WP), EXTERNAL :: QLAMCH
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS, LOG, MAX, HYPOT
+  REAL(WP), INTRINSIC :: LOG, MAX
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: ABS, HYPOT
+#endif
   INTEGER, INTRINSIC :: INT
 !     ..
 !     .. Executable Statements ..

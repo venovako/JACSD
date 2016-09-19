@@ -85,7 +85,10 @@ FUNCTION QLAPY2(X, Y)
   REAL(WP) :: W, XABS, YABS, Z
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS, SQRT, MAX, MIN
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: ABS, SQRT
+#endif
+  REAL(WP), INTRINSIC :: MAX, MIN
 !     ..
 !     .. Executable Statements ..
 !

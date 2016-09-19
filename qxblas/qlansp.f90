@@ -148,7 +148,9 @@ FUNCTION QLANSP( NORM, UPLO, N, AP, WORK )
   LOGICAL, EXTERNAL :: LSAME, QISNAN
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS, SQRT
+#endif
 !     ..
 !     .. Executable Statements ..
 !

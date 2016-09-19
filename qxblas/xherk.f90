@@ -200,9 +200,11 @@ SUBROUTINE XHERK(UPLO,TRANS,N,K,ALPHA,A,LDA,BETA,C,LDC)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
-  INTEGER, INTRINSIC :: MAX
   REAL(WP), INTRINSIC :: REAL
+#endif
+  INTEGER, INTRINSIC :: MAX
 !     ..
 !     .. Local Scalars ..
   COMPLEX(WP) :: TEMP

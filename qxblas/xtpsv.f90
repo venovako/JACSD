@@ -178,7 +178,9 @@ SUBROUTINE XTPSV(UPLO,TRANS,DIAG,N,AP,X,INCX)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
+#endif
 !     ..
 !
 !     Test the input parameters.

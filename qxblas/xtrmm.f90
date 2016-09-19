@@ -204,7 +204,9 @@ SUBROUTINE XTRMM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
+#endif
   INTEGER, INTRINSIC :: MAX
 !     ..
 !     .. Local Scalars ..

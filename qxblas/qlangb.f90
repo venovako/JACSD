@@ -157,7 +157,9 @@ FUNCTION QLANGB(NORM, N, KL, KU, AB, LDAB, WORK)
   LOGICAL, EXTERNAL :: LSAME, QISNAN
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS, SQRT
+#endif
   INTEGER, INTRINSIC :: MAX, MIN
 !     ..
 !     .. Executable Statements ..

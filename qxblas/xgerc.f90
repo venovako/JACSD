@@ -160,7 +160,9 @@ SUBROUTINE XGERC(M,N,ALPHA,X,INCX,Y,INCY,A,LDA)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
+#endif
   INTEGER, INTRINSIC :: MAX
 !     ..
 !

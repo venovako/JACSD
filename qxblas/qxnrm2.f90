@@ -52,7 +52,7 @@
 !> \endverbatim
 !>
 !  =====================================================================
-FUNCTION QXNRM2(N,X,INCX)
+FUNCTION QXNRM2(N, X, INCX)
 !
 !  -- Reference BLAS level1 routine (version 3.4.0) --
 !  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -63,7 +63,7 @@ FUNCTION QXNRM2(N,X,INCX)
   INCLUDE 'qx_wp.fi'
 !
 !     .. Scalar Arguments ..
-  INTEGER, INTENT(IN) :: INCX,N
+  INTEGER, INTENT(IN) :: INCX, N
 !     ..
 !     .. Array Arguments ..
   COMPLEX(WP), INTENT(IN) :: X(*)
@@ -74,15 +74,16 @@ FUNCTION QXNRM2(N,X,INCX)
 !  =====================================================================
 !
 !     .. Parameters ..
-  REAL(WP), PARAMETER :: ONE = 1.0E+0_WP
-  REAL(WP), PARAMETER :: ZERO = 0.0E+0_WP
+  REAL(WP), PARAMETER :: ONE = 1.0E+0_WP, ZERO = 0.0E+0_WP
 !     ..
 !     .. Local Scalars ..
-  REAL(WP) :: NORM,SCAL,SSQ,TEMP
+  REAL(WP) :: NORM, SCAL, SSQ, TEMP
   INTEGER :: IX
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS,AIMAG,REAL,SQRT
+#ifndef USE_IBM  
+  REAL(WP), INTRINSIC :: ABS, AIMAG, REAL, SQRT
+#endif
 !     ..
   IF ((N .LT. 1) .OR. (INCX .LT. 1)) THEN
      NORM = ZERO

@@ -156,7 +156,9 @@ FUNCTION QLANSY(NORM, UPLO, N, A, LDA, WORK)
   LOGICAL, EXTERNAL :: LSAME, QISNAN
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS, SQRT
+#endif
 !     ..
 !     .. Executable Statements ..
 !

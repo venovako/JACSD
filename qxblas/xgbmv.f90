@@ -223,7 +223,9 @@ SUBROUTINE XGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
+#endif
   INTEGER, INTRINSIC :: MAX,MIN
 !     ..
 !

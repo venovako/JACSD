@@ -135,7 +135,9 @@ SUBROUTINE QLARFG(N, ALPHA, X, INCX, TAU)
   REAL(WP), EXTERNAL :: QLAMCH, QNRM2
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS, SIGN
+#endif
 !     ..
 !     .. External Subroutines ..
   EXTERNAL :: QSCAL

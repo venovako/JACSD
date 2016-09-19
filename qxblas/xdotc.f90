@@ -76,7 +76,9 @@ FUNCTION XDOTC(N,CX,INCX,CY,INCY)
   INTEGER :: I,IX,IY
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
+#endif
 !     ..
   CTEMP = (0.0_WP,0.0_WP)
   XDOTC = (0.0_WP,0.0_WP)

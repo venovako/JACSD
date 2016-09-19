@@ -131,7 +131,9 @@ SUBROUTINE QLASSQ( N, X, INCX, SCAL, SUMSQ )
   LOGICAL, EXTERNAL :: QISNAN
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM  
   REAL(WP), INTRINSIC :: ABS
+#endif
 !     ..
 !     .. Executable Statements ..
 !

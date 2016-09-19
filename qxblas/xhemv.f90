@@ -189,9 +189,11 @@ SUBROUTINE XHEMV(UPLO,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM  
   COMPLEX(WP), INTRINSIC :: CONJG
-  INTEGER, INTRINSIC :: MAX
   REAL(WP), INTRINSIC :: REAL
+#endif
+  INTEGER, INTRINSIC :: MAX
 !     ..
 !
 !     Test the input parameters.

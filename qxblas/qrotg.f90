@@ -45,7 +45,7 @@
 !> \endverbatim
 !>
 !  =====================================================================
-SUBROUTINE QROTG(SA,SB,C,S)
+SUBROUTINE QROTG(SA, SB, C, S)
 !
 !  -- Reference BLAS level1 routine (version 3.4.0) --
 !  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -55,21 +55,22 @@ SUBROUTINE QROTG(SA,SB,C,S)
   INCLUDE 'qx_wp.fi'
 !
 !     .. Scalar Arguments ..
-  REAL(WP), INTENT(INOUT) ::  SA,SB
-  REAL(WP), INTENT(OUT) ::  C,S
+  REAL(WP), INTENT(INOUT) ::  SA, SB
+  REAL(WP), INTENT(OUT) ::  C, S
 !     ..
 !
 !  =====================================================================
 !
 !     .. Parameters ..
-  REAL(WP), PARAMETER :: ONE = 1.0E+0_WP
-  REAL(WP), PARAMETER :: ZERO = 0.0E+0_WP
+  REAL(WP), PARAMETER :: ONE = 1.0E+0_WP, ZERO = 0.0E+0_WP
 !     ..
 !     .. Local Scalars ..
-  REAL(WP) :: R,ROE,SCAL,Z
+  REAL(WP) :: R, ROE, SCAL, Z
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS,HYPOT,SIGN
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: ABS, HYPOT, SIGN
+#endif
 !     ..
   ROE = SB
   IF (ABS(SA) .GT. ABS(SB)) ROE = SA
@@ -80,10 +81,10 @@ SUBROUTINE QROTG(SA,SB,C,S)
      R = ZERO
      Z = ZERO
   ELSE
-     R = SCAL*HYPOT((SA/SCAL),(SB/SCAL))
-     R = SIGN(ONE,ROE)*R
-     C = SA/R
-     S = SB/R
+     R = SCAL * HYPOT((SA/SCAL),(SB/SCAL))
+     R = SIGN(ONE,ROE) * R
+     C = SA / R
+     S = SB / R
      Z = ONE
      IF (ABS(SA) .GT. ABS(SB)) Z = S
      IF ((ABS(SB) .GE. ABS(SA)) .AND. (C .NE. ZERO)) Z = ONE/C

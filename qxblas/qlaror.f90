@@ -181,7 +181,9 @@ SUBROUTINE QLAROR(SIDE, INIT, M, N, A, LDA, ISEED, X, INFO)
   EXTERNAL :: QGEMV, QGER, QLASET, QSCAL, XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS, SIGN
+#endif
 !     ..
 !     .. Executable Statements ..
 !

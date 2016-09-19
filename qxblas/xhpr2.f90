@@ -179,8 +179,10 @@ SUBROUTINE XHPR2(UPLO,N,ALPHA,X,INCX,Y,INCY,AP)
   EXTERNAL :: XERBLA
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   COMPLEX(WP), INTRINSIC :: CONJG
   REAL(WP), INTRINSIC :: REAL
+#endif
 !     ..
 !
 !     Test the input parameters.

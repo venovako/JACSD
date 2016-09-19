@@ -148,7 +148,9 @@ FUNCTION QLANGE( NORM, M, N, A, LDA, WORK )
   LOGICAL, EXTERNAL :: LSAME, QISNAN
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS, SQRT
+#endif
   INTEGER, INTRINSIC :: MIN
 !     ..
 !     .. Executable Statements ..

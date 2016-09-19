@@ -52,7 +52,7 @@
 !> \endverbatim
 !>
 !  =====================================================================
-FUNCTION QNRM2(N,X,INCX)
+FUNCTION QNRM2(N, X, INCX)
 !
 !  -- Reference BLAS level1 routine (version 3.4.0) --
 !  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -62,7 +62,7 @@ FUNCTION QNRM2(N,X,INCX)
   IMPLICIT NONE
   INCLUDE 'qx_wp.fi'
 !     .. Scalar Arguments ..
-  INTEGER, INTENT(IN) :: INCX,N
+  INTEGER, INTENT(IN) :: INCX, N
 !     ..
 !     .. Array Arguments ..
   REAL(WP), INTENT(IN) :: X(*)
@@ -75,11 +75,13 @@ FUNCTION QNRM2(N,X,INCX)
   REAL(WP), PARAMETER :: ONE=1.0E+0_WP, ZERO=0.0E+0_WP
 !     ..
 !     .. Local Scalars ..
-  REAL(WP) :: ABSXI,NORM,SCAL,SSQ
+  REAL(WP) :: ABSXI, NORM, SCAL, SSQ
   INTEGER :: IX
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS,SQRT
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: ABS, SQRT
+#endif
 !     ..
   IF ((N .LT. 1) .OR. (INCX .LT. 1)) THEN
      NORM = ZERO
@@ -92,7 +94,7 @@ FUNCTION QNRM2(N,X,INCX)
 !        auxiliary routine:
 !        CALL SLASSQ( N, X, INCX, SCAL, SSQ )
 !
-     DO IX = 1,1 + (N-1)*INCX,INCX
+     DO IX = 1, 1 + (N-1)*INCX, INCX
         IF (X(IX) .NE. ZERO) THEN
            ABSXI = ABS(X(IX))
            IF (SCAL .LT. ABSXI) THEN
@@ -103,7 +105,7 @@ FUNCTION QNRM2(N,X,INCX)
            END IF
         END IF
      END DO
-     NORM = SCAL*SQRT(SSQ)
+     NORM = SCAL * SQRT(SSQ)
   END IF
 !
   QNRM2 = NORM

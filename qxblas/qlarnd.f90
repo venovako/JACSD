@@ -101,7 +101,10 @@ FUNCTION QLARND(IDIST, ISEED)
   REAL(WP), EXTERNAL :: QLARAN
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: COS, LOG, SQRT
+  REAL(WP), INTRINSIC :: LOG
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: COS, SQRT
+#endif
 !     ..
 !     .. Executable Statements ..
 !

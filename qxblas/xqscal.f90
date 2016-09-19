@@ -74,8 +74,10 @@ SUBROUTINE XQSCAL(N,SA,CX,INCX)
   INTEGER :: I,NINCX
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: AIMAG,REAL
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: AIMAG, REAL
   COMPLEX(WP), INTRINSIC :: CMPLX
+#endif
 !     ..
   IF ((N .LE. 0) .OR. (INCX .LE. 0)) RETURN
   IF (INCX .EQ. 1) THEN

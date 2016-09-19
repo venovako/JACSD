@@ -76,7 +76,9 @@ FUNCTION QXASUM(N,CX,INCX)
   INTEGER :: I,NINCX
 !     ..
 !     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: ABS,AIMAG,REAL
+#ifndef USE_IBM
+  REAL(WP), INTRINSIC :: ABS, AIMAG, REAL
+#endif
 !     ..
   QXASUM = 0.0E0_WP
   STEMP = 0.0E0_WP

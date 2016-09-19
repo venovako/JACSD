@@ -74,7 +74,9 @@ FUNCTION QASUM(N,SX,INCX)
   INTEGER :: I,NINCX
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS
+#endif
 !     ..
   QASUM = 0.0e0_WP
   STEMP = 0.0e0_WP

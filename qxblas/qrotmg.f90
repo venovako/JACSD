@@ -120,7 +120,9 @@ SUBROUTINE QROTMG(SD1,SD2,SX1,SY1,SPARAM)
   REAL(WP) SFLAG,SH11,SH12,SH21,SH22,SP1,SP2,SQ1,SQ2,STEMP,SU
 !     ..
 !     .. Intrinsic Functions ..
+#ifndef USE_IBM
   REAL(WP), INTRINSIC :: ABS
+#endif
 !     ..
 
   IF (SD1 .LT. ZERO) THEN
