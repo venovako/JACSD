@@ -14,7 +14,7 @@ ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 FC=ifort
-FORFLAGS=-fpp -DUSE_INTEL -DUSE_X64 -i8 -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X64 -i8 -fexceptions -standard-semantics
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
@@ -33,7 +33,7 @@ else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 FC=ifort
-FORFLAGS=-fpp -DUSE_INTEL -DUSE_KNC -mmic -i8 -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_KNC -mmic -i8 -fexceptions -standard-semantics
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
@@ -48,7 +48,7 @@ else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-cpp -DUSE_GNU -DUSE_PWR8 -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
+FORFLAGS=-DUSE_GNU -DUSE_PWR8 -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
@@ -63,7 +63,7 @@ else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
 FC=xlf2008_r
-FORFLAGS=-WF,-qfpp -WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig
+FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
@@ -78,7 +78,7 @@ else # GNU Fortran
 AR=ar
 ARFLAGS=rsv
 FC=gfortran
-FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -fdefault-integer-8 -frecursive -fstack-arrays
+FORFLAGS=-DUSE_GNU -DUSE_X64 -fdefault-integer-8 -frecursive -fstack-arrays
 ifdef NDEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
@@ -103,97 +103,97 @@ LIBS=libqxblas.a
 LDFLAGS=-L.. -lqxblas
 
 SOURCES=     \
-iqamax.f90   \
-ixamax.f90   \
-qasum.f90    \
-qaxpy.f90    \
-qcopy.f90    \
-qdot.f90     \
-qgbmv.f90    \
-qgemm.f90    \
-qgemv.f90    \
-qger.f90     \
-qisnan.f90   \
-qlacpy.f90   \
-qlaisnan.f90 \
-qlamch.f90   \
-qlangb.f90   \
-qlange.f90   \
-qlansb.f90   \
-qlansp.f90   \
-qlansy.f90   \
-qlapy2.f90   \
-qlaran.f90   \
-qlarfg.f90   \
-qlarnd.f90   \
-qlaror.f90   \
-qlartg.f90   \
-qlaset.f90   \
-qlassq.f90   \
-qnrm2.f90    \
-qrot.f90     \
-qrotg.f90    \
-qrotm.f90    \
-qrotmg.f90   \
-qsbmv.f90    \
-qscal.f90    \
-qspmv.f90    \
-qspr.f90     \
-qspr2.f90    \
-qswap.f90    \
-qsymm.f90    \
-qsymv.f90    \
-qsyr.f90     \
-qsyr2.f90    \
-qsyr2k.f90   \
-qsyrk.f90    \
-qtbmv.f90    \
-qtbsv.f90    \
-qtpmv.f90    \
-qtpsv.f90    \
-qtrmm.f90    \
-qtrmv.f90    \
-qtrsm.f90    \
-qtrsv.f90    \
-qxabs1.f90   \
-qxasum.f90   \
-qxnrm2.f90   \
-xaxpy.f90    \
-xcopy.f90    \
-xdotc.f90    \
-xdotu.f90    \
-xgbmv.f90    \
-xgemm.f90    \
-xgemv.f90    \
-xgerc.f90    \
-xgeru.f90    \
-xhbmv.f90    \
-xhemm.f90    \
-xhemv.f90    \
-xher.f90     \
-xher2.f90    \
-xher2k.f90   \
-xherk.f90    \
-xhpmv.f90    \
-xhpr.f90     \
-xhpr2.f90    \
-xqrot.f90    \
-xqscal.f90   \
-xrotg.f90    \
-xscal.f90    \
-xswap.f90    \
-xsymm.f90    \
-xsyr2k.f90   \
-xsyrk.f90    \
-xtbmv.f90    \
-xtbsv.f90    \
-xtpmv.f90    \
-xtpsv.f90    \
-xtrmm.f90    \
-xtrmv.f90    \
-xtrsm.f90    \
-xtrsv.f90
-OBJS=$(SOURCES:.f90=.o)
+iqamax.F90   \
+ixamax.F90   \
+qasum.F90    \
+qaxpy.F90    \
+qcopy.F90    \
+qdot.F90     \
+qgbmv.F90    \
+qgemm.F90    \
+qgemv.F90    \
+qger.F90     \
+qisnan.F90   \
+qlacpy.F90   \
+qlaisnan.F90 \
+qlamch.F90   \
+qlangb.F90   \
+qlange.F90   \
+qlansb.F90   \
+qlansp.F90   \
+qlansy.F90   \
+qlapy2.F90   \
+qlaran.F90   \
+qlarfg.F90   \
+qlarnd.F90   \
+qlaror.F90   \
+qlartg.F90   \
+qlaset.F90   \
+qlassq.F90   \
+qnrm2.F90    \
+qrot.F90     \
+qrotg.F90    \
+qrotm.F90    \
+qrotmg.F90   \
+qsbmv.F90    \
+qscal.F90    \
+qspmv.F90    \
+qspr.F90     \
+qspr2.F90    \
+qswap.F90    \
+qsymm.F90    \
+qsymv.F90    \
+qsyr.F90     \
+qsyr2.F90    \
+qsyr2k.F90   \
+qsyrk.F90    \
+qtbmv.F90    \
+qtbsv.F90    \
+qtpmv.F90    \
+qtpsv.F90    \
+qtrmm.F90    \
+qtrmv.F90    \
+qtrsm.F90    \
+qtrsv.F90    \
+qxabs1.F90   \
+qxasum.F90   \
+qxnrm2.F90   \
+xaxpy.F90    \
+xcopy.F90    \
+xdotc.F90    \
+xdotu.F90    \
+xgbmv.F90    \
+xgemm.F90    \
+xgemv.F90    \
+xgerc.F90    \
+xgeru.F90    \
+xhbmv.F90    \
+xhemm.F90    \
+xhemv.F90    \
+xher.F90     \
+xher2.F90    \
+xher2k.F90   \
+xherk.F90    \
+xhpmv.F90    \
+xhpr.F90     \
+xhpr2.F90    \
+xqrot.F90    \
+xqscal.F90   \
+xrotg.F90    \
+xscal.F90    \
+xswap.F90    \
+xsymm.F90    \
+xsyr2k.F90   \
+xsyrk.F90    \
+xtbmv.F90    \
+xtbsv.F90    \
+xtpmv.F90    \
+xtpsv.F90    \
+xtrmm.F90    \
+xtrmv.F90    \
+xtrsm.F90    \
+xtrsv.F90
+OBJS=$(SOURCES:.F90=.o)
 
 .PHONY: all help prepare clean
 
@@ -208,7 +208,7 @@ prepare:
 ../$(LIBS): prepare $(OBJS) GNUmakefile
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
-%.o: %.f90 GNUmakefile
+%.o: %.F90 GNUmakefile
 	$(FC) $(FCFLAGS) -c $< -o $@
 
 clean:
