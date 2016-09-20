@@ -1,13 +1,13 @@
 PROGRAM xDJAC2
 
-#ifdef USE_MPI
-#ifdef USE_IBM
-  USE MPI
-#else
-  USE MPI_F08
-#endif
-#endif
   USE CSD
+#ifdef USE_MPI
+#ifdef USE_GNU
+  USE MPI_F08
+#else
+  USE MPI
+#endif
+#endif
   IMPLICIT NONE
 
   LOGICAL, PARAMETER :: FAST = .FALSE.
