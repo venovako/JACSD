@@ -16,10 +16,11 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
 FC=mpiifort
+FORFLAGS=-DUSE_INTEL -DUSE_X64 -DUSE_MPI -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
-endif # ?USE_MPI
 FORFLAGS=-DUSE_INTEL -DUSE_X64 -i8 -qopenmp -fexceptions -standard-semantics
+endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
@@ -44,10 +45,11 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
 FC=mpiifort
+FORFLAGS=-DUSE_INTEL -DUSE_KNC -DUSE_MPI -mmic -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
-endif # ?USE_MPI
 FORFLAGS=-DUSE_INTEL -DUSE_KNC -mmic -i8 -qopenmp -fexceptions -standard-semantics
+endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
@@ -79,8 +81,8 @@ else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
-FC=mpfort
-FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig -WF,-qfpp -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signdzerointr
+FC=mpfort -WF,-qfpp
+FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -WF,-DUSE_MPI -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig -k -qxlf90=signedzero -qxlf2003=nooldnaninf:signdzerointr
 else # no MPI
 FC=xlf2008_r
 FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig
@@ -102,10 +104,11 @@ AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpifort
+FORFLAGS=-DUSE_GNU -DUSE_X64 -DUSE_MPI -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
 else # no MPI
 FC=gfortran
-endif # ?USE_MPI
 FORFLAGS=-DUSE_GNU -DUSE_X64 -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
+endif # ?USE_MPI
 ifdef NDEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
