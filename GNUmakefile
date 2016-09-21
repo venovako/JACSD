@@ -15,7 +15,7 @@ ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
-FC=mpiifort
+FC=mpiifort -ilp64 -trace # -tcollect
 FORFLAGS=-DUSE_INTEL -DUSE_X64 -DUSE_MPI -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
@@ -44,7 +44,7 @@ else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
-FC=mpiifort
+FC=mpiifort -ilp64 -trace # -tcollect
 FORFLAGS=-DUSE_INTEL -DUSE_KNC -DUSE_MPI -mmic -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
