@@ -2,10 +2,10 @@ PROGRAM xDJAC0
 
   USE CSD
 #ifdef USE_MPI
-#ifdef USE_GNU
-  USE MPI_F08
-#else
+#ifdef USE_IBM
   USE MPI
+#else
+  USE MPI_F08
 #endif
 #endif
   IMPLICIT NONE
