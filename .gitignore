@@ -39,4 +39,6 @@
 # Generated files
 *__genmod.f90
 *__genmod.mod
+*.bin
+*.bin.tcs
 qx_wp.fi
