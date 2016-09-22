@@ -31,6 +31,10 @@ typedef struct {
   const integer *nxt; /* iterator */
 } jstrat_maneb2;
 
+typedef struct {
+  integer id, n, stp, swp;
+} jstrat_modmod;
+
 /* C interface */
 EXTERN_C integer jstrat_init(jstrat_common *const js, const integer id, const integer n);
 EXTERN_C integer jstrat_next(jstrat_common *const js, integer *const arr);

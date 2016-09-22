@@ -40,12 +40,17 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
     return (integer)-2;
   if (n < (integer)2)
     return (integer)-3;
+  integer info /* = (integer)0 */;
 
   if ((id & ~(integer)1) == (integer)0) { /* row/col-cyclic */
     (void)memset(js, 0, sizeof(jstrat_rolcyc));
+    if (n & (integer)1) /* n odd */
+      info = n * ((n - (integer)1) >> 1);
+    else /* n even */
+      info = (n >> 1) * (n - (integer)1);
   }
   else if ((id & ~(integer)1) == (integer)2) { /* Mantharam-Eberlein */
-    const integer *cur;
+    const integer *cur = (const integer*)NULL;
 
     if (n == (integer)2)
       cur = &(ME0002[0][0][0]);
@@ -114,13 +119,20 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
 
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)memset(js, 0, sizeof(jstrat_maneb2));
     me2->nxt = me2->tbl = cur;
+    info = n - (integer)1;
+  }
+  else if ((id == (integer)4) || (id == (integer)5)) { /* modified modulus */
+    if (n & (integer)1) /* n odd */
+      return (integer)-3;
+    /**/
+    info = n;
   }
   else
     return (integer)-2;
 
   js->id = id;
   js->n = n;
-  return (integer)0;
+  return info;
 }
 
 void jstrat_init_f(jstrat_common *const js, const integer *const id_, const integer *const n_, integer *const info_)
@@ -137,8 +149,8 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     return (integer)-1;
   if (!arr)
     return (integer)-2;
+  integer info /* = (integer)0 */;
 
-  integer info;
   if (js->id == (integer)0) { /* row-cyclic */
     jstrat_rolcyc *const row = (jstrat_rolcyc*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
@@ -230,6 +242,22 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
 
     info = n_2;
   }
+  else if (js->id == (integer)4) { /* modified modulus, no comm */
+    jstrat_modmod *const mom = (jstrat_modmod*)js;
+    integer (*const pairs)[2] = (integer (*)[2])arr;
+
+    const integer n_2 = mom->n >> 1;
+    /**/
+    info = n_2;
+  }
+  else if (js->id == (integer)5) { /* modified modulus */
+    jstrat_modmod *const mom = (jstrat_modmod*)js;
+    integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
+
+    const integer n_2 = mom->n >> 1;
+    /**/
+    info = n_2;
+  }
   else
     info = (integer)0;
 
@@ -240,13 +268,13 @@ void jstrat_next_f(jstrat_common *const js, integer *const arr, integer *const i
 {
   assert(info_);
   if ((*info_ = jstrat_next(js, arr)) > (integer)0) {
-    if (js->id < (integer)3) {
+    if ((js->id != (integer)3) && (js->id != (integer)5)) { /* no comm */
       integer (*const pairs)[2] = (integer (*)[2])arr;
       for (integer i = (integer)0; i < *info_; ++i)
         for (integer k = (integer)0; k < (integer)2; ++k)
           ++(pairs[i][k]);
     }
-    else {
+    else { /* comm */
       integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
       for (integer i = (integer)0; i < *info_; ++i)
         for (integer k = (integer)0; k < (integer)2; ++k)
