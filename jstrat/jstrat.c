@@ -284,18 +284,5 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
 void jstrat_next_f(jstrat_common *const js, integer *const arr, integer *const info_)
 {
   assert(info_);
-  if (*info_ = jstrat_next(js, arr)) {
-    if (js->id != (integer)3) { /* no comm */
-      integer (*const pairs)[2] = (integer (*)[2])arr;
-      for (integer i = (integer)0; i < *info_; ++i)
-        for (integer k = (integer)0; k < (integer)2; ++k)
-          ++(pairs[i][k]);
-    }
-    else { /* comm */
-      integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
-      for (integer i = (integer)0; i < *info_; ++i)
-        for (integer k = (integer)0; k < (integer)2; ++k)
-          ++(pairs[i][0][k]);
-    }
-  }
+  *info_ = jstrat_next(js, arr);
 }
