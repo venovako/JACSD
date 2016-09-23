@@ -15,6 +15,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
 
   INTEGER, INTRINSIC :: MOD, SUM
 #ifndef USE_IBM
+  INTEGER(4), INTRINSIC :: INT
   DOUBLE PRECISION, INTRINSIC :: ABS, SIGN, SQRT
 #endif
   DOUBLE PRECISION, EXTERNAL :: DDOT
@@ -64,7 +65,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
 
      DO STP = 1, STEPS
         CALL JSTRAT_NEXT(JS, JPAIRS, INFO(2))
-        IF (INFO(2) .NE. NPAIRS) THEN
+        IF (INFO(2) .EQ. 0) THEN
            INFO(1) = 2
            RETURN
         END IF
@@ -73,8 +74,8 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
         BLASNT = BLAS_SET_NUM_THREADS(NTPP)
         !$OMP DO
         DO PAIR = 1, NPAIRS
-           P = JPAIRS(1,PAIR)
-           Q = JPAIRS(2,PAIR)
+           P = INT(JPAIRS(1,PAIR),4)
+           Q = INT(JPAIRS(2,PAIR),4)
 
            APP(PAIR) = DDOT(M, G(1,P), 1, G(1,P), 1) ! DNRM2(M, G(1,P), 1)**2
            AQQ(PAIR) = DDOT(M, G(1,Q), 1, G(1,Q), 1) ! DNRM2(M, G(1,Q), 1)**2
@@ -162,8 +163,8 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
         !$OMP DO
         DO PAIR = 1, NPAIRS
            IF (LROT(PAIR) .GT. 0) THEN
-              P = JPAIRS(1,PAIR)
-              Q = JPAIRS(2,PAIR)
+              P = INT(JPAIRS(1,PAIR),4)
+              Q = INT(JPAIRS(2,PAIR),4)
               IF (T(PAIR) .EQ. D_ZERO) THEN
                  LROT(PAIR) = 0
                  IF (APP(PAIR) .LT. AQQ(PAIR)) THEN
