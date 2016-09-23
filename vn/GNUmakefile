@@ -38,7 +38,7 @@ FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transc
 else # DEBUG
 OPTFLAGS=-O0
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -w3 -traceback -diag-disable=1572,2547,10397
-FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt # -fp-model strict -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-mkl -pthread
 else ifeq ($(CPU),power8) # IBM POWER8LE
