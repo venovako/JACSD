@@ -62,6 +62,12 @@ xDJAC2.exe: xDJAC2.obj CSD.obj $(LIBS) Makefile
 xDJAC2.obj: xDJAC2.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c xDJAC2.F90
 
+xDGESVD.exe: xDGESVD.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xDGESVD.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xDGESVD.obj: xDGESVD.F90 csd.mod Makefile
+	$(FC) $(FCFLAGS) /c xDGESVD.F90
+
 xCSGEN.exe: xCSGEN.obj CSD.obj $(LIBS) Makefile
 	$(FC) $(FCFLAGS) xCSGEN.obj CSD.obj /exe:$@ $(LDFLAGS)
 

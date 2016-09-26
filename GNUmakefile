@@ -131,7 +131,7 @@ LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lv
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 
 help:
 	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -153,6 +153,12 @@ xDJAC2.exe: xDJAC2.o CSD.o $(LIBS) GNUmakefile
 
 xDJAC2.o: xDJAC2.F90 csd.mod GNUmakefile
 	$(FC) $(FCFLAGS) -c xDJAC2.F90
+
+xDGESVD.exe: xDGESVD.o CSD.o $(LIBS) GNUmakefile
+	$(FC) $(FCFLAGS) xDGESVD.o CSD.o -o$@ $(LDFLAGS)
+
+xDGESVD.o: xDGESVD.F90 csd.mod GNUmakefile
+	$(FC) $(FCFLAGS) -c xDGESVD.F90
 
 xCSGEN.exe: xCSGEN.o CSD.o $(LIBS) GNUmakefile
 	$(FC) $(FCFLAGS) xCSGEN.o CSD.o -o$@ $(LDFLAGS)
