@@ -26,14 +26,14 @@ MKLLIBS=mkl_intel_ilp64_dll.lib mkl_core_dll.lib mkl_intel_thread_dll.lib
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
 FPUFLAGS=/fp:source /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
-LIBFLAGS=/DUSE_MKL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads
+LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /RELEASE /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
 FPUFLAGS=/fp:strict /assume:ieee_fpe_flags /Qfma /Qfp-stack-check /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
-LIBFLAGS=/DUSE_MKL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads /dbglibs
+LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads /dbglibs
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)
 !ENDIF # ?NDEBUG

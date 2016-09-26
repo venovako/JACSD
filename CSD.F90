@@ -25,6 +25,10 @@ CONTAINS
 ! Timing support.
 #include "TIMER.F90"
 
+#ifdef USE_MKL
+#include "mkl_direct_call.fi"
+#endif
+
 #include "JAC0.F90"
 #include "JAC1.F90"
 #include "JAC2.F90"
