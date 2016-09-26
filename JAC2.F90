@@ -235,7 +235,7 @@ SUBROUTINE MYDJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, NBSIZE, NBSIZ2, L
      IF (FAST) THEN
         IF (LROT(1) .EQ. 0) EXIT
      ELSE
-        WRITE (U,'(A,I3,A,I7,A,I7,A)') 'CYC(',CYC, '),ALLROT(',LROT(1), '),BIGROT(',LROT(2),')'
+        WRITE (U,'(A,I3,A,I19,A,I19,A)') 'CYC(',CYC, '),ALLROT(',LROT(1), '),BIGROT(',LROT(2),')'
         IF (LROT(2) .EQ. 0) EXIT
      END IF
 
