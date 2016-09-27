@@ -96,8 +96,8 @@ OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
 DBGFLAGS=-g -C -qinfo=mt #:unset
 FPUFLAGS=-qfloat=nans:subnormals
 endif # ?NDEBUG
-LIBFLAGS=-WF,-DUSE_OPENBLAS -I. #-qessl -WF,-DUSE_ESSL -I.
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/OpenBLAS-ibm/lib -lopenblas_omp #-L/usr/lib64 -lesslsmp6464 -lessl6464
+LIBFLAGS=-qessl -WF,-DUSE_ESSL -I. #-WF,-DUSE_OPENBLAS -I.
+LDFLAGS=-L. -ljstrat -lqxblas -L/usr/lib64 -lesslsmp6464 -lessl6464 #-L$(HOME)/OpenBLAS-ibm/lib -lopenblas_omp
 #-L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
 else # GNU Fortran
 AR=ar
@@ -131,7 +131,11 @@ LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lv
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
+ifeq ($(CPU),pwr8)
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe
+else
 all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
+endif
 
 help:
 	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"

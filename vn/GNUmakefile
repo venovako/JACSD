@@ -70,8 +70,8 @@ OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qreport
 DBGFLAGS=-g -qcheck
 FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 endif # ?NDEBUG
-#LIBFLAGS=-DUSE_ESSL -L/usr/lib64 -lesslsmp -lessl
-LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-ibm/include #-DUSE_ESSL #-L/usr/lib64 -lesslsmp6464 -lessl6464
+LIBFLAGS=-DUSE_ESSL -L/usr/lib64 -lesslsmp -lessl
+#LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-ibm/include #-DUSE_ESSL #-L/usr/lib64 -lesslsmp6464 -lessl6464
 else # GNU/Clang
 ifeq ($(ARCH),Darwin)
 CC=clang

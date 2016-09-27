@@ -13,6 +13,9 @@ MODULE CSD
 CONTAINS
 
 #include "IFACES_IMPL.F90"
+#ifdef USE_ESSL
+#include "IFACES_ESSL.F90"
+#endif
 
 ! Threading support.
 #include "GET_NTHR.F90"
