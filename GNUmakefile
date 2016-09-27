@@ -132,7 +132,7 @@ endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
 ifeq ($(CPU),pwr8)
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe
 else
 all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 endif
