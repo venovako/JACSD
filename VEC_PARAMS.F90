@@ -41,9 +41,8 @@ INTEGER, PARAMETER :: Z_CL1_LEN = (D_CL1_LEN / 2)
 ! Assume L1 data cache line size >= vector length.
 INTEGER, PARAMETER :: CL1_VEC  = (L1D_CLS_B / VEC_BYTES)   ! > 0
 
-#ifdef USE_INTEL
+#ifndef USE_GNU
 ! Align allocatable arrays to a multiple of cache line size.
-! TODO: Support USE_PWR8 as well (see !IBM* ALIGN directive).
 INTEGER, PARAMETER :: MALIGN_B = L1D_CLS_B
 #else
 INTEGER, PARAMETER :: MALIGN_B = VEC_BYTES
