@@ -113,10 +113,13 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
 #ifdef USE_INTEL
            !DIR$ VECTOR ALWAYS,ALIGNED
 #else
+#ifdef USE_GNU
            !TODO: SIMDLEN(D_VEC_LEN)
+           !$OMP SIMD ALIGNED(APP,AQQ,APQ,C,T,LROT:MALIGN_B)
+#else           
 !IBM* ASSERT(NODEPS)
 !IBM* INDEPENDENT
-           !$OMP SIMD ALIGNED(APP,AQQ,APQ,C,T,LROT:MALIGN_B)
+#endif
 #endif
            DO J = 1, D_VEC_LEN
               C(PAIR+J) = SQRT(APP(PAIR+J))
@@ -127,7 +130,7 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
                  LROT(PAIR+J) = 1
               END IF
            END DO
-#ifndef USE_INTEL
+#ifdef USE_GNU
            !$OMP END SIMD
 #endif
         END DO
@@ -149,10 +152,13 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
 #ifdef USE_INTEL
               !DIR$ VECTOR ALWAYS,ALIGNED
 #else
+#ifdef USE_GNU
               !TODO: SIMDLEN(D_VEC_LEN)
+              !$OMP SIMD ALIGNED(APP,AQQ,APQ,C,T:MALIGN_B)
+#else
 !IBM* ASSERT(NODEPS)
 !IBM* INDEPENDENT
-              !$OMP SIMD ALIGNED(APP,AQQ,APQ,C,T:MALIGN_B)
+#endif
 #endif
               DO J = 1, D_VEC_LEN
                  ! (T(PAIR+J) - C(PAIR+J)) * (T(PAIR+J) + C(PAIR+J))
@@ -171,8 +177,8 @@ SUBROUTINE MYDJAC0(NPAIRS, VPAIRS, VTORS, VTORSV, M, N, G, LDG, V, LDV, MAXCYC, 
                  !DIR$ FMA
                  AQQ(PAIR+J) = AQQ(PAIR+J) - T(PAIR+J) * APQ(PAIR+J)
               END DO
-#ifndef USE_INTEL
-              !TODO: $OMP END SIMD
+#ifdef USE_GNU
+              !$OMP END SIMD
 #endif
            END IF
         END DO
