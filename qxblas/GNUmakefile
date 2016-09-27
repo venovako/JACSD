@@ -44,7 +44,7 @@ DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug in
 FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt # -fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-threads -I..
-ifeq ($(CPU),x200) # Knights Landing
+else ifeq ($(CPU),x200) # Knights Landing
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 FC=ifort
