@@ -28,7 +28,7 @@ FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transc
 else # DEBUG
 OPTFLAGS=-O0 -xHost
 ifeq ($(ARCH),Darwin)
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397 -prof-gen=srcpos,globdata,threadsafe
 else # Linux
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
 endif # ?Darwin
