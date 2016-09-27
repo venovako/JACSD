@@ -45,10 +45,10 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
 FC=mpiifort -ilp64 -trace # -tcollect
-FORFLAGS=-DUSE_INTEL -DUSE_KNC -DUSE_MPI -mmic -i8 -qopenmp -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X100 -DUSE_MPI -mmic -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_KNC -mmic -i8 -qopenmp -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X100 -mmic -i8 -qopenmp -fexceptions -standard-semantics
 endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
@@ -61,6 +61,27 @@ FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transc
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
+else ifeq ($(CPU),x200) # Knights Landing
+AR=xiar
+ARFLAGS=-qnoipo -lib rsv
+ifdef USE_MPI
+FC=mpiifort -ilp64 -trace # -tcollect
+FORFLAGS=-DUSE_INTEL -DUSE_X200 -DUSE_MPI -i8 -qopenmp -fexceptions -standard-semantics
+else # no MPI
+FC=ifort
+FORFLAGS=-DUSE_INTEL -DUSE_X200 -i8 -qopenmp -fexceptions -standard-semantics
+endif # ?USE_MPI
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -xMIC-AVX512 #-xHost
+DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+else # DEBUG
+OPTFLAGS=-O0 -xMIC-AVX512 #-xHost
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+endif # ?NDEBUG
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
+LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
 else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv

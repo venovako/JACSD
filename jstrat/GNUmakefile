@@ -30,7 +30,7 @@ else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
-C11FLAGS=-DUSE_INTEL -DUSE_KNC -std=c11 -mmic -fexceptions
+C11FLAGS=-DUSE_INTEL -DUSE_X100 -std=c11 -mmic -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
 DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=2547,10397
@@ -39,6 +39,21 @@ else # DEBUG
 OPTFLAGS=-O0
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -w3 -traceback -diag-disable=2547,10397
 FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt # -fp-model strict -fp-stack-check
+endif # ?NDEBUG
+LIBFLAGS=-pthread
+else ifeq ($(CPU),x200)
+AR=xiar
+ARFLAGS=-qnoipo -lib rsv
+CC=icc
+C11FLAGS=-DUSE_INTEL -DUSE_X200 -std=c11 -fexceptions
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -xMIC-AVX512 #-xHost
+DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -w3 -diag-disable=2547,10397
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+else # DEBUG
+OPTFLAGS=-O0 -xMIC-AVX512 #-xHost
+DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
+FPUFLAGS=-fp-model strict -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 endif # ?NDEBUG
 LIBFLAGS=-pthread
 else ifeq ($(CPU),power8) # IBM POWER8LE
