@@ -32,14 +32,14 @@ LDFLAGS=/link /RELEASE /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
-FPUFLAGS=/fp:strict /assume:ieee_fpe_flags /Qfma /Qfp-stack-check /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+FPUFLAGS=/fp:source /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
 LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads /dbglibs
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)
 !ENDIF # ?NDEBUG
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 
 help:
 	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"

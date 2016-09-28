@@ -26,7 +26,7 @@ DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug in
 else # Linux
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
 endif # ?Darwin
-FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-threads -I..
 else ifeq ($(CPU),x100) # Knights Corner
@@ -41,7 +41,7 @@ FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transc
 else # DEBUG
 OPTFLAGS=-O0
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt # -fp-model strict -assume ieee_fpe_flags -fp-stack-check
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-threads -I..
 else ifeq ($(CPU),x200) # Knights Landing
@@ -56,7 +56,7 @@ FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transc
 else # DEBUG
 OPTFLAGS=-O0 -xMIC-AVX512 #-xHost
 DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-FPUFLAGS=-fp-model strict -assume ieee_fpe_flags -fma -fp-stack-check -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-threads -I..
 else ifeq ($(CPU),power8) # IBM POWER8LE
