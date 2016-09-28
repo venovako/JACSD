@@ -185,6 +185,8 @@ CONTAINS
     END IF
 
     IF (NT .GT. 0) ONT = BLAS_SET_NUM_THREADS(ONT)
+    J = BLAS_FINISH()
+    IF (J .LT. 0) STOP 'BLAS_FINISH'
 
     IF ((INFO .GE. 0) .AND. (LEN_TRIM(RN) .GT. 0)) THEN
        ISTATS(1) = M
@@ -423,6 +425,8 @@ CONTAINS
     END IF
 
     IF (NT .GT. 0) ONT = BLAS_SET_NUM_THREADS(ONT)
+    J = BLAS_FINISH()
+    IF (J .LT. 0) STOP 'BLAS_FINISH'
 
     IF ((INFO .GE. 0) .AND. (LEN_TRIM(RN) .GT. 0)) THEN
        ISTATS(1) = M
@@ -679,6 +683,8 @@ CONTAINS
     END IF
 
     IF (NT .GT. 0) ONT = BLAS_SET_NUM_THREADS(ONT)
+    J = BLAS_FINISH()
+    IF (J .LT. 0) STOP 'BLAS_FINISH'
 
     IF ((INFO .GE. 0) .AND. (LEN_TRIM(RN) .GT. 0)) THEN
        ISTATS(1) = M
@@ -936,6 +942,8 @@ CONTAINS
     END IF
 
     IF (NT .GT. 0) ONT = BLAS_SET_NUM_THREADS(ONT)
+    J = BLAS_FINISH()
+    IF (J .LT. 0) STOP 'BLAS_FINISH'
 
     IF ((INFO .GE. 0) .AND. (LEN_TRIM(RN) .GT. 0)) THEN
        ISTATS(1) = M
