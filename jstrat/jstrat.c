@@ -121,7 +121,7 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
     me2->nxt = me2->tbl = cur;
     info = n - (integer)1;
   }
-  else if (id == (integer)4) { /* modified modulus */
+  else if ((id & ~(integer)1) == (integer)4) { /* modified modulus */
     if (n & (integer)1) /* n odd */
       return (integer)-3;
     (void)memset(js, 0, sizeof(jstrat_modmod));
@@ -274,6 +274,41 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
       ++(mom->swp);
     }
     info = (integer)-_n_2;
+  }
+  else if (js->id == (integer)5) { /* modified modulus */
+    jstrat_modmod *const mom = (jstrat_modmod*)js;
+    integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
+    int (*const ij)[2][2][2] = (int (*)[2][2][2])pairs;
+
+    const int _n = (int)(mom->n);
+    const int _n_2 = _n >> 1;
+    const int _n1 = _n - 1;
+
+    if (!(mom->stp) && !(mom->swp)) { /* init */
+      for (int r = 0; r < _n_2; ++r) {
+        ij[r][0][0][1] = ij[r][0][0][0] = r;
+        ij[r][0][1][1] = ij[r][0][1][0] = _n1 - r;
+      }
+    }
+    else { /* step */
+      for (int r = 0; r < _n_2; ++r) {
+        if ((ij[r][0][0][1] + ij[r][0][1][1]) >= _n1) {
+          if (++(ij[r][0][0][1]) == ij[r][0][1][1])
+            ij[r][0][1][1] = (ij[r][0][0][1] -= _n_2);
+          ij[r][0][0][0] = ij[r][0][0][1];
+        }
+        else
+          ij[r][0][1][0] = ++(ij[r][0][1][1]);
+      }
+    }
+
+    if (++(mom->stp) >= mom->n) {
+      mom->stp = (integer)0;
+      ++(mom->swp);
+    }
+    info = (integer)-_n_2;
+
+    /* TODO: complete the communication! */
   }
   else
     info = (integer)0;
