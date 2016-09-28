@@ -1,3 +1,4 @@
+!TODO: decide what arrays (if any) to put into FASTMEM for KNL.
 PROGRAM xCSGEN
 
   USE CSD

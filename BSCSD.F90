@@ -1,3 +1,4 @@
+!TODO: decide what arrays to put into FASTMEM for KNL.
 MODULE BSCSD
 
   USE CSD
