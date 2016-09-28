@@ -36,6 +36,8 @@ INTEGER FUNCTION BLAS_FINISH()
   ELSE
      BLAS_FINISH = MAX(A, B)
   END IF
+  A = MKL_MEM_STAT(B)
+  WRITE (GET_IOUNIT('E'),'(A,I12,A,I12,A,I11,A)') 'MKL memory: peak ',BLAS_FINISH,' B, currently ',A,' B in ',B,' buffers'
 #endif
 #endif
   BLAS_FINISH = 0

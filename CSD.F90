@@ -17,13 +17,13 @@ CONTAINS
 #include "IFACES_ESSL.F90"
 #endif
 
-! Threading support.
-#include "GET_NTHR.F90"
-#include "BLAS.F90"
-
 ! I/O support.
 #include "GET_IOUNIT.F90"
 #include "BIN_IO.F90"
+
+! Threading support.
+#include "GET_NTHR.F90"
+#include "BLAS.F90"
 
 ! Timing support.
 #include "TIMER.F90"
