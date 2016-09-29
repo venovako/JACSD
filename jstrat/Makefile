@@ -9,13 +9,13 @@ LIBS=jstrat.lib
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback /W5
-FPUFLAGS=/fp:source /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/I. /MD
 LDFLAGS=/link /RELEASE /LIBPATH:. $(LIBS)
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:expr-source-pos /debug:inline-debug-info /check:stack,uninit /warn:all /traceback /W5
-FPUFLAGS=/fp:source /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /Qfp-stack-check
+FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /Qfp-stack-check
 LIBFLAGS=/I. /MDd
 LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS)
 !ENDIF # ?NDEBUG

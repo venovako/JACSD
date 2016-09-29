@@ -15,7 +15,11 @@ ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
+ifdef NDEBUG
+FC=mpiifort -ilp64
+else # DEBUG
 FC=mpiifort -ilp64 -trace # -tcollect
+endif # ?NDEBUG
 FORFLAGS=-DUSE_INTEL -DUSE_X64 -DUSE_MPI -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
@@ -24,16 +28,16 @@ endif # ?USE_MPI
 #-prof-gen=srcpos,globdata,threadsafe
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
-DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
+FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xHost
 ifeq ($(ARCH),Darwin)
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
 else # Linux
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
 endif # ?Darwin
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
+FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
 ifeq ($(ARCH),Darwin)
@@ -43,22 +47,30 @@ LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_c
 endif # ?Darwin
 else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
+ifdef NDEBUG
+ARFLAGS=-lib rsv
+else # DEBUG
 ARFLAGS=-qnoipo -lib rsv
+endif # ?NDEBUG
 ifdef USE_MPI
+ifdef NDEBUG
+FC=mpiifort -ilp64
+else # DEBUG
 FC=mpiifort -ilp64 -trace # -tcollect
+endif # ?NDEBUG
 FORFLAGS=-DUSE_INTEL -DUSE_X100 -DUSE_MPI -mmic -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
 FORFLAGS=-DUSE_INTEL -DUSE_X100 -mmic -i8 -qopenmp -fexceptions -standard-semantics
 endif # ?USE_MPI
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG)
-DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+OPTFLAGS=-fast #-O$(NDEBUG)
+DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
+FPUFLAGS=-fma #-fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
+DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
@@ -66,7 +78,11 @@ else ifeq ($(CPU),x200) # Knights Landing
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
+ifdef NDEBUG
+FC=mpiifort -ilp64
+else # DEBUG
 FC=mpiifort -ilp64 -trace # -tcollect
+endif # ?NDEBUG
 FORFLAGS=-DUSE_INTEL -DUSE_X200 -DUSE_MPI -i8 -qopenmp -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
@@ -75,12 +91,12 @@ endif # ?USE_MPI
 #-prof-gen=srcpos,globdata,threadsafe
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xMIC-AVX512 #-xHost
-DBGFLAGS=-DNDEBUG -fno-omit-frame-pointer -qopt-report=5 -traceback -diag-disable=10397
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
+FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xMIC-AVX512 #-xHost
-DBGFLAGS=-fno-omit-frame-pointer -g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-FPUFLAGS=-fp-model source -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
+DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind # -lvn after -lqxblas
