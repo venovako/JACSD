@@ -22,17 +22,22 @@ FC=ifort.exe
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /4I8 /Qopenmp /standard-semantics
 LIBS=jstrat.lib qxblas.lib
 MKLLIBS=mkl_intel_ilp64_dll.lib mkl_core_dll.lib mkl_intel_thread_dll.lib
+!IFDEF NFMA
+FMAFLAGS=/DNFMA
+!ELSE # FMA
+FMAFLAGS=/Qfma
+!ENDIF # ?NFMA
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /RELEASE /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
+FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
 LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads /dbglibs
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)

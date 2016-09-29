@@ -21,16 +21,21 @@ FC=ifort.exe
 
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /4I8 /Qopenmp /standard-semantics
 LIBS=qxblas.lib
+!IFDEF NFMA
+FMAFLAGS=/DNFMA
+!ELSE # FMA
+FMAFLAGS=/Qfma
+!ENDIF # ?NFMA
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/I.. /libs:dll /threads
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
+FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
 LIBFLAGS=/I.. /libs:dll /threads /dbglibs
 LDFLAGS=/link /DEBUG /LIBPATH:.. $(LIBS)
 !ENDIF # ?NDEBUG

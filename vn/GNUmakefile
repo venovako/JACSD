@@ -12,10 +12,15 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
 C11FLAGS=-DUSE_INTEL -DUSE_X64 -DVN_INTEGER_KIND=8 -std=c11 -fexceptions
+ifdef NFMA
+FMAFLAGS=-DNFMA
+else # FMA
+FMAFLAGS=-fma
+endif # ?NFMA
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -w3 -diag-disable=1572,2547,10397
-FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xHost
 ifeq ($(ARCH),Darwin)
@@ -23,7 +28,7 @@ DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug p
 else # Linux
 DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=1572,2547,10397
 endif # ?Darwin
-FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
+FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-mkl -pthread
 else ifeq ($(CPU),x100) # Knights Corner

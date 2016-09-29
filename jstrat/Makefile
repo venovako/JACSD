@@ -6,16 +6,21 @@ ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 CC=icl.exe
 C99FLAGS=/nologo /DUSE_INTEL /DUSE_X64 /Qstd=c99 /Qlong-double
 LIBS=jstrat.lib
+!IFDEF NFMA
+FMAFLAGS=/DNFMA
+!ELSE # FMA
+FMAFLAGS=/Qfma
+!ENDIF # ?NFMA
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback /W5
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/I. /MD
 LDFLAGS=/link /RELEASE /LIBPATH:. $(LIBS)
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:expr-source-pos /debug:inline-debug-info /check:stack,uninit /warn:all /traceback /W5
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /Qfp-stack-check
+FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /Qfp-stack-check
 LIBFLAGS=/I. /MDd
 LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS)
 !ENDIF # ?NDEBUG
