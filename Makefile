@@ -44,7 +44,7 @@ LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(M
 !ENDIF # ?NDEBUG
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
+all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 
 help:
 	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -55,17 +55,35 @@ xDJAC0.exe: xDJAC0.obj CSD.obj $(LIBS) Makefile
 xDJAC0.obj: xDJAC0.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c xDJAC0.F90
 
+xVJAC0.exe: xVJAC0.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xVJAC0.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xVJAC0.obj: xVJAC0.F90 csd.mod Makefile
+	$(FC) $(FCFLAGS) /c xVJAC0.F90
+
 xDJAC1.exe: xDJAC1.obj CSD.obj $(LIBS) Makefile
 	$(FC) $(FCFLAGS) xDJAC1.obj CSD.obj /exe:$@ $(LDFLAGS)
 
 xDJAC1.obj: xDJAC1.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c xDJAC1.F90
 
+xVJAC1.exe: xVJAC1.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xVJAC1.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xVJAC1.obj: xVJAC1.F90 csd.mod Makefile
+	$(FC) $(FCFLAGS) /c xVJAC1.F90
+
 xDJAC2.exe: xDJAC2.obj CSD.obj $(LIBS) Makefile
 	$(FC) $(FCFLAGS) xDJAC2.obj CSD.obj /exe:$@ $(LDFLAGS)
 
 xDJAC2.obj: xDJAC2.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c xDJAC2.F90
+
+xVJAC2.exe: xVJAC2.obj CSD.obj $(LIBS) Makefile
+	$(FC) $(FCFLAGS) xVJAC2.obj CSD.obj /exe:$@ $(LDFLAGS)
+
+xVJAC2.obj: xVJAC2.F90 csd.mod Makefile
+	$(FC) $(FCFLAGS) /c xVJAC2.F90
 
 xDGESVD.exe: xDGESVD.obj CSD.obj $(LIBS) Makefile
 	$(FC) $(FCFLAGS) xDGESVD.obj CSD.obj /exe:$@ $(LDFLAGS)
@@ -111,7 +129,7 @@ BSCSD.obj bscsd.mod: BSCSD.F90 csd.mod Makefile
 JCSD.obj jcsd.mod: JCSD.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c JCSD.F90
 
-CSD.obj csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 Makefile
+CSD.obj csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 VJAC0.F90 VJAC1.F90 VJAC2.F90 Makefile
 	$(FC) $(FCFLAGS) /c CSD.F90
 
 clean:

@@ -36,4 +36,8 @@ CONTAINS
 #include "JAC1.F90"
 #include "JAC2.F90"
 
+#include "VJAC0.F90"
+#include "VJAC1.F90"
+#include "VJAC2.F90"
+
 END MODULE CSD
