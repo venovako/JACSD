@@ -318,12 +318,12 @@ SUBROUTINE DJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, JSTRAT, TOL, SIGMA,
   ELSE IF (LDV .LT. N) THEN
      INFO(1) = -7
      INFO(2) = LDV
-  ELSE IF (MAXTHR(1) .LT. 0) THEN
-     INFO(1) = -8
-     INFO(2) = MAXTHR(1)
   ELSE IF (MAXCYC(1) .LT. 0) THEN
-     INFO(1) = -9
+     INFO(1) = -8
      INFO(2) = MAXCYC(1)
+  ELSE IF (MAXTHR(1) .LT. 0) THEN
+     INFO(1) = -9
+     INFO(2) = MAXTHR(1)
   ELSE IF (JSTRAT(1) .LT. 0) THEN
      INFO(1) = -10
      INFO(2) = JSTRAT(1)
