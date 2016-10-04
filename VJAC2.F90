@@ -9,12 +9,10 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
   DOUBLE PRECISION, INTENT(INOUT) :: G(LDG,N), V(LDV,N)
   DOUBLE PRECISION, INTENT(IN) :: TOL
   DOUBLE PRECISION, INTENT(OUT) :: GB(LDAC,NBSIZ2),VB(LDAC,NBSIZ2), WORK(LWORK)
-  INTEGER, INTENT(INOUT) :: LROTP(2)
-  INTEGER, INTENT(OUT) :: IWORK(LIWORK), INFOP(2)
+  INTEGER, INTENT(OUT) :: IWORK(LIWORK), LROTP(2), INFOP(2)
 
   INTEGER :: NCF, I, J
   DOUBLE PRECISION :: SIGMAP(1)
-  INTEGER :: NROTP(2)
 
   INTEGER, INTRINSIC :: MOD
   EXTERNAL :: DLASET, DGEMM, DPOTRF, DSYRK
@@ -38,17 +36,17 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
      CALL DLASET('L', NCF-1, NCF-1, D_ZERO, D_ZERO, GB(2,1), LDAC)
      IF ((NC1 .EQ. NC2) .OR. (JSTRAT(1) .LT. JSMENC)) THEN
         CALL VJAC1(MYFAST, NCF,NCF, GB,LDAC, VB,LDAC, MAXCYC,MAXTHR,BLKTHR,JSTRAT, TOL, SIGMAP,&
-             WORK,LWORK, IWORK,LIWORK, NROTP,INFOP)
+             WORK,LWORK, IWORK,LIWORK, LROTP,INFOP)
      ELSE! |NC1 - NC2| = 1 (==> NCF odd ==> no parallel strategy implemented)
         ! Border GB with 1 row and 1 column of zeroes, and set the last diagonal element to 1.
         CALL DLASET('A', NCF, 1, D_ZERO, D_ZERO, GB(1,NCF+1), LDAC)
         CALL DLASET('A', 1, NCF, D_ZERO, D_ZERO, GB(NCF+1,1), LDAC)
         GB(NCF+1,NCF+1) = D_ONE
         CALL VJAC1(MYFAST, NCF+1,NCF+1, GB,LDAC, VB,LDAC, MAXCYC,MAXTHR,BLKTHR,JSTRAT, TOL, SIGMAP,&
-             WORK,LWORK, IWORK,LIWORK, NROTP,INFOP)
+             WORK,LWORK, IWORK,LIWORK, LROTP,INFOP)
      END IF
      IF (INFOP(1) .EQ. 0) THEN
-        IF (NROTP(1) .GT. 0) THEN
+        IF (LROTP(1) .GT. 0) THEN
            DO I = 1, M, NCF
               J = MIN(NCF, M - I + 1)
               CALL DGEMM('N','N', J,NC1,NC2, D_ONE, G(I,IFC2), LDG, VB(NC1+1, 1), LDAC, D_ZERO, GB(1,1), LDAC)
@@ -67,8 +65,6 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
               CALL DLACPY('A', J, NC1, GB(1,1), LDAC, V(I,IFC1), LDV)
               CALL DLACPY('A', J, NC2, GB(1,NC1+1), LDAC, V(I,IFC2), LDV)
            END DO
-           LROTP(1) = LROTP(1) + NROTP(1)
-           LROTP(2) = LROTP(2) + NROTP(2)
         ELSE
            INFOP(1) = -1
         END IF
@@ -88,14 +84,14 @@ SUBROUTINE MYVJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, NBSIZE, N
 
   LOGICAL, INTENT(IN) :: FAST
   INTEGER, INTENT(IN) :: M,N, LDG,LDV, MAXCYC(3),MAXTHR(3),BLKTHR(2), NBSIZE,NBSIZ2,LDAC, NPAIRS,NBL, JSTRAT(3), LWORK,LIWORK
-  INTEGER, INTENT(OUT) :: IWORK(LIWORK,NPAIRS), NC(NBL),IFC(NBL),&
-       JPAIRS(2,NPAIRS),LROTP(2,NPAIRS),INFOP(2,NPAIRS), NROT(2),INFO(2)
+  INTEGER, INTENT(OUT) :: IWORK(LIWORK,MAXTHR(1)), NC(NBL),IFC(NBL),&
+       JPAIRS(2,NPAIRS),LROTP(2,MAXTHR(1)),INFOP(2,MAXTHR(1)), NROT(2),INFO(2)
   DOUBLE PRECISION, INTENT(IN) :: TOL
   DOUBLE PRECISION, INTENT(INOUT) :: G(LDG,N)
   DOUBLE PRECISION, INTENT(OUT) :: V(LDV,N)
-  DOUBLE PRECISION, INTENT(OUT) :: GVB(LDAC,NBSIZ2,2,NPAIRS), WORK(LWORK,NPAIRS)
+  DOUBLE PRECISION, INTENT(OUT) :: GVB(LDAC,NBSIZ2,2,MAXTHR(1)), WORK(LWORK,MAXTHR(1))
 
-  INTEGER :: JS(JSMLEN), LROT(2), STEPS, CYC, STP, BLASNT, PAIR, I,J, NC1,IFC1, NC2,IFC2, U, CLK(3)
+  INTEGER :: JS(JSMLEN), LROT(2), STEPS, CYC, STP, BLASNT, PAIR, B,P,Q, I,J,K, NC1,IFC1, NC2,IFC2, U, CLK(3)
 
   INTEGER, INTRINSIC :: IAND, MOD
   EXTERNAL :: DLACPY, DLASET
@@ -160,7 +156,7 @@ SUBROUTINE MYVJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, NBSIZE, N
   DO CYC = 1, MAXCYC(1)
 
      IF (.NOT. FAST) CALL TIMER_START(CLK)
-     LROTP = 0
+     LROT = 0
 
      DO STP = 1, STEPS
 
@@ -171,45 +167,48 @@ SUBROUTINE MYVJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, NBSIZE, N
            RETURN
         END IF
 
-        !$OMP PARALLEL NUM_THREADS(MAXTHR(1)), PRIVATE(PAIR,I,J,NC1,IFC1,NC2,IFC2)
-        J = BLAS_SET_NUM_THREADS(BLASNT)
-        !$OMP DO
-        DO PAIR = 1, NPAIRS
-           I = IAND(JPAIRS(1,PAIR), JSMASK) + 1
-           J = IAND(JPAIRS(2,PAIR), JSMASK) + 1
+        DO B = 1, BLKTHR(1)
+           P = (B - 1) * MAXTHR(1) + 1
+           Q = P + (MAXTHR(1) - 1)
+           !$OMP PARALLEL NUM_THREADS(MAXTHR(1)), PRIVATE(PAIR,I,J,K,NC1,IFC1,NC2,IFC2)
+           J = BLAS_SET_NUM_THREADS(BLASNT)
+           !$OMP DO
+           DO PAIR = P, Q
+              I = IAND(JPAIRS(1,PAIR), JSMASK) + 1
+              J = IAND(JPAIRS(2,PAIR), JSMASK) + 1
+              K = (PAIR - P) + 1
 
-           NC1 = NC(I)
-           IFC1 = IFC(I)
-           NC2 = NC(J)
-           IFC2 = IFC(J)
+              NC1 = NC(I)
+              IFC1 = IFC(I)
+              NC2 = NC(J)
+              IFC2 = IFC(J)
 
-           CALL INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
-                MAXCYC(2),MAXTHR(2),BLKTHR(2),JSTRAT(2), TOL, GVB(1,1,1,PAIR),GVB(1,1,2,PAIR),&
-                WORK(1,PAIR),LWORK, IWORK(1,PAIR),LIWORK, LROTP(1,PAIR),INFOP(1,PAIR))
+              CALL INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
+                   MAXCYC(2),MAXTHR(2),BLKTHR(2),JSTRAT(2), TOL, GVB(1,1,1,K),GVB(1,1,2,K),&
+                   WORK(1,K),LWORK, IWORK(1,K),LIWORK, LROTP(1,K),INFOP(1,K))
 
-           IF (INFOP(1,PAIR) .EQ. -1) THEN ! no-op
-              CONTINUE ! INFOP(1,PAIR) = 0
-           ELSE IF (INFOP(1,PAIR) .EQ. 0) THEN
-              CONTINUE
-           ELSE
-              !$OMP CRITICAL
-              INFO(1) = 4 * PAIR
-              INFO(2) = INFOP(2,PAIR)
-              !$OMP END CRITICAL
-           END IF
+              IF (INFOP(1,K) .EQ. -1) THEN ! no-op
+                 CONTINUE
+              ELSE IF (INFOP(1,K) .EQ. 0) THEN
+                 CONTINUE
+              ELSE
+                 !$OMP CRITICAL
+                 INFO(1) = 4 * PAIR
+                 INFO(2) = INFOP(2,K)
+                 !$OMP END CRITICAL
+              END IF
+           END DO
+           !$OMP END DO
+           !$OMP END PARALLEL
+
+           IF (INFO(1) .NE. 0) RETURN
+           DO K = 1, MAXTHR(1)
+              LROT(1) = LROT(1) + LROTP(1,K)
+              LROT(2) = LROT(2) + LROTP(2,K)
+           END DO
         END DO
-        !$OMP END DO
-        !$OMP END PARALLEL
-
-        IF (INFO(1) .NE. 0) RETURN
 
      END DO ! STP
-
-     LROT = 0
-     DO PAIR = 1, NPAIRS
-        LROT(1) = LROT(1) + LROTP(1,PAIR)
-        LROT(2) = LROT(2) + LROTP(2,PAIR)
-     END DO
 
      NROT(1) = NROT(1) + LROT(1)
      NROT(2) = NROT(2) + LROT(2)
@@ -341,10 +340,10 @@ SUBROUTINE VJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, JSTRAT, TOL
      IF (INFO(2) .GT. 0) L_IWORK = INFO(2)
 
      I_GVB = 1
-     L_GVB = (LDAC*NBSIZ2) * MYNBL
+     L_GVB = 2 * (LDAC*NBSIZ2) * MAXTHR(1)
 
      I_WRK = I_GVB + L_GVB
-     L_WRK = L_WORK * NPAIRS
+     L_WRK = L_WORK * MAXTHR(1)
 
      MYLWRK = L_GVB + L_WRK
 
@@ -366,6 +365,14 @@ SUBROUTINE VJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, JSTRAT, TOL
      I_JP = I_IFC + L_IFC
      L_JP = J
 
+     J = MAXTHR(1)
+     IF (J .LT. I_CL1_LEN) THEN
+        J = I_CL1_LEN
+     ELSE
+        I = MOD(J, I_CL1_LEN)
+        IF (I .NE. 0) J = J + (I_CL1_LEN - I)
+     END IF
+
      I_LP = I_JP + L_JP
      L_LP = J
 
@@ -373,7 +380,7 @@ SUBROUTINE VJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, JSTRAT, TOL
      L_IP = J
 
      I_IWRK = I_IP + L_IP
-     L_IWRK = L_IWORK * NPAIRS
+     L_IWRK = L_IWORK * MAXTHR(1)
 
      MYLIWRK = L_NC + L_IFC + L_JP + L_LP + L_IP + L_IWRK
   END IF
