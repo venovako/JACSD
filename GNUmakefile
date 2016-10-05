@@ -211,11 +211,11 @@ xVJAC1.o: xVJAC1.F90 csd.mod GNUmakefile
 xDJAC2.exe: xDJAC2.o CSD.o $(LIBS) GNUmakefile
 	$(FC) $(FCFLAGS) xDJAC2.o CSD.o -o$@ $(LDFLAGS)
 
-xVJAC2.exe: xVJAC2.o CSD.o $(LIBS) GNUmakefile
-	$(FC) $(FCFLAGS) xVJAC2.o CSD.o -o$@ $(LDFLAGS)
-
 xDJAC2.o: xDJAC2.F90 csd.mod GNUmakefile
 	$(FC) $(FCFLAGS) -c xDJAC2.F90
+
+xVJAC2.exe: xVJAC2.o CSD.o $(LIBS) GNUmakefile
+	$(FC) $(FCFLAGS) xVJAC2.o CSD.o -o$@ $(LDFLAGS)
 
 xVJAC2.o: xVJAC2.F90 csd.mod GNUmakefile
 	$(FC) $(FCFLAGS) -c xVJAC2.F90
