@@ -25,6 +25,7 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
   !DIR$ ASSUME (MOD(LWORK,D_CL1_LEN) .EQ. 0)
   !DIR$ ASSUME (MOD(LIWORK,I_CL1_LEN) .EQ. 0)
 
+  INFOP = 0
   NCF = NC1 + NC2
 
   CALL DSYRK('U', 'T', NC1, M, D_ONE, G(1,IFC1), LDG, D_ZERO, GB(1, 1), LDAC)
@@ -48,7 +49,7 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
      IF (INFOP(1) .EQ. 0) THEN
         IF (LROTP(1) .GT. 0) THEN
            DO I = 1, M, NCF
-              J = MIN(NCF, M - I + 1)
+              J = MIN(NCF, (M - I) + 1)
               CALL DGEMM('N','N', J,NC1,NC2, D_ONE, G(I,IFC2), LDG, VB(NC1+1, 1), LDAC, D_ZERO, GB(1,1), LDAC)
               CALL DGEMM('N','N', J,NC1,NC1, D_ONE, G(I,IFC1), LDG, VB(1, 1), LDAC, D_ONE, GB(1,1), LDAC)
               CALL DGEMM('N','N', J,NC2,NC1, D_ONE, G(I,IFC1), LDG, VB(1, NC1+1), LDAC, D_ZERO, GB(1,NC1+1), LDAC)
@@ -57,7 +58,7 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
               CALL DLACPY('A', J, NC2, GB(1,NC1+1), LDAC, G(I,IFC2), LDG)
            END DO
            DO I = 1, N, NCF
-              J = MIN(NCF, N - I + 1)
+              J = MIN(NCF, (N - I) + 1)
               CALL DGEMM('N','N', J,NC1,NC2, D_ONE, V(I,IFC2), LDV, VB(NC1+1, 1), LDAC, D_ZERO, GB(1,1), LDAC)
               CALL DGEMM('N','N', J,NC1,NC1, D_ONE, V(I,IFC1), LDV, VB(1, 1), LDAC, D_ONE, GB(1,1), LDAC)
               CALL DGEMM('N','N', J,NC2,NC1, D_ONE, V(I,IFC1), LDV, VB(1, NC1+1), LDAC, D_ZERO, GB(1,NC1+1), LDAC)
@@ -65,11 +66,7 @@ SUBROUTINE INVJAC2(NC1,IFC1, NC2,IFC2, M,N, G,LDG, V,LDV, NBSIZ2,LDAC,&
               CALL DLACPY('A', J, NC1, GB(1,1), LDAC, V(I,IFC1), LDV)
               CALL DLACPY('A', J, NC2, GB(1,NC1+1), LDAC, V(I,IFC2), LDV)
            END DO
-        ELSE
-           INFOP(1) = -1
         END IF
-     ELSE
-        INFOP(1) = 2
      END IF
   ELSE
      INFOP(1) = 1
@@ -187,14 +184,12 @@ SUBROUTINE MYVJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, NBSIZE, N
                    MAXCYC(2),MAXTHR(2),BLKTHR(2),JSTRAT(2), TOL, GVB(1,1,1,K),GVB(1,1,2,K),&
                    WORK(1,K),LWORK, IWORK(1,K),LIWORK, LROTP(1,K),INFOP(1,K))
 
-              IF (INFOP(1,K) .EQ. -1) THEN ! no-op
-                 CONTINUE
-              ELSE IF (INFOP(1,K) .EQ. 0) THEN
-                 CONTINUE
-              ELSE
+              IF (INFOP(1,K) .NE. 0) THEN
                  !$OMP CRITICAL
-                 INFO(1) = 4 * PAIR
+                 INFO(1) = INFOP(1,K)
                  INFO(2) = INFOP(2,K)
+                 IF (.NOT. FAST) WRITE (UNIT=GET_IOUNIT('E'), FMT='(A,I5,A,I10,A,I10,A)') &
+                      'PAIR(', PAIR, '), INFO1(', INFO(1), '), INFO2(', INFO(2), ')'
                  !$OMP END CRITICAL
               END IF
            END DO
@@ -255,8 +250,6 @@ SUBROUTINE VJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, JSTRAT, TOL
   !DIR$ ASSUME (MOD(LWORK,D_CL1_LEN) .EQ. 0)
   !DIR$ ASSUME (MOD(LIWORK,I_CL1_LEN) .EQ. 0)
 
-  IF (FAST) GOTO 1
-
   IF (M .LT. 0) THEN
      INFO(1) = -2
      INFO(2) = M
@@ -294,17 +287,9 @@ SUBROUTINE VJAC2(FAST, M, N, G, LDG, V, LDV, MAXCYC, MAXTHR, BLKTHR, JSTRAT, TOL
      INFO = 0
   END IF
 
-  IF (INFO(1) .NE. 0) THEN
-     RETURN
-  ELSE IF (N .EQ. 0) THEN
-     NROT = 0
-     RETURN
-  ELSE
-     GOTO 2
-  END IF
-
-1 INFO = 0
-2 CONTINUE
+  NROT = 0
+  IF (INFO(1) .NE. 0) RETURN
+  IF (N .EQ. 0) RETURN
 
   IF (JSTRAT(1) .LT. JSMENC) THEN
      NPAIRS = 1
