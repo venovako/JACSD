@@ -134,13 +134,13 @@ endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
-FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS= #-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
 DBGFLAGS=-g -C -qinfo=mt #:unset
-FPUFLAGS=-qfloat=nans:subnormals
+FPUFLAGS= #-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
 endif # ?NDEBUG
-LIBFLAGS=-qessl -WF,-DUSE_ESSL -I. #-WF,-DUSE_OPENBLAS -I.
+LIBFLAGS=-WF,-DUSE_ESSL -I. #-qessl -WF,-DUSE_OPENBLAS -I.
 LDFLAGS=-L. -ljstrat -lqxblas -L/usr/lib64 -lesslsmp6464 -lessl6464 #-L$(HOME)/OpenBLAS-ibm/lib -lopenblas_omp
 #-L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
 else # GNU Fortran
@@ -176,7 +176,7 @@ endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
 ifeq ($(CPU),pwr8)
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xVJAC2.exe xDGESVD.exe
+all: xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe
 else
 all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
 endif
