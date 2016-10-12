@@ -119,8 +119,12 @@ OPTFLAGS=-Og -mcpu=power8
 DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
-LIBFLAGS=-I. -DUSE_ATLAS #-DUSE_OPENBLAS
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lptcblas -lptf77blas -lcblas -lf77blas -latlas #-L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
+LIBFLAGS=-I. -DUSE_ATLAS
+ifeq ($(USE_ATLAS),pt)
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lptcblas -lptf77blas -latlas
+else # sequential ATLAS
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lcblas -lf77blas -latlas
+endif # ?parallel ATLAS
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv
