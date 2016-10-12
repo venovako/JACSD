@@ -79,7 +79,7 @@ OPTFLAGS=-Og -mcpu=power8
 DBGFLAGS=-g
 FPUFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-gcc/include #-L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
+LIBFLAGS=-DUSE_ATLAS -I$(HOME)/atlas/include #-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-gcc/include #-L$(HOME)/OpenBLAS-gcc/lib -lopenblas_omp
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
 ARFLAGS=rsv

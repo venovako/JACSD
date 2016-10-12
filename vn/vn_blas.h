@@ -56,7 +56,8 @@
 #error BLAS(VN_REAL_KIND) not supported by IBM ESSL
 #endif /* ?VN_REAL_KIND */
 VN_EXTERN_C void VN_BLAS_R(syrk)(const char *const UPLO, const char *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
-#else /* OpenBLAS */
+#endif /* USE_ESSL */
+#ifdef USE_OPENBLAS /* USE_OPENBLAS */
 #include "f77blas.h"
 #if (4 == VN_REAL_KIND)
 #define VN_BLAS_R(name) s##name##_
@@ -70,7 +71,19 @@ VN_EXTERN_C void VN_BLAS_R(syrk)(const char *const UPLO, const char *const TRANS
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by OpenBLAS
 #endif /* ?VN_REAL_KIND */
-#endif /* USE_ESSL */
-#endif /* __ICC */
+#endif /* USE_OPENBLAS */
+#ifdef USE_ATLAS
+#if (4 == VN_REAL_KIND)
+#define VN_BLAS_R(name) s##name##_
+#define VN_BLAS_C(name) c##name##_
+#elif (8 == VN_REAL_KIND)
+#define VN_BLAS_R(name) d##name##_
+#define VN_BLAS_C(name) z##name##_
+#else /* unsupported */
+#error BLAS(VN_REAL_KIND) not supported by ATLAS
+#endif /* ?VN_REAL_KIND */
+VN_EXTERN_C void VN_BLAS_R(syrk)(const char *const UPLO, const char *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
+#endif /* USE_ATLAS */
+#endif /* ?__ICC */
 
 #endif /* !VN_BLAS_H */
