@@ -88,11 +88,11 @@ C11FLAGS=-DUSE_IBM -DUSE_PWR8 -qlanglvl=extc1x
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qreport -qhot=level=1:vector -qprefetch=aggressive
 DGBFLAGS=-DNDEBUG
-FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS=
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qreport
 DBGFLAGS=-g -qcheck
-FPUFLAGS=-qfloat=nans:spnans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS=
 endif # ?NDEBUG
 LIBFLAGS=-pthread
 else # GNU/Clang

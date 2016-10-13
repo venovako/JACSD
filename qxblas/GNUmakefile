@@ -91,11 +91,11 @@ FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=om
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
-FPUFLAGS=-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS=
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
 DBGFLAGS=-g -C -qinfo=mt #:unset
-FPUFLAGS=-qfloat=nans:subnormals
+FPUFLAGS=
 endif # ?NDEBUG
 LIBFLAGS=-I..
 else # GNU Fortran

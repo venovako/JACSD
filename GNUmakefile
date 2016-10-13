@@ -10,7 +10,7 @@ endif # !WP
 ifndef RM
 RM=rm -fv
 endif # !RM
-LIBS=libjstrat.a libqxblas.a # libvn.a
+LIBS=libjstrat.a libqxblas.a libvn.a
 ifeq ($(CPU),x64) # Xeon
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
@@ -46,9 +46,9 @@ FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
 ifeq ($(ARCH),Darwin)
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 else # Linux
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 endif # ?Darwin
 else ifeq ($(CPU),x100) # Knights Corner
 AR=xiar
@@ -78,7 +78,7 @@ DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug p
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl # -lvn after -lqxblas
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 else ifeq ($(CPU),x200) # Knights Landing
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
@@ -104,7 +104,7 @@ DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug p
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
-LDFLAGS=-L. -ljstrat -lqxblas -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind # -lvn after -lqxblas
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
 else ifeq ($(CPU),power8) # IBM POWER8LE
 AR=ar
 ARFLAGS=rsv
@@ -121,9 +121,9 @@ FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
 LIBFLAGS=-I. -DUSE_ATLAS
 ifeq ($(USE_ATLAS),pt)
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lptcblas -lptf77blas -latlas
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lptf77blas -lptcblas -latlas
 else # sequential ATLAS
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lcblas -lf77blas -latlas
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lf77blas -lcblas -latlas
 endif # ?parallel ATLAS
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
@@ -138,15 +138,14 @@ endif # ?USE_MPI
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
 DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
-FPUFLAGS= #-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS=
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
 DBGFLAGS=-g -C -qinfo=mt #:unset
-FPUFLAGS= #-qfloat=nans:subnormals -qstrict=nans:infinities:subnormals:zerosigns:operationprecision
+FPUFLAGS=
 endif # ?NDEBUG
-LIBFLAGS=-I. -WF,-DUSE_ESSL #-qessl -WF,-DUSE_OPENBLAS
-LDFLAGS=-L. -ljstrat -lqxblas -L/usr/lib64 -lesslsmp6464 -lessl6464 #-L$(HOME)/OpenBLAS-ibm/lib -lopenblas_omp
-#-L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
+LIBFLAGS=-I. -WF,-DUSE_ESSL #-qessl
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L/usr/lib64 -lesslsmp6464 -lessl6464
 else # GNU Fortran
 AR=ar
 ARFLAGS=rsv
@@ -175,15 +174,11 @@ DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
 LIBFLAGS=-I.
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/lapack -ltmglib -llapack -lrefblas # -lvn after -lqxblas
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L$(HOME)/lapack -ltmglib -llapack -lrefblas
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-ifeq ($(CPU),pwr8)
-all: xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe
-else
-all: xDJAC0.exe xDJAC1.exe xDJAC2.exe xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xJCSD.exe
-endif
+all: xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xDJAC0.exe xDJAC1.exe xDJAC2.exe xJCSD.exe
 
 help:
 	@echo "make [WP=4|8|10|16] [CPU=x64|x100|power8|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
