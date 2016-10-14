@@ -121,9 +121,9 @@ FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 endif # ?NDEBUG
 LIBFLAGS=-I. -DUSE_ATLAS
 ifeq ($(USE_ATLAS),pt)
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lptf77blas -lptcblas -latlas
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -lptlapack -llapack -lptf77blas -lptcblas -latlas
 else # sequential ATLAS
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -llapack -lf77blas -lcblas -latlas
+LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -lptlapack -llapack -lf77blas -lcblas -latlas
 endif # ?parallel ATLAS
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
 AR=ar
