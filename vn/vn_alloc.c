@@ -26,7 +26,7 @@ void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_int
   void *ret = NULL;
   vn_integer ld_ = MkInt(0);
   if ((m > MkInt(0)) && (n > MkInt(0)) && szT) {
-    if (szT <= VN_ALIGN_BYTES) {
+    if ((szT <= VN_ALIGN_BYTES) && !(VN_ALIGN_BYTES % szT)) {
       const vn_integer noe = VN_ALIGN_BYTES / szT;
       const vn_integer rem = m % noe;
       if (rem)
