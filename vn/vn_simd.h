@@ -47,6 +47,7 @@
 
 #ifndef VN_SIMD_LANES_R
 #if (VN_REAL_KIND == 10)
+/* no vectorization for extended, but if it were... */
 #define VN_SIMD_LANES_R ((VN_SIMD_BYTES) / 16)
 #else /* VN_REAL KIND != 10 */
 #define VN_SIMD_LANES_R ((VN_SIMD_BYTES) / (VN_REAL_KIND))
@@ -57,6 +58,7 @@
 
 #ifndef VN_SIMD_LANES_C
 #if (VN_REAL_KIND == 10)
+/* no vectorization for extended, but if it were... */
 #define VN_SIMD_LANES_C ((VN_SIMD_BYTES) / 32)
 #else /* VN_REAL KIND != 10 */
 #define VN_SIMD_LANES_C ((VN_SIMD_BYTES) / (2 * (VN_REAL_KIND)))

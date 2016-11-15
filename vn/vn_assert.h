@@ -18,7 +18,6 @@
 #endif /* !VN_STATIC_ASSERT */
 
 #ifndef VN_ASSERT
-#ifdef __GNUC__
 #ifdef __ICC
 #ifdef NDEBUG
 #define VN_ASSERT(cond) __assume(cond)
@@ -28,9 +27,6 @@
 #else /* !__ICC */
 #define VN_ASSERT(cond) assert(cond)
 #endif /* __ICC */
-#else /* !__GNUC__ */
-#define VN_ASSERT(cond) assert(cond)
-#endif /* __GNUC__ */
 #else /* VN_ASSERT */
 #error VN_ASSERT already defined
 #endif /* !VN_ASSERT */

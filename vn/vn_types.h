@@ -7,13 +7,19 @@
 
 #ifdef __ICC
 #include <mathimf.h>
-#endif /* __ICC */
-
+#else /* !__ICC */
 #ifdef __cplusplus
 #include <complex>
 #ifndef __CUDACC__
 #include <math>
 #endif /* !__CUDACC__ */
+#else /* !__cplusplus */
+#include <complex.h>
+#include <math.h>
+#endif /* __cplusplus */
+#endif /* __ICC */
+
+#ifdef __cplusplus
 /* C headers */
 #include <cfloat>
 #include <climits>
@@ -358,8 +364,6 @@ typedef vn_complex_10 vn_complex;
 /* default array order is column-major (Fortran) */
 #ifndef MkIx2
 #define MkIx2 VN_A2F
-#else /* MkIx2 */
-#error MkIx2 already defined
 #endif /* !MkIx2 */
 
 #endif /* VN_TYPES_H */
