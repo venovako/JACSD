@@ -24,6 +24,11 @@
 #else /* MKL_Complex16 */
 #error MKL_Complex16 already defined
 #endif /* !MKL_Complex16 */
+#if (8 == VN_INTEGER_KIND)
+#ifndef MKL_ILP64
+#define MKL_ILP64
+#endif /* !MKL_ILP64 */
+#endif /* ?VN_INTEGER_KIND */
 #include <mkl.h>
 #if (4 == VN_REAL_KIND)
 #define VN_BLAS_R(name) s##name
@@ -55,7 +60,9 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by IBM ESSL
 #endif /* ?VN_REAL_KIND */
-VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const UPLO, const vn_character *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
+#ifndef VN_BLAS_NO_PROTO_SYRK
+#define VN_BLAS_NO_PROTO_SYRK
+#endif /* !VN_BLAS_NO_PROTO_SYRK */
 #endif /* USE_ESSL */
 #ifdef USE_OPENBLAS /* USE_OPENBLAS */
 #include "f77blas.h"
@@ -82,8 +89,14 @@ VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const UPLO, const vn_charac
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by ATLAS
 #endif /* ?VN_REAL_KIND */
-VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const UPLO, const vn_character *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
+#ifndef VN_BLAS_NO_PROTO_SYRK
+#define VN_BLAS_NO_PROTO_SYRK
+#endif /* !VN_BLAS_NO_PROTO_SYRK */
 #endif /* USE_ATLAS */
 #endif /* ?__ICC */
+
+#ifdef VN_BLAS_NO_PROTO_SYRK
+VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const UPLO, const vn_character *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
+#endif /* VN_BLAS_NO_PROTO_SYRK */
 
 #endif /* !VN_BLAS_H */
