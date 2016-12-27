@@ -184,7 +184,7 @@ vn_integer vn_mtxvis_start(vn_mtxvis_ctx **const ctx, const char *const fname, c
   }
 
   /* allocate C, set ldC */
-  VN_SYSP_CALL((*ctx)->C = VN_ALLOC2(vn_real, (*ctx)->mC, (*ctx)->nC, &((*ctx)->ldC), MkReal(-1)));
+  VN_SYSP_CALL((*ctx)->C = VN_ALLOC2(vn_real, (*ctx)->mC, (*ctx)->nC, &((*ctx)->ldC), MkInt(-1)));
 
   const vn_integer asc = ((*ctx)->act) & MkInt(16);
   const vn_integer fnl = ((fname_len > MkInt(7)) ? MkInt(7) : fname_len);
@@ -237,7 +237,8 @@ static inline uint32_t normalise(const vn_real x, const vn_real minv, const vn_r
     return 0u;
   if (!isfinite(x)) /* +Inf || NaN */
     return 255u;
-  const vn_real y = ((x - minv) / wid) * MkReal(253.0) + MkReal(1.0);
+  /* const vn_real y = ((x - minv) / wid) * MkReal(253.0) + MkReal(1.0); */
+  const vn_real y = fma((x - minv) / wid, MkReal(253.0), MkReal(1.0));
   return (uint32_t)lround(y);
 }
 
