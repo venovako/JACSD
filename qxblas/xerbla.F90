@@ -72,8 +72,6 @@ SUBROUTINE XERBLA(SRNAME, INFO)
 !
 ! =====================================================================
 !
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: LEN_TRIM
 !     ..
 !     .. Executable Statements ..
 !

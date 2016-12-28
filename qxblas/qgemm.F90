@@ -212,9 +212,6 @@ SUBROUTINE QGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !     .. Local Scalars ..
   REAL(WP) :: TEMP
   INTEGER :: I,INFO,J,L,NCOLA,NROWA,NROWB

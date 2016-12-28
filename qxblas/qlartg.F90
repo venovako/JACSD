@@ -121,13 +121,6 @@ SUBROUTINE QLARTG(F, G, CS, SN, R)
 !     .. External Functions ..
   REAL(WP), EXTERNAL :: QLAMCH
 !     ..
-!     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: LOG, MAX
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: ABS, HYPOT
-#endif
-  INTEGER, INTRINSIC :: INT
-!     ..
 !     .. Executable Statements ..
 !
   SAFMIN = QLAMCH('S')

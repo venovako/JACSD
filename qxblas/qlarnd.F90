@@ -100,12 +100,6 @@ FUNCTION QLARND(IDIST, ISEED)
 !     .. External Functions ..
   REAL(WP), EXTERNAL :: QLARAN
 !     ..
-!     .. Intrinsic Functions ..
-  REAL(WP), INTRINSIC :: LOG
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: COS, SQRT
-#endif
-!     ..
 !     .. Executable Statements ..
 !
 !     Generate a real random number from a uniform (0,1) distribution

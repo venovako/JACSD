@@ -62,12 +62,6 @@ SUBROUTINE XROTG(CA,CB,C,S)
   COMPLEX(WP) :: ALPHA
   REAL(WP) :: NORM, ACA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: ABS, HYPOT
-  COMPLEX(WP), INTRINSIC :: CONJG
-#endif
-!     ..
   ACA = ABS(CA)
   IF (ACA .EQ. RZERO) THEN
      C = RZERO

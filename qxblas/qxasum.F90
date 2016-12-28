@@ -75,11 +75,6 @@ FUNCTION QXASUM(N,CX,INCX)
   REAL(WP) :: STEMP
   INTEGER :: I,NINCX
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: ABS, AIMAG, REAL
-#endif
-!     ..
   QXASUM = 0.0E0_WP
   STEMP = 0.0E0_WP
   IF ((N .LE. 0) .OR. (INCX .LE. 0)) RETURN

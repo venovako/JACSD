@@ -73,11 +73,6 @@ FUNCTION QASUM(N,SX,INCX)
   REAL(WP) :: STEMP
   INTEGER :: I,NINCX
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: ABS
-#endif
-!     ..
   QASUM = 0.0e0_WP
   STEMP = 0.0e0_WP
   IF ((N .LE. 0) .OR. (INCX .LE. 0)) RETURN

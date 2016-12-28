@@ -193,9 +193,6 @@ SUBROUTINE QSYRK(UPLO,TRANS,N,K,ALPHA,A,LDA,BETA,C,LDC)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !     .. Local Scalars ..
   REAL(WP) :: TEMP
   INTEGER :: I,INFO,J,L,NROWA

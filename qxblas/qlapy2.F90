@@ -84,12 +84,6 @@ FUNCTION QLAPY2(X, Y)
 !     .. Local Scalars ..
   REAL(WP) :: W, XABS, YABS, Z
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: ABS, SQRT
-#endif
-  REAL(WP), INTRINSIC :: MAX, MIN
-!     ..
 !     .. Executable Statements ..
 !
   XABS = ABS(X)

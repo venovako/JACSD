@@ -222,12 +222,6 @@ SUBROUTINE XTBSV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  COMPLEX(WP), INTRINSIC :: CONJG
-#endif
-  INTEGER, INTRINSIC :: MAX,MIN
-!     ..
 !
 !     Test the input parameters.
 !

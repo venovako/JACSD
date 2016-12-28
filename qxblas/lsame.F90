@@ -64,8 +64,6 @@ LOGICAL FUNCTION LSAME(CA,CB)
 !
 ! =====================================================================
 !
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: ICHAR
 !     ..
 !     .. Local Scalars ..
   INTEGER :: INTA,INTB

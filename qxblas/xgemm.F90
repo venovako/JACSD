@@ -213,12 +213,6 @@ SUBROUTINE XGEMM(TRANSA,TRANSB,M,N,K,ALPHA,A,LDA,B,LDB,BETA,C,LDC)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  COMPLEX(WP), INTRINSIC :: CONJG
-#endif
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !     .. Local Scalars ..
   COMPLEX(WP) :: TEMP
   INTEGER :: I,INFO,J,L,NCOLA,NROWA,NROWB

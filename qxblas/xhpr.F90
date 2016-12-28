@@ -164,12 +164,6 @@ SUBROUTINE XHPR(UPLO,N,ALPHA,X,INCX,AP)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  COMPLEX(WP), INTRINSIC :: CONJG
-  REAL(WP), INTRINSIC :: REAL
-#endif
-!     ..
 !
 !     Test the input parameters.
 !

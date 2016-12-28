@@ -127,9 +127,6 @@ SUBROUTINE QLACPY( UPLO, M, N, A, LDA, B, LDB )
 !     .. External Functions ..
   LOGICAL, EXTERNAL :: LSAME
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MIN
-!     ..
 !     .. Executable Statements ..
 !
   IF (LSAME(UPLO, 'U')) THEN

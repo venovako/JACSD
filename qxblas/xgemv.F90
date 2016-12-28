@@ -193,12 +193,6 @@ SUBROUTINE XGEMV(TRANS,M,N,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  COMPLEX(WP), INTRINSIC :: CONJG
-#endif
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !
 !     Test the input parameters.
 !

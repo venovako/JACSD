@@ -175,11 +175,6 @@ SUBROUTINE XTPMV(UPLO,TRANS,DIAG,N,AP,X,INCX)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM  
-  COMPLEX(WP), INTRINSIC :: CONJG
-#endif
-!     ..
 !
 !     Test the input parameters.
 !

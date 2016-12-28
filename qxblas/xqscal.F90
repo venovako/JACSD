@@ -73,12 +73,6 @@ SUBROUTINE XQSCAL(N,SA,CX,INCX)
 !     .. Local Scalars ..
   INTEGER :: I,NINCX
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: AIMAG, REAL
-  COMPLEX(WP), INTRINSIC :: CMPLX
-#endif
-!     ..
   IF ((N .LE. 0) .OR. (INCX .LE. 0)) RETURN
   IF (INCX .EQ. 1) THEN
 !

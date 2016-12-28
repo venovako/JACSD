@@ -72,11 +72,6 @@ INTEGER FUNCTION IQAMAX(N,SX,INCX)
   REAL(WP) :: SMAX
   INTEGER :: I,IX
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM  
-  REAL(WP), INTRINSIC :: ABS
-#endif
-!     ..
   IQAMAX = 0
   IF ((N .LT. 1) .OR. (INCX .LE. 0)) RETURN
   IQAMAX = 1

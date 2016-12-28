@@ -67,11 +67,6 @@ SUBROUTINE QROTG(SA, SB, C, S)
 !     .. Local Scalars ..
   REAL(WP) :: R, ROE, SCAL, Z
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  REAL(WP), INTRINSIC :: ABS, HYPOT, SIGN
-#endif
-!     ..
   ROE = SB
   IF (ABS(SA) .GT. ABS(SB)) ROE = SA
   SCAL = ABS(SA) + ABS(SB)

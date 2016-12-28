@@ -221,9 +221,6 @@ SUBROUTINE QTBSV(UPLO,TRANS,DIAG,N,K,A,LDA,X,INCX)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX,MIN
-!     ..
 !
 !     Test the input parameters.
 !

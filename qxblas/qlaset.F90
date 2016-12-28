@@ -134,9 +134,6 @@ SUBROUTINE QLASET( UPLO, M, N, ALPHA, BETA, A, LDA )
 !     .. External Functions ..
   LOGICAL, EXTERNAL :: LSAME
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MIN
-!     ..
 !     .. Executable Statements ..
 !
   IF (LSAME(UPLO, 'U')) THEN

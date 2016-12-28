@@ -217,9 +217,6 @@ SUBROUTINE QGBMV(TRANS,M,N,KL,KU,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX,MIN
-!     ..
 !
 !     Test the input parameters.
 !

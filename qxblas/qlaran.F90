@@ -91,9 +91,6 @@ FUNCTION QLARAN(ISEED)
   INTEGER :: IT1, IT2, IT3, IT4
   REAL(WP) :: RNDOUT
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MOD
-!     ..
 !     .. Executable Statements ..
 1 CONTINUE
 !

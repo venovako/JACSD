@@ -217,9 +217,6 @@ SUBROUTINE QSBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX,MIN
-!     ..
 !
 !     Test the input parameters.
 !

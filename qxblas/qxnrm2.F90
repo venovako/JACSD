@@ -80,11 +80,6 @@ FUNCTION QXNRM2(N, X, INCX)
   REAL(WP) :: NORM, SCAL, SSQ, TEMP
   INTEGER :: IX
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM  
-  REAL(WP), INTRINSIC :: ABS, AIMAG, REAL, SQRT
-#endif
-!     ..
   IF ((N .LT. 1) .OR. (INCX .LT. 1)) THEN
      NORM = ZERO
   ELSE

@@ -179,9 +179,6 @@ SUBROUTINE QSYR2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !
 !     Test the input parameters.
 !

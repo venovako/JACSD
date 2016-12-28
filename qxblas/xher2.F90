@@ -183,13 +183,6 @@ SUBROUTINE XHER2(UPLO,N,ALPHA,X,INCX,Y,INCY,A,LDA)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  COMPLEX(WP), INTRINSIC :: CONJG
-  REAL(WP), INTRINSIC :: REAL
-#endif
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !
 !     Test the input parameters.
 !

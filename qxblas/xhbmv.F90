@@ -221,13 +221,6 @@ SUBROUTINE XHBMV(UPLO,N,K,ALPHA,A,LDA,X,INCX,BETA,Y,INCY)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-#ifndef USE_IBM
-  COMPLEX(WP), INTRINSIC :: CONJG
-  REAL(WP), INTRINSIC :: REAL
-#endif
-  INTEGER, INTRINSIC :: MAX,MIN
-!     ..
 !
 !     Test the input parameters.
 !

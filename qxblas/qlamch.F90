@@ -90,10 +90,6 @@ FUNCTION QLAMCH(CMACH)
 !     .. External Functions ..
   LOGICAL, EXTERNAL :: LSAME
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: DIGITS, MAXEXPONENT, MINEXPONENT, RADIX
-  REAL(WP), INTRINSIC :: EPSILON, HUGE, TINY
-!     ..
 !     .. Executable Statements ..
 !
 !

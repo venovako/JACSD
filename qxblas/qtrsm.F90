@@ -206,9 +206,6 @@ SUBROUTINE QTRSM(SIDE,UPLO,TRANSA,DIAG,M,N,ALPHA,A,LDA,B,LDB)
 !     .. External Subroutines ..
   EXTERNAL :: XERBLA
 !     ..
-!     .. Intrinsic Functions ..
-  INTEGER, INTRINSIC :: MAX
-!     ..
 !     .. Local Scalars ..
   REAL(WP) :: TEMP
   INTEGER :: I,INFO,J,K,NROWA
