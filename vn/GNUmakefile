@@ -71,9 +71,9 @@ ARFLAGS=rsv
 CC=gcc
 C11FLAGS=-DUSE_GNU -DUSE_PWR8 -DVN_INTEGER_KIND=8 -std=gnu11
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DGBFLAGS=-DNDEBUG -fopt-info-optimized-vec
-FPUFLAGS=-ffp-contract=fast
+FPUFLAGS=-ffp-contract=fast -fno-math-errno
 else # DEBUG
 OPTFLAGS=-Og -mcpu=power8
 DBGFLAGS=-g
@@ -106,29 +106,25 @@ endif # ?Darwin
 ifdef NDEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -integrated-as
-else # Linux
-OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-endif # ?Darwin
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
-ifeq ($(ARCH),Darwin)
+DBGFLAGS=-DNDEBUG
 FPUFLAGS=-ffp-contract=on
-else
-FPUFLAGS=-ffp-contract=fast
+else # Linux
+OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
+FPUFLAGS=-ffp-contract=fast -fno-math-errno
 endif # ?Darwin
 else # DEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O0 -march=native -integrated-as
-else # Linux
-OPTFLAGS=-Og -march=native
-endif # ?Darwin
 DBGFLAGS=-g -ftrapv
-ifeq ($(ARCH),Darwin)
 FPUFLAGS=-ffp-contract=on
 else # Linux
+OPTFLAGS=-Og -march=native
+DBGFLAGS=-g -ftrapv
 FPUFLAGS=-ffp-contract=fast
 endif # ?Darwin
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS-gcc/include
+LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include
 endif # ?CPU
 CFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUFLAGS)
 

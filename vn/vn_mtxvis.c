@@ -316,7 +316,7 @@ vn_integer vn_mtxvis_stop(vn_mtxvis_ctx *const ctx)
               ps(bmp, jsx + (uint32_t)jj, isy + (uint32_t)ii, 127u);
         }
       }
-      (void)sprintf(bmpn + idot, "-%010d.bmp", k);
+      (void)sprintf(bmpn + idot, "-%010u.bmp", (uint32_t)k);
       if (vn_bmp_fwrite(bmp, bmpn))
         return MkInt(6);
     }
@@ -336,7 +336,7 @@ vn_integer vn_mtxvis_stop(vn_mtxvis_ctx *const ctx)
                 ps(bmp, jsx + (uint32_t)jj, isy + (uint32_t)ii, c);
           }
         }
-        (void)sprintf(bmpn + idot, "-%010d.bmp", k);
+        (void)sprintf(bmpn + idot, "-%010u.bmp", (uint32_t)k);
         if (vn_bmp_fwrite(bmp, bmpn))
           return MkInt(6);
       }
@@ -354,7 +354,7 @@ vn_integer vn_mtxvis_stop(vn_mtxvis_ctx *const ctx)
                 ps(bmp, jsx + (uint32_t)jj, isy + (uint32_t)ii, c);
           }
         }
-        (void)sprintf(bmpn + idot, "-%010d.bmp", k);
+        (void)sprintf(bmpn + idot, "-%010u.bmp", (uint32_t)k);
         if (vn_bmp_fwrite(bmp, bmpn))
           return MkInt(6);
       }
