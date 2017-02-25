@@ -1,3 +1,15 @@
+ifndef SHELL
+SHELL=/bin/bash
+endif # !SHELL
+ifndef ARCH
+ARCH=$(shell uname)
+endif # !ARCH
+ifndef WP
+WP=16
+endif # !WP
+ifndef RM
+RM=rm -fv
+endif # !RM
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
@@ -12,6 +24,8 @@ FC=ifort
 FORFLAGS=-DUSE_INTEL -DUSE_X64 -i8 -qopenmp -fexceptions -standard-semantics
 endif # ?USE_MPI
 #-prof-gen=srcpos,globdata,threadsafe
+CC=icc
+C11FLAGS=-DUSE_INTEL -DUSE_X64 -DVN_INTEGER_KIND=8 -std=c11 -fexceptions
 ifdef NFMA
 FMAFLAGS=-DNFMA
 else # FMA
@@ -19,20 +33,25 @@ FMAFLAGS=-fma
 endif # ?NFMA
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
+OPTCFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
+DBGCFLAGS=-DNDEBUG -qopt-report=5 -traceback -w3 -diag-disable=1572,2547,10397
 FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+FPUCFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
+ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O0 -xHost
-ifeq ($(ARCH),Darwin)
+OPTCFLAGS=-O0 -xHost
 DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-else # Linux
-DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-endif # ?Darwin
+DBGCFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=1572,2547,10397
 FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
-endif # ?NDEBUG
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
-ifeq ($(ARCH),Darwin)
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+FPUCFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 else # Linux
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+OPTFLAGS=-O0 -xHost
+OPTCFLAGS=-O0 -xHost
+DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+DBGCFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=1572,2547,10397
+FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
+FPUCFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?Darwin
+endif # ?NDEBUG

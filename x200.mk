@@ -1,3 +1,15 @@
+ifndef SHELL
+SHELL=/bin/bash
+endif # !SHELL
+ifndef ARCH
+ARCH=$(shell uname)
+endif # !ARCH
+ifndef WP
+WP=16
+endif # !WP
+ifndef RM
+RM=rm -fv
+endif # !RM
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 ifdef USE_MPI
@@ -12,14 +24,20 @@ FC=ifort
 FORFLAGS=-DUSE_INTEL -DUSE_X200 -i8 -qopenmp -fexceptions -standard-semantics
 endif # ?USE_MPI
 #-prof-gen=srcpos,globdata,threadsafe
+CC=icc
+C11FLAGS=-DUSE_INTEL -DUSE_X200 -DVN_INTEGER_KIND=8 -std=c11 -fexceptions
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost #-xMIC-AVX512
+OPTCFLAGS=-O$(NDEBUG) -xHost #-xMIC-AVX512
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
+DBGCFLAGS=-DNDEBUG -qopt-report=5 -traceback -w3 -diag-disable=1572,2547,10397
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
+FPUCFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
 OPTFLAGS=-O0 -xHost #-xMIC-AVX512
+OPTCFLAGS=-O0 -xHost #-xMIC-AVX512
 DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
+DBGCFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=1572,2547,10397
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
+FPUCFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
