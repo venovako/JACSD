@@ -10,116 +10,23 @@ endif # !WP
 ifndef RM
 RM=rm -fv
 endif # !RM
-ifeq ($(CPU),x64) # Xeon
-AR=xiar
-ARFLAGS=-qnoipo -lib rsv
-FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_X64 -i8 -fexceptions -standard-semantics
-ifdef NFMA
-FMAFLAGS=-DNFMA
-else # FMA
-FMAFLAGS=-fma
-endif # ?NFMA
-ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xHost
-DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
-FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
-else # DEBUG
-OPTFLAGS=-O0 -xHost
-ifeq ($(ARCH),Darwin)
-DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-else # Linux
-DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-endif # ?Darwin
-FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
-endif # ?NDEBUG
+ifeq ($(CPU),x64) # Xeon / Intel Fortran
+include ../x64.mk
 LIBFLAGS=-threads -I..
-else ifeq ($(CPU),x100) # Knights Corner
-AR=xiar
-ifdef NDEBUG
-ARFLAGS=-lib rsv
-else # DEBUG
-ARFLAGS=-qnoipo -lib rsv
-endif # ?NDEBUG
-FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_KNL -mmic -i8 -fexceptions -standard-semantics
-ifdef NDEBUG
-OPTFLAGS=-fast #-O$(NDEBUG)
-DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
-FPUFLAGS=-fma #-fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
-else # DEBUG
-OPTFLAGS=-O0
-DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
-endif # ?NDEBUG
+else ifeq ($(CPU),x100) # Knights Corner / Intel Fortran
+include ../x100.mk
 LIBFLAGS=-threads -I..
-else ifeq ($(CPU),x200) # Knights Landing
-AR=xiar
-ARFLAGS=-qnoipo -lib rsv
-FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_X200 -i8 -fexceptions -standard-semantics
-ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xMIC-AVX512 #-xHost
-DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
-FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
-else # DEBUG
-OPTFLAGS=-O0 -xMIC-AVX512 #-xHost
-DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -debug-parameters all -check all -warn all -traceback -diag-disable=10397
-FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
-endif # ?NDEBUG
+else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
+include ../x200.mk
 LIBFLAGS=-threads -I..
-else ifeq ($(CPU),power8) # IBM POWER8LE
-AR=ar
-ARFLAGS=rsv
-FC=gfortran
-FORFLAGS=-DUSE_GNU -DUSE_PWR8 -fdefault-integer-8 -frecursive -fstack-arrays -fopenmp
-ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
-FPUFLAGS=
-else # DEBUG
-OPTFLAGS=-Og -mcpu=power8
-DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
-FPUFLAGS=-ffpe-trap=invalid,zero,overflow
-endif # ?NDEBUG
+else ifeq ($(CPU),power8) # IBM POWER8LE / GNU Fortran
+include ../power8.mk
 LIBFLAGS=-I..
-else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
-AR=ar
-ARFLAGS=rsv
-FC=xlf2008_r
-FORFLAGS=-WF,-DUSE_IBM -WF,-DUSE_PWR8 -qintsize=8 -qnosave -qsclk=micro -qsmp=omp -qreport=smplist -qlanglvl=extended -qassert=contig
-ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8 -qhot=level=2:vector -qprefetch=aggressive
-DBGFLAGS=-WF,-DNDEBUG -qinfo=mt #:unset
-FPUFLAGS=
-else # DEBUG
-OPTFLAGS=-O0 -qmaxmem=-1 -qarch=auto -qtune=pwr8:smt8
-DBGFLAGS=-g -C -qinfo=mt #:unset
-FPUFLAGS=
-endif # ?NDEBUG
+else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL Fortran
+include ../pwr8.mk
 LIBFLAGS=-I..
 else # GNU Fortran
-AR=ar
-ARFLAGS=rsv
-FC=gfortran
-FORFLAGS=-DUSE_GNU -DUSE_X64 -fdefault-integer-8 -frecursive -fstack-arrays
-ifdef NDEBUG
-ifeq ($(ARCH),Darwin)
-OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-else # Linux
-OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-endif # ?Darwin
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
-FPUFLAGS=
-else # DEBUG
-ifeq ($(ARCH),Darwin)
-OPTFLAGS=-O0 -march=native -Wa,-q
-else # Linux
-OPTFLAGS=-O0 -march=native
-endif # ?Darwin
-DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
-FPUFLAGS=-ffpe-trap=invalid,zero,overflow
-endif # ?NDEBUG
+include ../gnu.mk
 LIBFLAGS=-I..
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)

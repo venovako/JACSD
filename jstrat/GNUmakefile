@@ -7,7 +7,7 @@ endif # !ARCH
 ifndef RM
 RM=rm -fv
 endif # !RM
-ifeq ($(CPU),x64) # Xeon
+ifeq ($(CPU),x64) # Xeon / Intel C
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
@@ -31,7 +31,7 @@ endif # ?Darwin
 FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-pthread
-else ifeq ($(CPU),x100) # Knights Corner
+else ifeq ($(CPU),x100) # Knights Corner / Intel C
 AR=xiar
 ifdef NDEBUG
 ARFLAGS=-lib rsv
@@ -50,44 +50,44 @@ DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug p
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-pthread
-else ifeq ($(CPU),x200)
+else ifeq ($(CPU),x200) # Knights Landing / Intel C
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
 C11FLAGS=-DUSE_INTEL -DUSE_X200 -std=c11 -fexceptions
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xMIC-AVX512 #-xHost
+OPTFLAGS=-O$(NDEBUG) -xHost #-xMIC-AVX512
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -w3 -diag-disable=2547,10397
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 else # DEBUG
-OPTFLAGS=-O0 -xMIC-AVX512 #-xHost
+OPTFLAGS=-O0 -xHost #-xMIC-AVX512
 DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -check=stack,uninit -traceback -w3 -diag-disable=2547,10397
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
 LIBFLAGS=-pthread
-else ifeq ($(CPU),power8) # IBM POWER8LE
+else ifeq ($(CPU),power8) # IBM POWER8LE / GNU C
 AR=ar
 ARFLAGS=rsv
 CC=gcc
 C11FLAGS=-DUSE_GNU -DUSE_PWR8 -std=gnu11
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
-FPUFLAGS=-ffp-contract=fast
+FPUFLAGS=-ffp-contract=fast -fno-math-errno
 else # DEBUG
 OPTFLAGS=-Og -mcpu=power8
 DBGFLAGS=-g
 FPUFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
 LIBFLAGS=-pthread
-else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL
+else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL C
 AR=ar
 ARFLAGS=rsv
 CC=xlc_r
 C11FLAGS=-DUSE_IBM -DUSE_PWR8 -qlanglvl=extc1x
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qreport -qhot=level=1:vector -qprefetch=aggressive
-DGBFLAGS=-DNDEBUG
+DBGFLAGS=-DNDEBUG
 FPUFLAGS=
 else # DEBUG
 OPTFLAGS=-O0 -qmaxmem=-1 -qaltivec=le -qarch=auto -qtune=pwr8:smt8 -qreport
@@ -100,7 +100,7 @@ AR=ar
 ARFLAGS=rsv
 ifeq ($(ARCH),Darwin)
 CC=clang
-C11FLAGS=-DUSE_CLANG -DUSE_X64
+C11FLAGS=-DUSE_CLANG -DUSE_X64 -std=gnu11
 else # Linux
 CC=gcc
 C11FLAGS=-DUSE_GNU -DUSE_X64 -std=gnu11
@@ -108,14 +108,12 @@ endif # ?Darwin
 ifdef NDEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -integrated-as
-else # Linux
-OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-sm -fgcse-las -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-endif # ?Darwin
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
-ifeq ($(ARCH),Darwin)
+DBGFLAGS=-DNDEBUG
 FPUFLAGS=-ffp-contract=on
-else
-FPUFLAGS=-ffp-contract=fast
+else # Linux
+OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
+FPUFLAGS=-ffp-contract=fast -fno-math-errno
 endif # ?Darwin
 else # DEBUG
 ifeq ($(ARCH),Darwin)
