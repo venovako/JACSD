@@ -9,10 +9,10 @@ include ../x200.mk
 LIBFLAGS=-mkl -pthread
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU C
 include ../power8.mk
-LIBFLAGS=-DUSE_ATLAS -I$(HOME)/atlas/include
+LIBFLAGS=-DUSE_ATLAS -I$(HOME)/atlas/include -pthread
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL C
 include ../pwr8.mk
-LIBFLAGS=-DUSE_ESSL -L/usr/lib64 -lesslsmp -lessl
+LIBFLAGS=-DUSE_ESSL -pthread
 else # GNU/Clang C
 include ../gnu.mk
 LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include
