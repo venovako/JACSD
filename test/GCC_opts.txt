@@ -107,3 +107,42 @@ IN -O3:
 -funit-at-a-timefthread-jumps
 -funswitch-loops
 -fvect-cost-model
+
+GFortran:
+-fdefault-integer-8
+-fopenmp ( => -frecursive )
+-std=f2008ts
+FPP:
+-cpp ( ?+ -ffree-line-length-none )
+WARNINGS:
+-pedantic
+-Wall   =
+        -Waliasing
+        -Wampersand
+        -Wconversion
+        -Wsurprising
+        -Wc-binding-type
+        -Wintrinsics-std
+        -Wtabs
+        -Wintrinsic-shadow
+        -Wline-truncation
+        -Wtarget-lifetime
+        -Winteger-division
+        -Wreal-q-constant
+        -Wunused
+        -Wundefined-do-loop
+-Wextra =
+        -Wcompare-reals
+        -Wunused-parameter
+-Warray-temporaries
+-Wcharacter-truncation
+-Wconversion-extra
+-Wimplicit-procedure
+-Wfunction-elimination
+-Wrealloc-lhs-all
+DEBUG:
+-fcheck=all
+-finit-local-zero ( but for REALs... )
+        -finit-real=snan
+        -ffpe-trap=invalid,zero,overflow
+-finit-derived ( GCC 7.0 )
