@@ -52,11 +52,11 @@
 #endif /* ?VN_INTEGER_KIND */
 #include <essl.h>
 #if (4 == VN_REAL_KIND)
-#define VN_BLAS_R(name) s##name##_
-#define VN_BLAS_C(name) c##name##_
+#define VN_BLAS_R(name) s##name
+#define VN_BLAS_C(name) c##name
 #elif (8 == VN_REAL_KIND)
-#define VN_BLAS_R(name) d##name##_
-#define VN_BLAS_C(name) z##name##_
+#define VN_BLAS_R(name) d##name
+#define VN_BLAS_C(name) z##name
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by IBM ESSL
 #endif /* ?VN_REAL_KIND */

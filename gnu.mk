@@ -14,14 +14,14 @@ AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpifort
-FORFLAGS=-DUSE_GNU -DUSE_X64 -DUSE_MPI -fdefault-integer-8 -fopenmp -fstack-arrays
+FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -DUSE_MPI -fdefault-integer-8 -fopenmp -fstack-arrays -std=f2008ts
 else # no MPI
 ifeq ($(ARCH),Darwin)
 FC=gfortran-6
 else # Linux
 FC=gfortran
 endif # ?Darwin
-FORFLAGS=-DUSE_GNU -DUSE_X64 -fdefault-integer-8 -fopenmp -fstack-arrays
+FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -fdefault-integer-8 -fopenmp -fstack-arrays
 endif # ?USE_MPI
 ifeq ($(ARCH),Darwin)
 CC=clang #gcc-6
@@ -34,14 +34,14 @@ ifdef NDEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 OPTCFLAGS=-O$(NDEBUG) -march=native -integrated-as
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-DNDEBUG
 FPUFLAGS=
 FPUCFLAGS=-ffp-contract=on
 else # Linux
 OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 OPTCFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec
+DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-DNDEBUG -fopt-info-optimized-vec
 FPUFLAGS=
 FPUCFLAGS=-ffp-contract=fast -fno-math-errno

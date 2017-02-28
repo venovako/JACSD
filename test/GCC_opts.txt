@@ -132,11 +132,15 @@ WARNINGS:
         -Wunused
         -Wundefined-do-loop
 -Wextra =
-        -Wcompare-reals
+        -Wcompare-reals ( but override with -Wno-compare-reals )
         -Wunused-parameter
 -Warray-temporaries
+        ( Does it complain about _possibility_ of creating a temporary
+        at run-time, i.e., about creating a check for contiguity, and
+        _not_ about actually creating one?  C.f. -fcheck=array-temps &
+        https://groups.google.com/forum/#!topic/comp.lang.fortran/rEDGlmDO2Xw )
 -Wcharacter-truncation
--Wconversion-extra
+-Wconversion-extra ( too much complaining )
 -Wimplicit-procedure
 -Wfunction-elimination
 -Wrealloc-lhs-all
