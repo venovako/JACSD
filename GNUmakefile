@@ -1,5 +1,6 @@
 ifeq ($(CPU),x64) # Xeon / Intel Fortran
 include x64.mk
+MKFS=GNUmakefile x64.mk
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
 ifeq ($(ARCH),Darwin)
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
@@ -8,14 +9,17 @@ LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -l
 endif # ?Darwin
 else ifeq ($(CPU),x100) # Knights Corner / Intel Fortran
 include x100.mk
+MKFS=GNUmakefile x100.mk
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
 include x200.mk
+MKFS=GNUmakefile x200.mk
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU Fortran
 include power8.mk
+MKFS=GNUmakefile power8.mk
 LIBFLAGS=-I. -DUSE_ATLAS
 ifeq ($(USE_ATLAS),pt)
 LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -lptlapack -llapack -lptf77blas -lptcblas -latlas
@@ -24,17 +28,20 @@ LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -lptlapack -llapack -lf77blas 
 endif # ?parallel ATLAS
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL Fortran
 include pwr8.mk
+MKFS=GNUmakefile pwr8.mk
 LIBFLAGS=-I. -WF,-DUSE_ESSL #-qessl
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L/usr/lib64 -lesslsmp6464 -lessl6464
 else # GNU Fortran
 include gnu.mk
+MKFS=GNUmakefile gnu.mk
 LIBFLAGS=-I.
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L$(HOME)/OpenBLAS/lib -lopenblas_omp #-ltmglib -llapack -lrefblas
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
-MKFS=GNUmakefile gnu.mk power8.mk pwr8.mk x100.mk x200.mk x64.mk
 LIBS=libjstrat.a libqxblas.a libvn.a
+
+.PHONY: all help clean
 
 all: xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xDJAC0.exe xDJAC1.exe xDJAC2.exe xJCSD.exe
 
@@ -147,3 +154,4 @@ endif # ?NDEBUG
 	-$(RM) *.optrpt
 	-$(RM) *__genmod.f90
 	-$(RM) *__genmod.mod
+	-$(RM) *.dSYM

@@ -1,16 +1,10 @@
-ifndef SHELL
 SHELL=/bin/bash
-endif # !SHELL
-ifndef ARCH
 ARCH=$(shell uname)
-endif # !ARCH
+RM=rm -rfv
+AR=xiar
 ifndef WP
 WP=16
 endif # !WP
-ifndef RM
-RM=rm -fv
-endif # !RM
-AR=xiar
 ifdef NDEBUG
 ARFLAGS=-lib rsv
 else # DEBUG

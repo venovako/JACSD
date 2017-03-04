@@ -12,21 +12,27 @@ RM=rm -fv
 endif # !RM
 ifeq ($(CPU),x64) # Xeon / Intel Fortran
 include ../x64.mk
+MKFS=GNUmakefile ../x64.mk
 LIBFLAGS=-threads -I..
 else ifeq ($(CPU),x100) # Knights Corner / Intel Fortran
 include ../x100.mk
+MKFS=GNUmakefile ../x100.mk
 LIBFLAGS=-threads -I..
 else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
 include ../x200.mk
+MKFS=GNUmakefile ../x200.mk
 LIBFLAGS=-threads -I..
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU Fortran
 include ../power8.mk
+MKFS=GNUmakefile ../power8.mk
 LIBFLAGS=-I..
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL Fortran
 include ../pwr8.mk
+MKFS=GNUmakefile ../pwr8.mk
 LIBFLAGS=-I..
 else # GNU Fortran
 include ../gnu.mk
+MKFS=GNUmakefile ../gnu.mk
 LIBFLAGS=-I..
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
@@ -136,10 +142,10 @@ help:
 prepare:
 	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi
 
-../$(LIBS): prepare $(OBJS) GNUmakefile
+../$(LIBS): prepare $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
-%.o: %.F90 GNUmakefile
+%.o: %.F90 $(MKFS)
 	$(FC) $(FCFLAGS) -c $< -o $@
 
 clean:
@@ -149,3 +155,4 @@ clean:
 	-$(RM) ../qx_wp.fi
 	-$(RM) *__genmod.mod
 	-$(RM) *__genmod.f90
+	-$(RM) *.dSYM

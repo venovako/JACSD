@@ -1,16 +1,10 @@
-ifndef SHELL
 SHELL=/bin/bash
-endif # !SHELL
-ifndef ARCH
 ARCH=$(shell uname)
-endif # !ARCH
+RM=rm -rfv
+AR=ar
 ifndef WP
 WP=16
 endif # !WP
-ifndef RM
-RM=rm -fv
-endif # !RM
-AR=ar
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpifort
@@ -50,14 +44,14 @@ else # DEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O0 -march=native -Wa,-q
 OPTCFLAGS=-O0 -march=native -integrated-as
-DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
+DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-g -ftrapv
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=-ffp-contract=on
 else # Linux
 OPTFLAGS=-O0 -march=native
 OPTCFLAGS=-Og -march=native
-DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan
+DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-g -ftrapv
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=-ffp-contract=fast

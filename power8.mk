@@ -1,16 +1,10 @@
-ifndef SHELL
 SHELL=/bin/bash
-endif # !SHELL
-ifndef ARCH
 ARCH=$(shell uname)
-endif # !ARCH
+RM=rm -rfv
+AR=ar
 ifndef WP
 WP=16
 endif # !WP
-ifndef RM
-RM=rm -fv
-endif # !RM
-AR=ar
 ARFLAGS=rsv
 FC=gfortran
 CC=gcc
@@ -26,7 +20,7 @@ FPUCFLAGS=-ffp-contract=fast -fno-math-errno
 else # DEBUG
 OPTFLAGS=-Og -mcpu=power8
 OPTCFLAGS=-Og -mcpu=power8
-DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-g
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=-ffp-contract=fast
