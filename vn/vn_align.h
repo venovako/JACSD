@@ -10,7 +10,7 @@
 #endif /* !VN_ALIGN_BYTES */
 
 #ifndef VN_VAR_ALIGNED
-#if defined(__GNUC__)
+#ifdef __GNUC__
 #define VN_VAR_ALIGNED __attribute__((aligned(VN_ALIGN_BYTES)))
 #else /* __xlC__ */
 #define VN_VAR_ALIGNED __attribute__((__aligned__(VN_ALIGN_BYTES)))
@@ -20,11 +20,19 @@
 #endif /* !VN_VAR_ALIGNED */
 
 #ifndef VN_IS_ALIGNED
-#if (defined(__ICC) && defined(NDEBUG))
-#define VN_IS_ALIGNED(a) __assume_aligned(a, VN_ALIGN_BYTES)
-#else /* !__ICC || !NDEBUG */
+#ifdef NDEBUG
+#ifdef __ICC
+#define VN_IS_ALIGNED(a) __assume_aligned((a), VN_ALIGN_BYTES)
+#else /* !__ICC */
+#ifdef __GNUC__
+#define VN_IS_ALIGNED(a) (void)__builtin_assume_aligned((a), VN_ALIGN_BYTES)
+#else /* !__GNUC__ */
 #define VN_IS_ALIGNED(a) VN_ASSERT(!((intptr_t)(a) % VN_ALIGN_BYTES))
-#endif /* __ICC && NDEBUG */
+#endif /* __GNUC__ */
+#endif /* __ICC */
+#else /* !NDEBUG */
+#define VN_IS_ALIGNED(a) VN_ASSERT(!((intptr_t)(a) % VN_ALIGN_BYTES))
+#endif /* NDEBUG */
 #else /* VN_IS_ALIGNED */
 #error VN_IS_ALIGNED already defined
 #endif /* !VN_IS_ALIGNED */

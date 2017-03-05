@@ -160,6 +160,7 @@ typedef vn_logical_8 vn_logical;
 
 typedef float vn_real_4;
 typedef double vn_real_8;
+/* TODO: FIXME for long doubles that are not Intel's 80-bit extended! */
 typedef long double vn_real_10;
 
 #ifdef __cplusplus

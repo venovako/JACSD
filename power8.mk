@@ -15,7 +15,7 @@ OPTFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-dis
 OPTCFLAGS=-O$(NDEBUG) -mcpu=power8 -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-DNDEBUG -fopt-info-optimized-vec
-FPUFLAGS=
+FPUFLAGS=-ffp-contract=fast
 FPUCFLAGS=-ffp-contract=fast -fno-math-errno
 else # DEBUG
 OPTFLAGS=-Og -mcpu=power8
