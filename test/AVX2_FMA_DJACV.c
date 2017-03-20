@@ -1,19 +1,33 @@
-/* clang -std=c11 -Ofast -march=native -integrated-as AVX2_FMA_DJACV.c */
+/* -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets) */
+/* gcc   -std=gnu11 -Ofast          -march=native                   AVX2_FMA_DJACV.c */
+/* gcc   -std=gnu11 -Ofast -DNDEBUG -march=native                -c AVX2_FMA_DJACV.c */
+/* clang -std=c11   -Ofast          -march=native -integrated-as    AVX2_FMA_DJACV.c */
+/* clang -std=c11   -Ofast -DNDEBUG -march=native -integrated-as -c AVX2_FMA_DJACV.c */
 #include <emmintrin.h>
 #include <immintrin.h>
-
+#ifndef NDEBUG
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#endif /* !NDEBUG */
 #define VSIZE_B 32
 #define DBLE_SZ 8
 #define NDBLE_V (VSIZE_B / DBLE_SZ)
 #define NPAIR_V NDBLE_V
+#ifdef SIGNED_INTS_ONLY
+#define USGN signed
+#else /* unsigneds allowed */
+#define USGN unsigned
+#endif /* SIGNED_INTS_ONLY */
+#ifdef _WIN32
+#define __Int64 long long
+#else /* POSIX */
+#define __Int64 long
+#endif /* _WIN32 */
 
-static inline __m256 avx2_fma_ddots(const int m, const double *const restrict Gp, const double *const restrict Gq)
+static inline __m256d avx2_fma_ddots(const USGN int m, const double *const restrict Gp, const double *const restrict Gq)
 {
   register const double *const Gp_i = (const double*)__builtin_assume_aligned(Gp, VSIZE_B);
   register const double *const Gq_i = (const double*)__builtin_assume_aligned(Gq, VSIZE_B);
@@ -22,7 +36,7 @@ static inline __m256 avx2_fma_ddots(const int m, const double *const restrict Gp
   register __m256d Gqq = _mm256_setzero_pd();
   register __m256d Gpq = _mm256_setzero_pd();
 
-  for (register int i = 0; i < m; i += NDBLE_V) {
+  for (register USGN int i = 0; i < m; i += NDBLE_V) {
     register const __m256d Gpi = _mm256_load_pd(Gp_i + i);
     register const __m256d Gqi = _mm256_load_pd(Gq_i + i);
 
@@ -53,7 +67,7 @@ static void print_vars(const double (*const A)[4])
 }
 #endif /* !NDEBUG */
 
-extern long long avx2_fma_djacv(const int np, const int m, const double tol, double *const *const restrict Gp_, double *const *const restrict Gq_, double *const *const restrict Vp_, double *const *const restrict Vq_)
+extern USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const double tol, double *const *const restrict Gp_, double *const *const restrict Gq_, double *const *const restrict Vp_, double *const *const restrict Vq_)
 {
   double res[NPAIR_V][NDBLE_V] __attribute__((aligned(VSIZE_B)));
 
@@ -63,28 +77,28 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
   register const __m128i idx3 = _mm_set_epi32(15, 11, 7, 3);
 
   register const __m256d tolv = _mm256_broadcast_sd(&tol);
-  register int small_transf = 0;
-  register int big_transf = 0;
+  register USGN int small_transf = 0;
+  register USGN int big_transf = 0;
   
-  for (register int i = 0; i < np; i += NPAIR_V) {
-    for (register int j = 0; j < NPAIR_V; ++j) {
-      register const int ij = i + j;
+  for (register USGN int i = 0; i < np; i += NPAIR_V) {
+    for (register USGN int j = 0; j < NPAIR_V; ++j) {
+      register const USGN int ij = i + j;
       _mm256_store_pd(res[j], avx2_fma_ddots(m, (const double*)__builtin_assume_aligned(Gp_[ij], VSIZE_B), (const double*)__builtin_assume_aligned(Gq_[ij], VSIZE_B)));
     }
 
-    register __m256d Gpp  = _mm256_i32gather_pd(res, idx0, DBLE_SZ);
-    register __m256d Gqq  = _mm256_i32gather_pd(res, idx1, DBLE_SZ);
+    register __m256d Gpp  = _mm256_i32gather_pd((const double*)res, idx0, DBLE_SZ);
+    register __m256d Gqq  = _mm256_i32gather_pd((const double*)res, idx1, DBLE_SZ);
 
-    register const __m256d Gpq  = _mm256_i32gather_pd(res, idx2, DBLE_SZ);
-    register const __m256d Gpq_ = _mm256_i32gather_pd(res, idx3, DBLE_SZ);
+    register const __m256d Gpq  = _mm256_i32gather_pd((const double*)res, idx2, DBLE_SZ);
+    register const __m256d Gpq_ = _mm256_i32gather_pd((const double*)res, idx3, DBLE_SZ);
 
     register const __m256d Gpp_ = _mm256_sqrt_pd(Gpp);
     register const __m256d Gqq_ = _mm256_sqrt_pd(Gqq);
     register const __m256d Max_ = _mm256_max_pd(Gpp_, Gqq_);
     register const __m256d Min_ = _mm256_min_pd(Gpp_, Gqq_);
 
-    register const int rot = _mm256_movemask_pd(_mm256_cmp_pd(Gpq_, _mm256_mul_pd(_mm256_mul_pd(Max_, tolv), Min_), _CMP_NLT_UQ));
-    register int swp;
+    register const USGN int rot = _mm256_movemask_pd(_mm256_cmp_pd(Gpq_, _mm256_mul_pd(_mm256_mul_pd(Max_, tolv), Min_), _CMP_NLT_UQ));
+    register USGN int swp;
 
     if (!rot)
       goto swapme;
@@ -98,7 +112,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
     register const __m256d Cos = _mm256_div_pd(ones, _mm256_sqrt_pd(_mm256_fmadd_pd(Tan, Tan, ones)));
 
     /* Should never happen.
-    const int Tan0 = _mm256_movemask_pd(_mm256_cmp_pd(Tan, _mm256_setzero_pd(), _CMP_EQ_UQ));
+    const USGN int Tan0 = _mm256_movemask_pd(_mm256_cmp_pd(Tan, _mm256_setzero_pd(), _CMP_EQ_UQ));
 
     if (Tan0 == 0x0F) // all-zero
       goto swapme;
@@ -106,7 +120,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
     Gpp = _mm256_fmadd_pd(Tan, Gpq, Gpp);
     Gqq = _mm256_fnmadd_pd(Tan, Gpq, Gqq);
 
-    register const int Cos1 = _mm256_movemask_pd(_mm256_cmp_pd(Cos, ones, _CMP_EQ_UQ));
+    register const USGN int Cos1 = _mm256_movemask_pd(_mm256_cmp_pd(Cos, ones, _CMP_EQ_UQ));
     _mm256_store_pd(res[0], Tan);
     /* if (Cos1 != 0x0F) // not all ones */
     _mm256_store_pd(res[1], Cos);
@@ -119,9 +133,9 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
   swapme:
     swp = _mm256_movemask_pd(_mm256_cmp_pd(Gpp, Gqq, _CMP_NGE_UQ));
 
-    for (register int j = 0; j < NPAIR_V; ++j) {
-      register const int msk = 1 << j;
-      register const int ij = i + j;
+    for (register USGN int j = 0; j < NPAIR_V; ++j) {
+      register const USGN int msk = 1 << j;
+      register const USGN int ij = i + j;
       register double *const Gpij = Gp_[ij];
       register double *const Gqij = Gq_[ij];
       register double *const Vpij = Vp_[ij];
@@ -132,7 +146,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
           ++big_transf;
           register const __m256d myCos = _mm256_broadcast_sd(&(res[1][j]));
           if (swp & msk) {
-            for (register int k = 0; k < m; k += NDBLE_V) {
+            for (register USGN int k = 0; k < m; k += NDBLE_V) {
               register const __m256d Gp_k = _mm256_load_pd(__builtin_assume_aligned(Gpij + k, VSIZE_B));
               register const __m256d Gq_k = _mm256_load_pd(__builtin_assume_aligned(Gqij + k, VSIZE_B));
               register const __m256d Vp_k = _mm256_load_pd(__builtin_assume_aligned(Vpij + k, VSIZE_B));
@@ -144,7 +158,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
             }
           }
           else {
-            for (register int k = 0; k < m; k += NDBLE_V) {
+            for (register USGN int k = 0; k < m; k += NDBLE_V) {
               register const __m256d Gp_k = _mm256_load_pd(__builtin_assume_aligned(Gpij + k, VSIZE_B));
               register const __m256d Gq_k = _mm256_load_pd(__builtin_assume_aligned(Gqij + k, VSIZE_B));
               register const __m256d Vp_k = _mm256_load_pd(__builtin_assume_aligned(Vpij + k, VSIZE_B));
@@ -158,7 +172,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
         }
         else if (swp & msk) {
           ++small_transf;
-          for (register int k = 0; k < m; k += NDBLE_V) {
+          for (register USGN int k = 0; k < m; k += NDBLE_V) {
             register const __m256d Gp_k = _mm256_load_pd(__builtin_assume_aligned(Gpij + k, VSIZE_B));
             register const __m256d Gq_k = _mm256_load_pd(__builtin_assume_aligned(Gqij + k, VSIZE_B));
             register const __m256d Vp_k = _mm256_load_pd(__builtin_assume_aligned(Vpij + k, VSIZE_B));
@@ -171,7 +185,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
         }
         else {
           ++small_transf;
-          for (register int k = 0; k < m; k += NDBLE_V) {
+          for (register USGN int k = 0; k < m; k += NDBLE_V) {
             register const __m256d Gp_k = _mm256_load_pd(__builtin_assume_aligned(Gpij + k, VSIZE_B));
             register const __m256d Gq_k = _mm256_load_pd(__builtin_assume_aligned(Gqij + k, VSIZE_B));
             register const __m256d Vp_k = _mm256_load_pd(__builtin_assume_aligned(Vpij + k, VSIZE_B));
@@ -185,7 +199,7 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
       }
       else if (swp & msk) {
         ++small_transf;
-        for (register int k = 0; k < m; k += NDBLE_V) {
+        for (register USGN int k = 0; k < m; k += NDBLE_V) {
           register const __m256d Gp_k = _mm256_load_pd(__builtin_assume_aligned(Gpij + k, VSIZE_B));
           register const __m256d Gq_k = _mm256_load_pd(__builtin_assume_aligned(Gqij + k, VSIZE_B));
           register const __m256d Vp_k = _mm256_load_pd(__builtin_assume_aligned(Vpij + k, VSIZE_B));
@@ -202,11 +216,11 @@ extern long long avx2_fma_djacv(const int np, const int m, const double tol, dou
 #ifndef NDEBUG
   printf("#transformations: big %d, small %d, total %d\n", big_transf, small_transf, (big_transf + small_transf));
 #endif /* !NDEBUG */
-  return ((((long long)big_transf) << 32) | (long long)small_transf);
+  return ((((USGN __Int64)big_transf) << 32) | (USGN __Int64)small_transf);
 }
 
 #ifndef NDEBUG
-static const int C[7][4][2] __attribute__((aligned(VSIZE_B))) =
+static const USGN int C[7][4][2] __attribute__((aligned(VSIZE_B))) =
   {
     {{0,7},{1,6},{2,5},{3,4}},
     {{0,6},{1,7},{2,4},{3,5}},
@@ -261,38 +275,38 @@ static double* Vq_[4] __attribute__((aligned(VSIZE_B))) = { (double*)NULL, (doub
 
 static void print_mtx(const double (*const A)[8])
 {
-  for (int i = 0; i < 8; ++i) {
-    for (int j = 0; j < 8; ++j)
+  for (USGN int i = 0; i < 8; ++i) {
+    for (USGN int j = 0; j < 8; ++j)
       printf("%#26.17e", A[j][i]);
     printf("\n");
   }
 }
 
-static void print_step(const int step)
+static void print_step(const USGN int step)
 {
-  const int i = step % 7;
-  for (int j = 0; j < 4; ++j)
+  const USGN int i = step % 7;
+  for (USGN int j = 0; j < 4; ++j)
     printf(" (%d,%d)", C[i][j][0], C[i][j][1]);
   printf("\n");
 }
 
-static void print_matrices(const int step)
+static void print_matrices(const USGN int step)
 {
-  printf("\nG before step %d:", step);
+  printf("\nG before step %d in cycle %d:", step, (step / 7));
   print_step(step);
   print_mtx(G);
-  printf("\nV before step %d:", step);
+  printf("\nV before step %d in cycle %d:", step, (step / 7));
   print_step(step);
   print_mtx(V);
   fflush(stdout);
 }
 
-static void init_step(const int step)
+static void init_step(const USGN int step)
 {
-  const int i = step % 7;
-  for (int j = 0; j < 4; ++j) {
-    const int p = C[i][j][0];
-    const int q = C[i][j][1];
+  const USGN int i = step % 7;
+  for (USGN int j = 0; j < 4; ++j) {
+    const USGN int p = C[i][j][0];
+    const USGN int q = C[i][j][1];
     Gp_[j] = G[p];
     Gq_[j] = G[q];
     Vp_[j] = V[p];
@@ -300,23 +314,31 @@ static void init_step(const int step)
   }
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
   if (argc != 2) {
     fprintf(stderr, "%s #steps\n", argv[0]);
     return EXIT_FAILURE;
   }
 
-  const int steps = atoi(argv[1]);
-  const double tol = sqrt(8.0) * (DBL_EPSILON / 2)/*4.0 * DBL_EPSILON*/;
-  printf("#steps: %d, tolerance: %#26.17e\n", steps, tol);
+  const USGN int steps = atoi(argv[1]);
+  const double tol = sqrt(8.0) * (DBL_EPSILON / 2) /* or 4 * DBL_EPSILON */;
+  printf("#steps <= %d, tolerance = %#26.17e\n", steps, tol);
 
-  for (int i = 0; i < steps; ++i) {
-    print_matrices(i);
-    init_step(i);
-    avx2_fma_djacv(4, 8, tol, Gp_, Gq_, Vp_, Vq_);
+  USGN int step = 0;
+  for (USGN int sweep = 0; step < steps; ++sweep) {
+    USGN __Int64 ret = 0;
+    for (USGN int i = 0; i < 7; ++i) {
+      print_matrices(step);
+      init_step(step);
+      ret += avx2_fma_djacv(4, 8, tol, Gp_, Gq_, Vp_, Vq_);
+      if (++step >= steps)
+        break;
+    }
+    if (!ret)
+      break;
   }
-  print_matrices(steps);
+  print_matrices(step);
 
   return EXIT_SUCCESS;
 }
