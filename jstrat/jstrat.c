@@ -106,8 +106,48 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
       cur = &(ME0060[0][0][0]);
     else if (n == (integer)64)
       cur = &(ME0064[0][0][0]);
+    else if (n == (integer)68)
+      cur = &(ME0068[0][0][0]);
+    else if (n == (integer)72)
+      cur = &(ME0072[0][0][0]);
+    else if (n == (integer)76)
+      cur = &(ME0076[0][0][0]);
+    else if (n == (integer)80)
+      cur = &(ME0080[0][0][0]);
+    else if (n == (integer)84)
+      cur = &(ME0084[0][0][0]);
+    else if (n == (integer)88)
+      cur = &(ME0088[0][0][0]);
+    else if (n == (integer)96)
+      cur = &(ME0096[0][0][0]);
+    else if (n == (integer)104)
+      cur = &(ME0104[0][0][0]);
+    else if (n == (integer)112)
+      cur = &(ME0112[0][0][0]);
+    else if (n == (integer)120)
+      cur = &(ME0120[0][0][0]);
     else if (n == (integer)128)
       cur = &(ME0128[0][0][0]);
+    else if (n == (integer)136)
+      cur = &(ME0136[0][0][0]);
+    else if (n == (integer)144)
+      cur = &(ME0144[0][0][0]);
+    else if (n == (integer)152)
+      cur = &(ME0152[0][0][0]);
+    else if (n == (integer)160)
+      cur = &(ME0160[0][0][0]);
+    else if (n == (integer)168)
+      cur = &(ME0168[0][0][0]);
+    else if (n == (integer)176)
+      cur = &(ME0176[0][0][0]);
+    else if (n == (integer)192)
+      cur = &(ME0192[0][0][0]);
+    else if (n == (integer)208)
+      cur = &(ME0208[0][0][0]);
+    else if (n == (integer)224)
+      cur = &(ME0224[0][0][0]);
+    else if (n == (integer)240)
+      cur = &(ME0240[0][0][0]);
     else if (n == (integer)256)
       cur = &(ME0256[0][0][0]);
     else if (n == (integer)512)
