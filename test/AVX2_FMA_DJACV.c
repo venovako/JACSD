@@ -5,9 +5,10 @@
 /* clang -std=c11   -Ofast -DNDEBUG -march=native -integrated-as -c AVX2_FMA_DJACV.c */
 #include <emmintrin.h>
 #include <immintrin.h>
-#ifndef NDEBUG
+/* standard headers */
 #include <float.h>
 #include <math.h>
+#ifndef NDEBUG
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -217,6 +218,23 @@ extern USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const do
   printf("#transformations: big %d, small %d, total %d\n", big_transf, small_transf, (big_transf + small_transf));
 #endif /* !NDEBUG */
   return ((((USGN __Int64)big_transf) << 32) | (USGN __Int64)small_transf);
+}
+
+extern USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const restrict G, const USGN int ldG, double *const restrict V, const USGN int ldV, int *const restrict info)
+{
+  if ((n > m) || (n & 7) || (n > ldV)) {
+    if (info)
+      *info = -1;
+    return 0;
+  }
+  if ((m > ldG) || (m & 3) || (m > n)) {
+    if (info)
+      *info = -2;
+    return 0;
+  }
+  const double tol = sqrt((double)m) * (DBL_EPSILON / 2);
+  const USGN int np = (n >> 1);
+  return avx2_fma_djacv(np, m, tol, (double *const*)NULL, (double *const*)NULL, (double *const*)NULL, (double *const*)NULL);
 }
 
 #ifndef NDEBUG
