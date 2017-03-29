@@ -1,8 +1,8 @@
 /* -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets) */
-/* gcc   -std=gnu11 -Ofast          -march=native                   AVX2_FMA_DJACV.c */
 /* gcc   -std=gnu11 -Ofast -DNDEBUG -march=native                -c AVX2_FMA_DJACV.c */
-/* clang -std=c11   -Ofast          -march=native -integrated-as    AVX2_FMA_DJACV.c */
+/* gcc   -std=gnu11 -Ofast          -march=native                   AVX2_FMA_DJACV.c */
 /* clang -std=c11   -Ofast -DNDEBUG -march=native -integrated-as -c AVX2_FMA_DJACV.c */
+/* clang -std=c11   -Ofast          -march=native -integrated-as    AVX2_FMA_DJACV.c -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
 #include <emmintrin.h>
 #include <immintrin.h>
 /* standard headers */
@@ -411,7 +411,7 @@ int main(int argc, char* argv[])
     fprintf(stderr, "%s #steps\n", argv[0]);
     return EXIT_FAILURE;
   }
-
+         
   const USGN int steps = atoi(argv[1]);
   const double tol = sqrt(8.0) * (DBL_EPSILON / 2) /* or 4 * DBL_EPSILON */;
   printf("#steps <= %d, tolerance = %#26.17e\n", steps, tol);
