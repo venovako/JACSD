@@ -13,20 +13,21 @@
 #include <stdlib.h>
 #include <string.h>
 #endif /* !NDEBUG */
+#include "../jstrat/jstrat.h"
 #define VSIZE_B 32
 #define DBLE_SZ 8
 #define NDBLE_V (VSIZE_B / DBLE_SZ)
 #define NPAIR_V NDBLE_V
-#ifdef SIGNED_INTS_ONLY
-#define USGN signed
-#else /* unsigneds allowed */
-#define USGN unsigned
-#endif /* SIGNED_INTS_ONLY */
 #ifdef _WIN32
 #define __Int64 long long
 #else /* POSIX */
 #define __Int64 long
 #endif /* _WIN32 */
+#ifdef SIGNED_INTS_ONLY
+#define USGN signed
+#else /* unsigneds allowed */
+#define USGN unsigned
+#endif /* SIGNED_INTS_ONLY */
 
 static inline __m256d avx2_fma_ddots(const USGN int m, const double *const restrict Gp, const double *const restrict Gq)
 {
@@ -68,7 +69,7 @@ static void print_vars(const double (*const A)[4])
 }
 #endif /* !NDEBUG */
 
-extern USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const double tol, double *const *const restrict Gp_, double *const *const restrict Gq_, double *const *const restrict Vp_, double *const *const restrict Vq_)
+EXTERN_C USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const double tol, double *const *const restrict Gp_, double *const *const restrict Gq_, double *const *const restrict Vp_, double *const *const restrict Vq_)
 {
   double res[NPAIR_V][NDBLE_V] __attribute__((aligned(VSIZE_B)));
 
@@ -220,8 +221,29 @@ extern USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const do
   return ((((USGN __Int64)big_transf) << 32) | (USGN __Int64)small_transf);
 }
 
-extern USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const restrict G, const USGN int ldG, double *const restrict V, const USGN int ldV, int *const restrict info)
+EXTERN_C void dgesvj_(const char *const JOBA, const char *const JOBU, const char *const JOBV, const USGN int *const M, const USGN int *const N, double *const A, const USGN int *const LDA, double *const SVA, const USGN int *const MV, double *const V, const USGN int *const LDV, double *const WORK, const USGN int *const LWORK, int *const INFO);
+
+EXTERN_C USGN __Int64 djaczd(const USGN int n, const USGN int m, double *const restrict G, const USGN int ldG, double *const restrict V, const USGN int ldV, int *const restrict info)
 {
+  const USGN int MV = n;
+  const USGN int LWORK = (((m + n) < 6) ? 6 : (m + n));
+  double SVA[n] __attribute__((aligned(VSIZE_B)));
+  double WORK[LWORK + 1] __attribute__((aligned(VSIZE_B)));
+  int *const INFO = (info ? info : (int*)(WORK + LWORK));
+
+  dgesvj_("U", "N", "V", &m, &n, (G ? G : (WORK + LWORK)), &ldG, SVA, &MV, (V ? V : (WORK + LWORK)), &ldV, WORK, &LWORK, INFO);
+  if (*INFO >= 0)
+    *INFO = ((*INFO > 0) ? 31 : (int)(WORK[3]));
+  return (((USGN __Int64)(WORK[1]) << 32) | (USGN __Int64)(WORK[2]));
+}
+
+EXTERN_C void dlaset_(const char *const UPLO, const USGN int *const M, const USGN int *const N, const double *const ALPHA, const double *const BETA, double *const A, const USGN int *const LDA);
+
+EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const restrict G, const USGN int ldG, double *const restrict V, const USGN int ldV, int *const restrict info)
+{
+  static const double zero = 0.0;
+  static const double one = 1.0;
+
   if ((n > m) || (n & 7) || (n > ldV)) {
     if (info)
       *info = -1;
@@ -232,9 +254,60 @@ extern USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const res
       *info = -2;
     return 0;
   }
-  const double tol = sqrt((double)m) * (DBL_EPSILON / 2);
-  const USGN int np = (n >> 1);
-  return avx2_fma_djacv(np, m, tol, (double *const*)NULL, (double *const*)NULL, (double *const*)NULL, (double *const*)NULL);
+  /* see DGESVJ, JOBU = 'N', i.e., as if CTOL = M */
+  const double tol = m * (DBL_EPSILON / 2);
+  /* const double tol = sqrt((double)m) * (DBL_EPSILON / 2); */
+
+  /* Mantharam-Eberlein-like strategy. */
+  jstrat_maneb2 me;
+  const int stp = (int)jstrat_init((jstrat_common*)&me, (__Int64)2, (__Int64)n);
+  if (stp <= 0) {
+    if (info)
+      *info = stp;
+    return 0;
+  }
+  const USGN int n_2 = n >> 1;
+  const USGN int np = n_2 * (USGN int)stp;
+
+  double* Gp[np] __attribute__((aligned(VSIZE_B)));
+  double* Gq[np] __attribute__((aligned(VSIZE_B)));
+  double* Vp[np] __attribute__((aligned(VSIZE_B)));
+  double* Vq[np] __attribute__((aligned(VSIZE_B)));
+
+  __Int64 piv[n_2][2] __attribute__((aligned(VSIZE_B)));
+
+  /* create the sweep */
+  for (USGN int i = 0, r = 0; i < (USGN int)stp; ++i) {
+    const int jnr = (int)jstrat_next((jstrat_common*)&me, piv[0]);
+    if ((USGN int)jnr != n_2) {
+      if (info)
+        *info = jnr;
+      return 0;
+    }
+    for (USGN int j = 0; j < n_2; ++j, ++r) {
+      const USGN __Int64 p = (USGN __Int64)(piv[j][0]);
+      const USGN __Int64 q = (USGN __Int64)(piv[j][1]);
+      Gp[r] = G + p * ldG;
+      Gq[r] = G + q * ldG;
+      Vp[r] = V + p * ldV;
+      Vq[r] = V + q * ldV;
+    }
+  }
+
+  /* V = I, see DGESVJ, JOBV = 'V' */
+  dlaset_("A", &n, &n, &zero, &one, V, &ldV);
+
+  USGN int s = 0;
+  USGN __Int64 R = 0, r;
+  do {
+    R += (r = avx2_fma_djacv(np, m, tol, Gp, Gq, Vp, Vq));
+    ++s;
+  } while (r);
+
+  /* info = #sweeps */
+  if (info)
+    *info = (int)s;
+  return R;
 }
 
 #ifndef NDEBUG
