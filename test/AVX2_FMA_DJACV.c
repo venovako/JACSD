@@ -1,28 +1,22 @@
 /* -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets) */
-/* gcc   -std=gnu11 -Ofast -DNDEBUG -march=native                -c AVX2_FMA_DJACV.c */
-/* gcc   -std=gnu11 -Ofast          -march=native                   AVX2_FMA_DJACV.c */
-/* clang -std=c11   -Ofast -DNDEBUG -march=native -integrated-as -c AVX2_FMA_DJACV.c */
-/* clang -std=c11   -Ofast          -march=native -integrated-as    AVX2_FMA_DJACV.c -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
+/* clang -std=c11 -Ofast [-DNDEBUG] -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
+/* -DNDEBUG => time comparison with DGESVJ for small matrix sizes, i.e., for the innermost blocking level */
 #include <emmintrin.h>
 #include <immintrin.h>
 /* standard headers */
 #include <float.h>
 #include <math.h>
-#ifndef NDEBUG
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#endif /* !NDEBUG */
+#include <time.h>
+/* Jacobi strategies */
 #include "../jstrat/jstrat.h"
 #define VSIZE_B 32
 #define DBLE_SZ 8
 #define NDBLE_V (VSIZE_B / DBLE_SZ)
 #define NPAIR_V NDBLE_V
-#ifdef _WIN32
-#define __Int64 long long
-#else /* POSIX */
 #define __Int64 long
-#endif /* _WIN32 */
 #ifdef SIGNED_INTS_ONLY
 #define USGN signed
 #else /* unsigneds allowed */
@@ -231,7 +225,7 @@ EXTERN_C USGN __Int64 djaczd(const USGN int n, const USGN int m, double *const r
   double WORK[LWORK + 1] __attribute__((aligned(VSIZE_B)));
   int *const INFO = (info ? info : (int*)(WORK + LWORK));
 
-  dgesvj_("U", "N", "V", &m, &n, (G ? G : (WORK + LWORK)), &ldG, SVA, &MV, (V ? V : (WORK + LWORK)), &ldV, WORK, &LWORK, INFO);
+  dgesvj_("G", "N", "V", &m, &n, (G ? G : (WORK + LWORK)), &ldG, SVA, &MV, (V ? V : (WORK + LWORK)), &ldV, WORK, &LWORK, INFO);
   if (*INFO >= 0)
     *INFO = ((*INFO > 0) ? 31 : (int)(WORK[3]));
   return (((USGN __Int64)(WORK[1]) << 32) | (USGN __Int64)(WORK[2]));
@@ -301,8 +295,9 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
   USGN __Int64 R = 0, r;
   do {
     R += (r = avx2_fma_djacv(np, m, tol, Gp, Gq, Vp, Vq));
-    ++s;
-  } while (r);
+    if (++s >= 30)
+      break;
+  } while (r >= ((USGN __Int64)1 << 32));
 
   /* info = #sweeps */
   if (info)
@@ -310,7 +305,14 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
   return R;
 }
 
-#ifndef NDEBUG
+#ifdef NDEBUG
+EXTERN_C void dlacpy_(const char *const UPLO, const USGN int *const M, const USGN int *const N, const double *const A, const USGN int *const LDA, double *const B, const USGN int *const LDB);
+#define MAX_LDA 176
+static const USGN int ldA = MAX_LDA;
+static double A[MAX_LDA][MAX_LDA] __attribute__((aligned(VSIZE_B)));
+static double G[MAX_LDA][MAX_LDA] __attribute__((aligned(VSIZE_B)));
+static double V[MAX_LDA][MAX_LDA] __attribute__((aligned(VSIZE_B)));
+#else /* !NDEBUG */
 static const USGN int C[7][4][2] __attribute__((aligned(VSIZE_B))) =
   {
     {{0,7},{1,6},{2,5},{3,4}},
@@ -368,8 +370,8 @@ static void print_mtx(const double (*const A)[8])
 {
   for (USGN int i = 0; i < 8; ++i) {
     for (USGN int j = 0; j < 8; ++j)
-      printf("%#26.17e", A[j][i]);
-    printf("\n");
+      (void)fprintf(stdout, "%#26.17e", A[j][i]);
+    (void)fprintf(stdout, "\n");
   }
 }
 
@@ -377,19 +379,19 @@ static void print_step(const USGN int step)
 {
   const USGN int i = step % 7;
   for (USGN int j = 0; j < 4; ++j)
-    printf(" (%d,%d)", C[i][j][0], C[i][j][1]);
-  printf("\n");
+    (void)fprintf(stdout, " (%d,%d)", C[i][j][0], C[i][j][1]);
+  (void)fprintf(stdout, "\n");
 }
 
 static void print_matrices(const USGN int step)
 {
-  printf("\nG before step %d in cycle %d:", step, (step / 7));
+  (void)fprintf(stdout, "\nG before step %d in cycle %d:", step, (step / 7));
   print_step(step);
   print_mtx(G);
-  printf("\nV before step %d in cycle %d:", step, (step / 7));
+  (void)fprintf(stdout, "\nV before step %d in cycle %d:", step, (step / 7));
   print_step(step);
   print_mtx(V);
-  fflush(stdout);
+  (void)fflush(stdout);
 }
 
 static void init_step(const USGN int step)
@@ -404,17 +406,55 @@ static void init_step(const USGN int step)
     Vq_[j] = V[q];
   }
 }
+#endif /* NDEBUG */
 
 int main(int argc, char* argv[])
 {
-  if (argc != 2) {
-    fprintf(stderr, "%s #steps\n", argv[0]);
+#ifdef NDEBUG
+  if (argc != 3) {
+    (void)fprintf(stderr, "%s seed #runs\n", argv[0]);
     return EXIT_FAILURE;
   }
-         
+  const long seed = atol(argv[1]);
+  if (seed >= 0)
+    srand48(seed);
+  for (USGN int j = 0; j < ldA; ++j)
+    for (USGN int i = 0; i < ldA; ++i)
+      A[j][i] = drand48();
+  const USGN int nt = (USGN int)atoi(argv[2]);
+  USGN __Int64 ret[2] = { 0, 0 };
+  int info[2] = { 0, 0 };
+  uint64_t clk[2] = { 0, 0 };
+  uint64_t tim[2] = { 0, 0 };
+  double sec[2] = { 0.0, 0.0 };
+  (void)fprintf(stdout, "\"N\",\"VEC_SWP\",\"VEC_AVG_s\",\"SVJ_SWP\",\"SVJ_AVG_s\"\n");
+  (void)fflush(stdout);
+  for (USGN int n = 8; n <= ldA; n += 8) {
+    tim[1] = tim[0] = 0;
+    for (USGN int t = 0; t < nt; ++t) {
+      dlacpy_("A", &n, &n, A[0], &ldA, G[0], &ldA);
+      clk[0] = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID);
+      ret[0] = djacv0(n, n, G[0], ldA, V[0], ldA, info);
+      tim[0] += (clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID) - clk[0]);
+      dlacpy_("A", &n, &n, A[0], &ldA, G[0], &ldA);
+      clk[1] = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID);
+      ret[1] = djaczd(n, n, G[0], ldA, V[0], ldA, info + 1);
+      tim[1] += (clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID) - clk[1]);
+    }
+    sec[0] = tim[0] / (nt * 1e9);
+    sec[1] = tim[1] / (nt * 1e9);
+    (void)fprintf(stdout, "%3u,%9d,%#.9f,%9d,%#.9f\n", n, info[0], sec[0], info[1], sec[1]);
+    (void)fflush(stdout);
+  }
+#else /* !NDEBUG */
+  if (argc != 2) {
+    (void)fprintf(stderr, "%s #steps\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+
   const USGN int steps = atoi(argv[1]);
   const double tol = sqrt(8.0) * (DBL_EPSILON / 2) /* or 4 * DBL_EPSILON */;
-  printf("#steps <= %d, tolerance = %#26.17e\n", steps, tol);
+  (void)fprintf(stdout, "#steps <= %d, tolerance = %#26.17e\n", steps, tol);
 
   USGN int step = 0;
   for (USGN int sweep = 0; step < steps; ++sweep) {
@@ -430,7 +470,7 @@ int main(int argc, char* argv[])
       break;
   }
   print_matrices(step);
-
+#endif /* NDEBUG */
   return EXIT_SUCCESS;
 }
-#endif /* !NDEBUG */
+
