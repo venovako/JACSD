@@ -1,5 +1,6 @@
 /* -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets) */
-/* clang -std=c11 -Ofast [-DNDEBUG] -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
+/* macOS: clang -std=c11   -Ofast [-DNDEBUG] -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
+/* Linux: gcc   -std=gnu11 -Ofast [-DNDEBUG] -march=native                AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
 /* -DNDEBUG => time comparison with DGESVJ for small matrix sizes, i.e., for the innermost blocking level */
 #include <emmintrin.h>
 #include <immintrin.h>
@@ -408,6 +409,16 @@ static void init_step(const USGN int step)
 }
 #endif /* NDEBUG */
 
+#ifndef __APPLE__
+#ifdef NDEBUG
+static inline USGN __Int64 clock_gettime_nsec_np(const clockid_t clk_id)
+{
+  struct timespec tv;
+  return (clock_gettime(clk_id, &tv) ? 0ul : (USGN __Int64)(tv.tv_sec * 1000000000ul + tv.tv_nsec));
+}
+#endif /* NDEBUG */
+#endif /* !__APPLE__ */
+
 int main(int argc, char* argv[])
 {
 #ifdef NDEBUG
@@ -422,10 +433,10 @@ int main(int argc, char* argv[])
     for (USGN int i = 0; i < ldA; ++i)
       A[j][i] = drand48();
   const USGN int nt = (USGN int)atoi(argv[2]);
-  USGN __Int64 ret[2] = { 0, 0 };
   int info[2] = { 0, 0 };
-  uint64_t clk[2] = { 0, 0 };
-  uint64_t tim[2] = { 0, 0 };
+  USGN __Int64 ret[2] = { 0, 0 };
+  USGN __Int64 clk[2] = { 0, 0 };
+  USGN __Int64 tim[2] = { 0, 0 };
   double sec[2] = { 0.0, 0.0 };
   (void)fprintf(stdout, "\"N\",\"VEC_SWP\",\"VEC_AVG_s\",\"SVJ_SWP\",\"SVJ_AVG_s\"\n");
   (void)fflush(stdout);
