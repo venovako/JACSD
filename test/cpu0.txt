@@ -1,0 +1,5 @@
+Intel(R) Core(TM) i7-4850HQ CPU @ 2.30GHz
+Apple LLVM version 8.1.0 (clang-802.0.38)
+Target: x86_64-apple-darwin16.5.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
