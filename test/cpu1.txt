@@ -1,0 +1,5 @@
+Intel(R) Core(TM) i5-4570 CPU @ 3.20GHz
+clang version 3.8.1-12ubuntu1 (tags/RELEASE_381/final)
+Target: x86_64-pc-linux-gnu
+Thread model: posix
+InstalledDir: /usr/bin
