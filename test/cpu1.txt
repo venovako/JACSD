@@ -3,3 +3,4 @@ clang version 3.8.1-12ubuntu1 (tags/RELEASE_381/final)
 Target: x86_64-pc-linux-gnu
 Thread model: posix
 InstalledDir: /usr/bin
+OpenBLAS 0.2.20.dev sequential

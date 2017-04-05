@@ -1,5 +1,6 @@
 /* -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets) */
 /* macOS: clang -std=c11   -Ofast [-DNDEBUG]               -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
+/* macOS: clang -std=c11   -Ofast [-DNDEBUG]               -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl */
 /* Linux: gcc   -std=gnu11 -Ofast [-DNDEBUG]               -march=native                AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
 /* Linux: clang -std=c11   -Ofast [-DNDEBUG] -D_GNU_SOURCE -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
 /* -DNDEBUG => time comparison with DGESVJ for small matrix sizes, i.e., for the innermost blocking level */
