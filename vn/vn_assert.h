@@ -11,12 +11,6 @@
 #include <assert.h>
 #endif /* __cplusplus */
 
-#ifndef VN_STATIC_ASSERT
-#define VN_STATIC_ASSERT(msg, cond) struct { char msg : 8 + !(cond); }
-#else /* VN_STATIC_ASSERT */
-#error VN_STATIC_ASSERT already defined
-#endif /* !VN_STATIC_ASSERT */
-
 #ifndef VN_ASSERT
 #ifdef __ICC
 #ifdef NDEBUG

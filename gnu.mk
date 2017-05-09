@@ -11,14 +11,14 @@ FC=mpifort
 FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -DUSE_MPI -fdefault-integer-8 -fopenmp -fstack-arrays -std=f2008ts
 else # no MPI
 ifeq ($(ARCH),Darwin)
-FC=gfortran-6
+FC=gfortran-7
 else # Linux
 FC=gfortran
 endif # ?Darwin
 FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -fdefault-integer-8 -fopenmp -fstack-arrays
 endif # ?USE_MPI
 ifeq ($(ARCH),Darwin)
-CC=gcc-6 #clang
+CC=gcc-7 #clang
 C11FLAGS=-DUSE_GNU -DUSE_X64 -DVN_INTEGER_KIND=8 -std=gnu11 #-DUSE_CLANG
 else # Linux
 CC=gcc
