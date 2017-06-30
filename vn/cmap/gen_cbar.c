@@ -149,10 +149,11 @@ int main(int argc, char *argv[])
         ps(cbar, x, y, 255u);
     const unsigned bar_h = height / n_bars;
     for (y = 0u; y < height; y += bar_h)
-      for (unsigned x = 0u; x < width; x += 2u * color_h)
-        for (unsigned x_ = 0u; x_ < color_h; ++x_)
-          if (x + x_ < width)
-            ps(cbar, x + x_, y, 255u);
+      for (unsigned y_ = 0u; y_ < color_h; ++y_)
+        for (unsigned x = color_h; x < width; x += 2u * color_h)
+          for (unsigned x_ = 0u; x_ < color_h; ++x_)
+            if (((x + x_) < width) && ((y + y_) < height))
+              ps(cbar, x + x_, y + y_, 255u);
     const unsigned spc_x = width + color_h;
     (void)fprintf(stdout, "convert %s -font Courier-Bold -pointsize %u ", bmp, bar_h);
     (void)fprintf(stdout, "-annotate +%u+%u \'<= %#+.17e\' ", spc_x, (bar_h - color_h), fn(max_val));
@@ -161,7 +162,7 @@ int main(int argc, char *argv[])
     const double wid = max_val - min_val;
     for (unsigned b = 1u; b < n_bars_1; ++b) {
       const unsigned c = 255u - b * cpb;
-      const double val = fn((((c + 0.5 * (1.0 - 0.5 * DBL_EPSILON)) - 1.0) / 253.0) * wid + min_val);
+      const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
       (void)fprintf(stdout, "-annotate +%u+%u \'<= %#+.17e\' ", spc_x, ((b + 1u) * bar_h - color_h), val);
     }
     (void)fprintf(stdout, "-annotate +%u+%u \'>= %#+.17e\' ", spc_x, (height - color_h), fn(min_val));
