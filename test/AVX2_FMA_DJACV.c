@@ -110,12 +110,14 @@ EXTERN_C USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const 
     register const __m256d Tan = _mm256_div_pd(ones, Ctg);
     register const __m256d Cos = _mm256_div_pd(ones, _mm256_sqrt_pd(_mm256_fmadd_pd(Tan, Tan, ones)));
 
-    /* Should never happen.
+#ifndef NDEBUG
+    /* Should never happen. */
     const USGN int Tan0 = _mm256_movemask_pd(_mm256_cmp_pd(Tan, _mm256_setzero_pd(), _CMP_EQ_UQ));
 
-    if (Tan0 == 0x0F) // all-zero
+    if (Tan0 == 0x0F) /* all-zero */
       goto swapme;
-    */
+#endif /* !NDEBUG */
+
     Gpp = _mm256_fmadd_pd(Tan, Gpq, Gpp);
     Gqq = _mm256_fnmadd_pd(Tan, Gpq, Gqq);
 
@@ -486,4 +488,3 @@ int main(int argc, char* argv[])
 #endif /* NDEBUG */
   return EXIT_SUCCESS;
 }
-

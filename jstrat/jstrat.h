@@ -19,10 +19,12 @@ typedef long integer;
 
 typedef struct {
   integer id, n;
+  integer reserved[4];
 } jstrat_common;
 
 typedef struct {
   integer id, n, p, q;
+  integer reserved[2];
 } jstrat_rolcyc;
 
 typedef struct {
@@ -33,7 +35,13 @@ typedef struct {
 
 typedef struct {
   integer id, n, stp, swp;
+  integer reserved[2];
 } jstrat_modmod;
+
+/* MEMORY REQUIREMENTS:
+ * struct jstrat_* = 6 * sizeof(integer) = 48 B
+ * arr = #pivot pairs in a step * 2 components of a pair * (1 + (id > 1 && id & 1){communication}) * sizeof(integer)
+ */
 
 /* C interface */
 EXTERN_C integer jstrat_init(jstrat_common *const js, const integer id, const integer n);

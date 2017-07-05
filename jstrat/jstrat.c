@@ -24,13 +24,137 @@
 
 #ifdef __cplusplus
 #include <cassert>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #else /* !__cplusplus */
 #include <assert.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #endif /* ?__cplusplus */
+
+#ifdef VN_TEST
+static integer test_rolcyc(const integer id, const integer n)
+{
+  jstrat_common js;
+  const integer ret = jstrat_init(&js, id, n);
+  if (ret <= (integer)0)
+    return ret;
+  integer arr[2];
+  (void)fprintf(stdout, "{\n\t");
+  for (integer stp = (integer)0; stp < ret; ++stp) {
+    const integer r = jstrat_next(&js, arr);
+    if (r != (integer)1)
+      return -labs(r);
+    (void)fprintf(stdout, "{%3ld,%3ld},", arr[0], arr[1]);
+  }
+  (void)fprintf(stdout, "\b \n}\n");
+  return ret;
+}
+
+static integer test_maneb2(const integer id, const integer n)
+{
+  jstrat_common js;
+  const integer ret = jstrat_init(&js, id, n);
+  if (ret <= (integer)0)
+    return ret;
+  (void)fprintf(stdout, "{\n\t");
+  const integer n_2 = n >> 1;
+  if (id & (integer)1) { /* comm */
+    integer arr[n_2][2][2];
+    for (integer stp = (integer)0; stp < ret; ++stp) {
+      const integer r = jstrat_next(&js, (integer*)arr);
+      if (r != n_2)
+        return -labs(r);
+      (void)fprintf(stdout, "{\n\t\t");
+      for (integer p = (integer)0; p < r; ++p)
+        (void)fprintf(stdout, "{%3ld,%3ld}:[%3ld,%3ld],", arr[p][0][0], arr[p][0][1], arr[p][1][0], arr[p][1][1]);
+      (void)fprintf(stdout, "\b \n\t},");
+    }
+    (void)fprintf(stdout, "\b \n}\n");
+  }
+  else { /* no comm */
+    integer arr[n_2][2];
+    for (integer stp = (integer)0; stp < ret; ++stp) {
+      const integer r = jstrat_next(&js, (integer*)arr);
+      if (r != n_2)
+        return -labs(r);
+      (void)fprintf(stdout, "{\n\t\t");
+      for (integer p = (integer)0; p < r; ++p)
+        (void)fprintf(stdout, "{%3ld,%3ld},", arr[p][0], arr[p][1]);
+      (void)fprintf(stdout, "\b \n\t},");
+    }
+    (void)fprintf(stdout, "\b \n}\n");
+  }
+  return ret;
+}
+
+static integer test_modmod(const integer id, const integer n)
+{
+  jstrat_common js;
+  const integer ret = jstrat_init(&js, id, n);
+  if (ret <= (integer)0)
+    return ret;
+  (void)fprintf(stdout, "{\n\t");
+  const integer n_2 = n >> 1;
+  if (id & (integer)1) { /* comm */
+    int arr[n_2][2][2][2];
+    for (integer stp = (integer)0; stp < ret; ++stp) {
+      const integer r = -jstrat_next(&js, (integer*)arr);
+      if (r != n_2)
+        return -labs(r);
+      (void)fprintf(stdout, "{\n\t\t");
+      for (integer p = (integer)0; p < r; ++p)
+        (void)fprintf(stdout, "{%3d,%3d}:[%3d,%3d],", arr[p][0][0][0], arr[p][0][1][0], arr[p][1][0][0], arr[p][1][1][0]);
+      (void)fprintf(stdout, "\b \n\t},");
+    }
+    (void)fprintf(stdout, "\b \n}\n");
+  }
+  else { /* no comm */
+    int arr[n_2][2][2];
+    for (integer stp = (integer)0; stp < ret; ++stp) {
+      const integer r = -jstrat_next(&js, (integer*)arr);
+      if (r != n_2)
+        return -labs(r);
+      (void)fprintf(stdout, "{\n\t\t");
+      for (integer p = (integer)0; p < r; ++p)
+        (void)fprintf(stdout, "{%3d,%3d},", arr[p][0][0], arr[p][1][0]);
+      (void)fprintf(stdout, "\b \n\t},");
+    }
+    (void)fprintf(stdout, "\b \n}\n");
+  }
+  return ret;
+}
+
+int main(int argc, char *argv[])
+{
+  if (argc != 3) {
+    (void)fprintf(stderr, "%s id n\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+  const integer id = atol(argv[1]);
+  const integer n = atol(argv[2]);
+  if ((n <= (integer)1) || (n > (integer)100))
+    return EXIT_FAILURE;
+  integer ret = (integer)0;
+  switch (id & ~(integer)1) {
+  case (integer)0:
+    ret = test_rolcyc(id, n);
+    break;
+  case (integer)2:
+    ret = test_maneb2(id, n);
+    break;
+  case (integer)4:
+    ret = test_modmod(id, n);
+    break;
+  default:
+    return EXIT_FAILURE;
+  }
+  (void)fprintf(((ret <= (integer)0) ? stderr : stdout), "ret = %ld\n", ret);
+  return ((ret <= (integer)0) ? EXIT_FAILURE : EXIT_SUCCESS);
+}
+#endif /* VN_TEST */
 
 integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
 {
@@ -227,6 +351,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     info = (integer)1;
   }
   else if (js->id == (integer)2) { /* Mantharam-Eberlein, no comm */
+    /* [RANK][p/q] */
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
 
@@ -247,6 +372,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     info = n_2;
   }
   else if (js->id == (integer)3) { /* Mantharam-Eberlein */
+    /* [RANK][0=PAIR,1=COMM][p/q] */
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)js;
     integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
 
@@ -283,6 +409,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     info = n_2;
   }
   else if (js->id == (integer)4) { /* modified modulus, no comm */
+    /* [RANK][p/q][0=PAIR,1=SHADOW] */
     jstrat_modmod *const mom = (jstrat_modmod*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
     int (*const ij)[2][2] = (int (*)[2][2])pairs;
@@ -316,6 +443,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     info = (integer)-_n_2;
   }
   else if (js->id == (integer)5) { /* modified modulus */
+    /* [RANK][0=PAIR,1=COMM][p/q][0=PAIR,1=SHADOW] */
     jstrat_modmod *const mom = (jstrat_modmod*)js;
     integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
     int (*const ij)[2][2][2] = (int (*)[2][2][2])pairs;
