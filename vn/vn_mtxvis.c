@@ -273,9 +273,9 @@ vn_integer vn_mtxvis_stop(vn_mtxvis_ctx *const ctx)
 
   if (tot > 128)
     return MkInt(1);
-
   if (tot < 128)
     VN_SYSI_CALL(fseek(ctx->out, 128L, SEEK_SET));
+  VN_SYSI_CALL(fflush(ctx->out));
 
   vn_integer idot = (vn_integer)strlen(ctx->fname) - MkInt(1);
   for (; idot >= MkInt(0); --idot)
