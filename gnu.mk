@@ -18,8 +18,8 @@ endif # ?Darwin
 FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -fdefault-integer-8 -fopenmp -fstack-arrays
 endif # ?USE_MPI
 ifeq ($(ARCH),Darwin)
-CC=gcc-7 #clang
-C11FLAGS=-DUSE_GNU -DUSE_X64 -DVN_INTEGER_KIND=8 -std=gnu11 #-DUSE_CLANG
+CC=clang
+C11FLAGS=-DUSE_GNU -DUSE_X64 -DVN_INTEGER_KIND=8 -std=gnu11 -DUSE_CLANG
 else # Linux
 CC=gcc
 C11FLAGS=-DUSE_GNU -DUSE_X64 -DVN_INTEGER_KIND=8 -std=gnu11
@@ -27,9 +27,9 @@ endif # ?Darwin
 ifdef NDEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-OPTCFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller #-integrated-as
+OPTCFLAGS=-O$(NDEBUG) -march=native -integrated-as
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
-DBGCFLAGS=-DNDEBUG -fopt-info-optimized-vec
+DBGCFLAGS=-DNDEBUG
 FPUFLAGS=-ffp-contract=fast
 FPUCFLAGS=-ffp-contract=fast
 else # Linux
@@ -43,7 +43,7 @@ endif # ?Darwin
 else # DEBUG
 ifeq ($(ARCH),Darwin)
 OPTFLAGS=-Og -march=native -Wa,-q
-OPTCFLAGS=-Og -march=native -Wa,-q #-integrated-as
+OPTCFLAGS=-Og -march=native -integrated-as
 DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-g -ftrapv
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow

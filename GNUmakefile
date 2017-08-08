@@ -35,7 +35,7 @@ else # GNU Fortran
 include gnu.mk
 MKFS=GNUmakefile gnu.mk
 LIBFLAGS=-I.
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L$(HOME)/OpenBLAS/lib -lopenblas_omp #-ltmglib -llapack -lrefblas
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L$(HOME)/OpenBLAS-seq/lib -lopenblas #_omp #-ltmglib -llapack -lrefblas
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
