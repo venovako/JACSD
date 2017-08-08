@@ -34,8 +34,12 @@ LDFLAGS=-L. -ljstrat -lqxblas -lvn -L/usr/lib64 -lesslsmp6464 -lessl6464
 else # GNU Fortran
 include gnu.mk
 MKFS=GNUmakefile gnu.mk
-LIBFLAGS=-I.
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L$(HOME)/OpenBLAS-seq/lib -lopenblas #_omp #-ltmglib -llapack -lrefblas
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
+ifeq ($(ARCH),Darwin)
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl
+else # Linux
+LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+endif # ?Darwin
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 

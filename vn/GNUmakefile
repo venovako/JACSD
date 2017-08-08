@@ -1,15 +1,15 @@
 ifeq ($(CPU),x64) # Xeon / Intel C
 include ../x64.mk
 MKFS=GNUmakefile ../x64.mk
-LIBFLAGS=-mkl -pthread
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -pthread
 else ifeq ($(CPU),x100) # Knights Corner / Intel C
 include ../x100.mk
 MKFS=GNUmakefile ../x100.mk
-LIBFLAGS=-mkl -pthread
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -pthread
 else ifeq ($(CPU),x200) # Knights Landing / Intel C
 include ../x200.mk
 MKFS=GNUmakefile ../x200.mk
-LIBFLAGS=-mkl -pthread
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -pthread
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU C
 include ../power8.mk
 MKFS=GNUmakefile ../power8.mk
@@ -21,7 +21,7 @@ LIBFLAGS=-DUSE_ESSL -pthread
 else # GNU/Clang C
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
-LIBFLAGS=-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include #-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include
 endif # ?CPU
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
 

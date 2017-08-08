@@ -13,7 +13,7 @@
 #error VN_BLAS_C already defined
 #endif /* VN_BLAS_C */
 
-#ifdef __ICC
+#ifdef USE_MKL
 #ifndef MKL_Complex8
 #define MKL_Complex8 vn_complex_4
 #else /* MKL_Complex8 */
@@ -39,7 +39,7 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by Intel MKL
 #endif /* ?VN_REAL_KIND */
-#else /* !__ICC */
+#else /* !USE_MKL */
 #ifdef USE_ESSL
 #if (8 == VN_INTEGER_KIND)
 #ifndef _ESV6464

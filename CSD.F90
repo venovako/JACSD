@@ -10,6 +10,12 @@ MODULE CSD
 
 #include "INTERFACES.F90"
 
+#ifdef USE_MKL
+#ifndef USE_INTEL
+#include "mkl_service.fi"
+#endif
+#endif
+
 CONTAINS
 
 #include "IFACES_IMPL.F90"
