@@ -1,7 +1,8 @@
-/* clang -I.. gen_cbar.c -L../.. -lvn -lm */
+/* Linux: clang -DNDEBUG -D_GNU_SOURCE -I.. gen_cbar.c -L../.. -lvn -lm */
+/* macOS: clang -DNDEBUG               -I.. gen_cbar.c -L../.. -lvn -lm */
 
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE
+#define exp10 __exp10
 #endif // !_GNU_SOURCE
 #include "vn_lib.h"
 
@@ -14,8 +15,8 @@ static double id(double x)
 
 int main(int argc, char *argv[])
 {
-  if ((argc < 8) || (argc > 9)) {
-    (void)fprintf(stderr, "%s min_val max_val n_bars width height plt bmp [lg|ln|log]\n", argv[0]);
+  if ((argc < 9) || (argc > 10)) {
+    (void)fprintf(stderr, "%s min_val max_val n_bars width height plt bmp id|lg|ln|log [fmt]\n", argv[0]);
     return EXIT_FAILURE;
   }
   char *endptr = (char*)NULL;
@@ -101,18 +102,18 @@ int main(int argc, char *argv[])
 #endif // !NDEBUG
 
   pfn fn = id;
-  if (argc == 9) {
-    if (!strcmp(argv[8], "lg"))
-      fn = exp2;
-    else if (!strcmp(argv[8], "ln"))
-      fn = exp;
-    else if (!strcmp(argv[8], "log"))
-      fn = exp10;
-    else {
-      (void)fprintf(stderr, "Scale not one of lg (base 2), ln (base e), or log (base 10)!\n");
-      return EXIT_FAILURE;
-    }
+  if (!strcmp(argv[8], "lg"))
+    fn = exp2;
+  else if (!strcmp(argv[8], "ln"))
+    fn = exp;
+  else if (!strcmp(argv[8], "log"))
+    fn = exp10;
+  else if (strcmp(argv[8], "id")) {
+    (void)fprintf(stderr, "Scale not one of id, lg (base 2), ln (base e), log (base 10)!\n");
+    return EXIT_FAILURE;
   }
+
+  const char *const fmt = ((argc == 10) ? argv[9] : "%#+.17e");
 
   vn_bmp_t cbar = (vn_bmp_t)NULL;
   if (vn_bmp_create(&cbar, height, height, 8u))
@@ -156,17 +157,22 @@ int main(int argc, char *argv[])
               ps(cbar, x + x_, y + y_, 255u);
     const unsigned spc_x = width + color_h;
     (void)fprintf(stdout, "convert %s -font Courier-Bold -pointsize %u ", bmp, bar_h);
-    (void)fprintf(stdout, "-annotate +%u+%u \'<= %#+.17e\' ", spc_x, (bar_h - color_h), fn(max_val));
+    (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, (bar_h - color_h));
+    (void)fprintf(stdout, fmt, fn(max_val));
+    (void)fprintf(stdout, "\' ");
     const unsigned n_bars_1 = n_bars - 1u;
     const unsigned cpb = 256 / n_bars;
     const double wid = max_val - min_val;
     for (unsigned b = 1u; b < n_bars_1; ++b) {
       const unsigned c = 255u - b * cpb;
       const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
-      (void)fprintf(stdout, "-annotate +%u+%u \'<= %#+.17e\' ", spc_x, ((b + 1u) * bar_h - color_h), val);
+      (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, ((b + 1u) * bar_h - color_h));
+      (void)fprintf(stdout, fmt, val);
+      (void)fprintf(stdout, "\' ");
     }
-    (void)fprintf(stdout, "-annotate +%u+%u \'>= %#+.17e\' ", spc_x, (height - color_h), fn(min_val));
-    (void)fprintf(stdout, "A%s\n", bmp);
+    (void)fprintf(stdout, "-annotate +%u+%u \'>= ", spc_x, (height - color_h));
+    (void)fprintf(stdout, fmt, fn(min_val));
+    (void)fprintf(stdout, "\' A%s\n", bmp);
   }
 
   if (vn_bmp_fwrite(cbar, bmp))
