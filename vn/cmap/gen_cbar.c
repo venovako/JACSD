@@ -60,6 +60,10 @@ int main(int argc, char *argv[])
     (void)fprintf(stderr, "n_colors < n_bars\n");
     return EXIT_FAILURE;
   }
+  if (n_colors <= 1u) {
+    (void)fprintf(stderr, "n_colors <= 1\n");
+    return EXIT_FAILURE;
+  }
 
   const long widthl = strtol(argv[4], &endptr, 0);
 #ifndef NDEBUG
@@ -129,51 +133,51 @@ int main(int argc, char *argv[])
   if (vn_bmp_set_palette_color(cbar, 255u, 0u))
     return EXIT_FAILURE;
 
-  if (n_colors == 1u) {
-    // TODO: complete the degenerate case
-    for (int y = 0; y < height; ++y)
+  const unsigned color_h = height / 256u;
+  unsigned y = 0u;
+  for (int c = 255; c >= 0; --c)
+    for (unsigned y_ = 0u; y_ < color_h; ++y, ++y_)
       for (unsigned x = 0u; x < width; ++x)
-        ps(cbar, x, y, 127u);
-  }
-  else {
-    const unsigned color_h = height / 256u;
-    unsigned y = 0u;
-    for (int c = 255; c >= 0; --c)
-      for (unsigned y_ = 0u; y_ < color_h; ++y, ++y_)
-        for (unsigned x = 0u; x < width; ++x)
-          ps(cbar, x, y, (unsigned)(c ? c : 255));
-    for (y = 0u; y < height; ++y)
-      for (unsigned x = width - color_h; x < width; ++x)
-        ps(cbar, x, y, 255u);
-    for (y = 0u; y < height; ++y)
-      for (unsigned x = 0u; x < color_h; ++x)
-        ps(cbar, x, y, 255u);
-    const unsigned bar_h = height / n_bars;
-    for (y = 0u; y < height; y += bar_h)
-      for (unsigned y_ = 0u; y_ < color_h; ++y_)
-        for (unsigned x = color_h; x < width; x += 2u * color_h)
-          for (unsigned x_ = 0u; x_ < color_h; ++x_)
-            if (((x + x_) < width) && ((y + y_) < height))
-              ps(cbar, x + x_, y + y_, 255u);
-    const unsigned spc_x = width + color_h;
-    (void)fprintf(stdout, "convert %s -font Courier-Bold -pointsize %u ", bmp, bar_h);
-    (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, (bar_h - color_h));
-    (void)fprintf(stdout, fmt, fn(max_val));
+        ps(cbar, x, y, (unsigned)(c ? c : 255));
+  for (y = 0u; y < height; ++y)
+    for (unsigned x = width - color_h; x < width; ++x)
+      ps(cbar, x, y, 255u);
+  for (y = 0u; y < height; ++y)
+    for (unsigned x = 0u; x < color_h; ++x)
+      ps(cbar, x, y, 255u);
+  const unsigned bar_h = height / n_bars;
+  for (y = 0u; y < height; y += bar_h)
+    for (unsigned y_ = 0u; y_ < color_h; ++y_)
+      for (unsigned x = color_h; x < width; x += 2u * color_h)
+        for (unsigned x_ = 0u; x_ < color_h; ++x_)
+          if (((x + x_) < width) && ((y + y_) < height))
+            ps(cbar, x + x_, y + y_, 255u);
+  const unsigned spc_x = width + color_h;
+  (void)fprintf(stdout, "convert %s -font %s ", bmp,
+                // Font name is Courier-Bold on Linux, CourierNewB on macOS.
+#ifdef _GNU_SOURCE
+                "Courier-Bold"
+#else // macOS
+                "CourierNewB"
+#endif // _GNU_SOURCE
+                );
+  (void)fprintf(stdout, "-pointsize %u ", bar_h);
+  (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, (bar_h - color_h));
+  (void)fprintf(stdout, fmt, fn(max_val));
+  (void)fprintf(stdout, "\' ");
+  const unsigned n_bars_1 = n_bars - 1u;
+  const unsigned cpb = 256 / n_bars;
+  const double wid = max_val - min_val;
+  for (unsigned b = 1u; b < n_bars_1; ++b) {
+    const unsigned c = 255u - b * cpb;
+    const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
+    (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, ((b + 1u) * bar_h - color_h));
+    (void)fprintf(stdout, fmt, val);
     (void)fprintf(stdout, "\' ");
-    const unsigned n_bars_1 = n_bars - 1u;
-    const unsigned cpb = 256 / n_bars;
-    const double wid = max_val - min_val;
-    for (unsigned b = 1u; b < n_bars_1; ++b) {
-      const unsigned c = 255u - b * cpb;
-      const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
-      (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, ((b + 1u) * bar_h - color_h));
-      (void)fprintf(stdout, fmt, val);
-      (void)fprintf(stdout, "\' ");
-    }
-    (void)fprintf(stdout, "-annotate +%u+%u \'>= ", spc_x, (height - color_h));
-    (void)fprintf(stdout, fmt, fn(min_val));
-    (void)fprintf(stdout, "\' A%s\n", bmp);
   }
+  (void)fprintf(stdout, "-annotate +%u+%u \'>= ", spc_x, (height - color_h));
+  (void)fprintf(stdout, fmt, fn(min_val));
+  (void)fprintf(stdout, "\' A%s\n", bmp);
 
   if (vn_bmp_fwrite(cbar, bmp))
     return EXIT_FAILURE;
