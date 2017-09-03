@@ -9,11 +9,13 @@
 #ifdef __MIC__
 #define VN_SIMD_BITS_MAX 512
 #else /* CPU */
-#if defined(__AVX__)
+#if defined(__AVX512F__)
+#define VN_SIMD_BITS_MAX 512
+#elif defined(__AVX__)
 #define VN_SIMD_BITS_MAX 256
 #elif defined(__SSE__)
 #define VN_SIMD_BITS_MAX 128
-#else /* default vector size */
+#else /* POWER8 */
 #define VN_SIMD_BITS_MAX 128
 #endif /* ?CPU */
 #endif /* __MIC__ */
@@ -66,5 +68,76 @@
 #else /* VN_SIMD_LANES_C */
 #error VN_SIMD_LANES_C already defined
 #endif /* !VN_SIMD_LANES_C */
+
+#ifndef VN_L1D_CLS_B
+#ifdef __SSE__
+#define VN_L1D_CLS_B 64
+#else /* POWER8 */
+#define VN_L1D_CLS_B 128
+#endif /* __SSE__ */
+#error VN_L1D_CLS_B already defined
+#endif /* !VN_L1D_CLS_B */
+
+#ifndef VN_CL1_I
+#define VN_CL1_I (VN_L1D_CLS_B / VN_INTEGER_KIND)
+#else /* VN_CL1_I */
+#error VN_CL1_I already defined
+#endif /* !VN_CL1_I */
+
+#ifndef VN_CL1_R
+#if (VN_REAL_KIND == 10)
+#define VN_CL1_R (VN_L1D_CLS_B / 16)
+#else /* VN_REAL KIND != 10 */
+#define VN_CL1_R (VN_L1D_CLS_B / VN_REAL_KIND)
+#endif /* ?VN_REAL_KIND */
+#else /* VN_CL1_R */
+#error VN_CL1_R already defined
+#endif /* !VN_CL1_R */
+
+#ifndef VN_CL1_C
+#if (VN_REAL_KIND == 10)
+#define VN_CL1_C (VN_L1D_CLS_B / 32)
+#else /* VN_REAL KIND != 10 */
+#define VN_CL1_C (VN_L1D_CLS_B / (2 * VN_REAL_KIND))
+#endif /* ?VN_REAL_KIND */
+#else /* VN_CL1_C */
+#error VN_CL1_C already defined
+#endif /* !VN_CL1_C */
+
+#ifndef VN_L1D_B
+#ifdef __SSE__
+#define VN_L1D_B 32768
+#else /* POWER8 */
+#define VN_L1D_B 65536
+#endif /* __SSE__ */
+#else /* VN_L1D_B */
+#error VN_L1D_B already defined
+#endif /* !VN_L1D_B */
+
+/* SMT/hyperthreading */
+
+#ifndef VN_MAX_TPC
+#ifdef __MIC__
+#define VN_MAX_TPC 4
+#else /* CPU */
+#if defined(__AVX512F__)
+#define VN_MAX_TPC 4
+#elif defined(__SSE__)
+#define VN_MAX_TPC 2
+#else /* POWER8 */
+#define VN_MAX_TPC 8
+#endif /* ?CPU */
+#endif /* __MIC__ */
+#else /* VN_MAX_TPC */
+#error VN_MAX_TPC already defined
+#endif /* !VN_MAX_TPC */
+
+#ifndef VN_TPC
+#define VN_TPC 1
+#else /* VN_TPC */
+#if (VN_TPC < 1) || (VN_TPC > VN_MAX_TPC)
+#error VN_TPC invalid
+#endif /* ?VN_TPC */
+#endif /* !VN_TPC */
 
 #endif /* !VN_SIMD_H */

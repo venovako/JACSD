@@ -6,7 +6,7 @@
 #endif /* !VN_LIB_H */
 
 #ifndef VN_ALIGN_BYTES
-#define VN_ALIGN_BYTES VN_SIMD_BYTES_MAX
+#define VN_ALIGN_BYTES VN_L1D_CLS_B
 #endif /* !VN_ALIGN_BYTES */
 
 #ifndef VN_VAR_ALIGNED
