@@ -470,13 +470,59 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
       }
     }
 
+    for (int r = 0; r < _n_2; ++r) {
+      ij[r][1][0][0] = ij[r][0][0][0];
+      ij[r][1][0][1] = ij[r][0][0][1];
+      ij[r][1][1][0] = ij[r][0][1][0];
+      ij[r][1][1][1] = ij[r][0][1][1];
+    }
+
+    for (int r = 0; r < _n_2; ++r) {
+      if ((ij[r][1][0][1] + ij[r][1][1][1]) >= _n1) {
+        if (++(ij[r][1][0][1]) == ij[r][1][1][1])
+          ij[r][1][1][1] = (ij[r][1][0][1] -= _n_2);
+        ij[r][1][0][0] = ij[r][1][0][1];
+      }
+      else
+        ij[r][1][1][0] = ++(ij[r][1][1][1]);
+    }
+
+    for (int r = 0; r < _n_2; ++r) {
+      ij[r][1][0][1] = ij[r][1][0][0];
+      ij[r][1][0][0] = 0;
+      ij[r][1][1][1] = ij[r][1][1][0];
+      ij[r][1][1][0] = 0;
+    }
+
     if (++(mom->stp) >= mom->n) {
       mom->stp = (integer)0;
       ++(mom->swp);
     }
     info = (integer)-_n_2;
 
-    /* TODO: complete the communication! */
+    /* communication */
+    for (int i = 0; i < _n; ++i) {
+      for (int j = 0; j < _n; ++j) {
+        const int Is1 = i >> 1;
+        const int Ia1 = i & 1;
+        const int Js1 = j >> 1;
+        const int Ja1 = j & 1;
+        const int cur = ij[Is1][0][Ia1][0];
+        const int nxt = ij[Js1][1][Ja1][1];
+        /* cur sent to nxt */
+        if (cur == nxt) {
+          const int k_1 = Ia1;
+          const int k_2 = Is1;
+          const int l_1 = Ja1;
+          const int l_2 = Js1;
+          const int snd = l_2 + 1;
+          ij[Is1][1][Ia1][0] = (l_1 ? snd : -snd);
+        }
+      }
+    }
+
+    for (int r = 0; r < _n_2; ++r)
+      ij[r][1][1][1] = ij[r][1][0][1] = 0;
   }
   else
     info = (integer)0;
