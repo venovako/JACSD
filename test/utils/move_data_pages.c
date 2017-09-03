@@ -1,4 +1,8 @@
+#include "move_data_pages.h"
+
 #include <numaif.h>
+
+#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -51,4 +55,13 @@ long move_data_pages(void *const addr, const size_t sz, const int to_node)
   }
 
   return 0L;
+}
+
+void move_data_pages_(void *const addr, const size_t *const sz, const int *const to_node, long *const info)
+{
+  assert(sz);
+  assert(to_node);
+  assert(info);
+
+  info = move_data_pages(addr, *sz, *to_node);
 }
