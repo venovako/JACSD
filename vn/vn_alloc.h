@@ -7,9 +7,9 @@
 
 /*
   act:
-  0  - compute ldA
-  1  - allocate...
-  -1 - ...and zero out
+   0 - compute ldA
+   1 - allocate in RAM
+   2 - allocate in HBM
 */
 
 VN_EXTERN_C void *vn_alloc1(const vn_integer m, const size_t szT, vn_integer *const ldA, const vn_integer act);
