@@ -9,7 +9,9 @@
   act:
    0 - compute ldA
    1 - allocate in RAM
-   2 - allocate in HBM
+   2 - allocate in HBM (Only on the KNLs!)
+  -1 - also zero-out the allocation in RAM
+  -2 - also zero-out the allocation in HBM
 */
 
 VN_EXTERN_C void *vn_alloc1(const vn_integer m, const size_t szT, vn_integer *const ldA, const vn_integer act);

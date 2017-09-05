@@ -51,14 +51,18 @@ void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_int
       const size_t siz = ld_ * (n * szT);
       if (labs(act) == MkInt(1)) {
         VN_SYSI_CALL(posix_memalign(&ret, algnB, siz));
+#ifndef NDEBUG
         VN_SYSP_CALL(ret);
+#endif /* !NDEBUG */
       }
 #ifdef __AVX512PF__
       else if (labs(act) == MkInt(2)) {
         VN_SYSI_CALL(hbw_check_available());
         VN_SYSI_CALL(hbw_posix_memalign(&ret, algnB, siz));
+#ifndef NDEBUG
         VN_SYSP_CALL(ret);
         VN_SYSI_CALL(hbw_verify_memory_region(ret, siz, ((act < MkInt(0)) ? HBW_TOUCH_PAGES : 0)));
+#endif /* !NDEBUG */
       }
 #endif /* __AVX512PF__ */
       else
