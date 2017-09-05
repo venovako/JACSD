@@ -247,8 +247,7 @@ vn_integer vn_mtxvis_stop(vn_mtxvis_ctx *const ctx)
   if (!ctx)
     return MkInt(-1);
 
-  free(ctx->C);
-  ctx->C = (vn_real*)NULL;
+  vn_freep((const void**)&(ctx->C));
 
   rewind(ctx->out);
   int tot = 0, ret;

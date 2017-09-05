@@ -16,7 +16,7 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
   vn_real *const A = VN_ALLOC2(vn_real, m, n, &ldA, act);
   VN_IS_ALIGNED2(A, ldA);
   VN_SYSI_CALL(printf("ldA: %d\n", ldA) <= 0);
-  free(A);
+  vn_free(A);
   return EXIT_SUCCESS;
 }
 #else /* !VN_TEST */
@@ -51,17 +51,19 @@ void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_int
       const size_t siz = ld_ * (n * szT);
       if (labs(act) == MkInt(1)) {
         VN_SYSI_CALL(posix_memalign(&ret, algnB, siz));
+        VN_SYSP_CALL(ret);
       }
 #ifdef __AVX512PF__
       else if (labs(act) == MkInt(2)) {
         VN_SYSI_CALL(hbw_check_available());
         VN_SYSI_CALL(hbw_posix_memalign(&ret, algnB, siz));
-        VN_SYSI_CALL(hbw_verify_memory_region(ret, siz, HBW_TOUCH_PAGES));
+        VN_SYSP_CALL(ret);
+        VN_SYSI_CALL(hbw_verify_memory_region(ret, siz, ((act < MkInt(0)) ? HBW_TOUCH_PAGES : 0)));
       }
 #endif /* __AVX512PF__ */
       else
         goto LdA;
-      if (ret && (act > MkInt(0)))
+      if (ret && (act < MkInt(0)))
         (void)memset(ret, 0, siz);
     }
   }
@@ -70,5 +72,24 @@ void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_int
   if (ldA)
     *ldA = ld_;
   return ret;
+}
+
+void vn_free(const void *const ptr)
+{
+#ifdef __AVX512PF__
+  if (!hbw_verify_memory_region((void*)ptr, 1u, 0)) {
+    hbw_free((void*)ptr);
+    return;
+  }
+#endif /* __AVX512PF__ */
+  free((void*)ptr);
+}
+
+void vn_freep(const void **const pptr)
+{
+  if (pptr) {
+    vn_free(*pptr);
+    *pptr = (const void*)NULL;
+  }
 }
 #endif /* VN_TEST */

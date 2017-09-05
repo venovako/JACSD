@@ -14,6 +14,8 @@
 
 VN_EXTERN_C void *vn_alloc1(const vn_integer m, const size_t szT, vn_integer *const ldA, const vn_integer act);
 VN_EXTERN_C void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_integer *const ldA, const vn_integer act);
+VN_EXTERN_C void vn_free(const void *const ptr);
+VN_EXTERN_C void vn_freep(const void **const pptr);
 
 #ifndef VN_ALLOC1
 #define VN_ALLOC1(T, m, ldA, act) (T *)vn_alloc1(m, sizeof(T), ldA, act)
