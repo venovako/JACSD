@@ -42,8 +42,8 @@ FPUCFLAGS=-ffp-contract=fast -fno-math-errno
 endif # ?Darwin
 else # DEBUG
 ifeq ($(ARCH),Darwin)
-OPTFLAGS=-Og -march=native -Wa,-q
-OPTCFLAGS=-Og -march=native -integrated-as
+OPTFLAGS=-O0 -march=native -Wa,-q
+OPTCFLAGS=-O0 -march=native -integrated-as
 DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-g -ftrapv
 FPUFLAGS=-ffpe-trap=invalid,zero,overflow

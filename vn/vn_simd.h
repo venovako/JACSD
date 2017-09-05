@@ -2,7 +2,7 @@
 #define VN_SIMD_H
 
 #ifndef VN_LIB_H
-#error vn_align.h not intended for direct inclusion
+#error vn_simd.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
 #ifndef VN_SIMD_BITS_MAX
@@ -75,6 +75,7 @@
 #else /* POWER8 */
 #define VN_L1D_CLS_B 128
 #endif /* __SSE__ */
+#else /* VN_L1D_CLS_B */
 #error VN_L1D_CLS_B already defined
 #endif /* !VN_L1D_CLS_B */
 

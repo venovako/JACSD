@@ -49,8 +49,9 @@ void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_int
       ld_ = m;
     if (act) {
       const size_t siz = ld_ * (n * szT);
-      if (labs(act) == MkInt(1))
+      if (labs(act) == MkInt(1)) {
         VN_SYSI_CALL(posix_memalign(&ret, algnB, siz));
+      }
 #ifdef __AVX512PF__
       else if (labs(act) == MkInt(2)) {
         VN_SYSI_CALL(hbw_check_available());
