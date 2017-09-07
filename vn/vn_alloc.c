@@ -1,11 +1,5 @@
 #include "vn_lib.h"
 
-#include <unistd.h>
-/* for the KNLs */
-#ifdef __AVX512PF__
-#include <hbwmalloc.h>
-#endif /* __AVX512PF__ */
-
 #ifdef VN_TEST
 int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 {
@@ -20,6 +14,13 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
   return EXIT_SUCCESS;
 }
 #else /* !VN_TEST */
+
+#include <unistd.h>
+/* for the KNLs */
+#ifdef __AVX512PF__
+#include <hbwmalloc.h>
+#endif /* __AVX512PF__ */
+
 void *vn_alloc1(const vn_integer m, const size_t szT, vn_integer *const ldA, const vn_integer act)
 {
   return vn_alloc2(m, MkInt(1), szT, ldA, act);

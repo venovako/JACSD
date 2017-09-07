@@ -13,7 +13,7 @@
 #error VN_BLAS_C already defined
 #endif /* VN_BLAS_C */
 
-#ifdef USE_MKL
+#if defined(USE_MKL)
 #ifndef MKL_Complex8
 #define MKL_Complex8 vn_complex_4
 #else /* MKL_Complex8 */
@@ -39,8 +39,7 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by Intel MKL
 #endif /* ?VN_REAL_KIND */
-#else /* !USE_MKL */
-#ifdef USE_ESSL
+#elif defined(USE_ESSL)
 #if (8 == VN_INTEGER_KIND)
 #ifndef _ESV6464
 #define _ESV6464
@@ -63,8 +62,7 @@
 #ifndef VN_BLAS_NO_PROTO_SYRK
 #define VN_BLAS_NO_PROTO_SYRK
 #endif /* !VN_BLAS_NO_PROTO_SYRK */
-#endif /* USE_ESSL */
-#ifdef USE_OPENBLAS /* USE_OPENBLAS */
+#elif defined(USE_OPENBLAS)
 #include "f77blas.h"
 #if (4 == VN_REAL_KIND)
 #define VN_BLAS_R(name) s##name##_
@@ -78,8 +76,7 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by OpenBLAS
 #endif /* ?VN_REAL_KIND */
-#endif /* USE_OPENBLAS */
-#ifdef USE_ATLAS
+#elif defined(USE_ATLAS)
 #if (4 == VN_REAL_KIND)
 #define VN_BLAS_R(name) s##name##_
 #define VN_BLAS_C(name) c##name##_
@@ -92,11 +89,16 @@
 #ifndef VN_BLAS_NO_PROTO_SYRK
 #define VN_BLAS_NO_PROTO_SYRK
 #endif /* !VN_BLAS_NO_PROTO_SYRK */
-#endif /* USE_ATLAS */
-#endif /* ?__ICC */
+#else /* unsupported BLAS */
+#error BLAS library not supported
+#endif /* ?BLAS */
 
 #ifdef VN_BLAS_NO_PROTO_SYRK
 VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const UPLO, const vn_character *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
 #endif /* VN_BLAS_NO_PROTO_SYRK */
+
+VN_EXTERN_C vn_integer vn_blas_prepare();
+VN_EXTERN_C vn_integer vn_blas_finish(vn_integer *const curr, vn_integer *const nbuf);
+VN_EXTERN_C vn_integer vn_blas_set_num_threads(const vn_integer nt);
 
 #endif /* !VN_BLAS_H */

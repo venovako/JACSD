@@ -22,6 +22,9 @@
 #include <execinfo.h>
 #include <pthread.h>
 #include <unistd.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif /* _OPENMP */
 
 #ifndef VN_BTRACE_BUFSIZ
 #define VN_BTRACE_BUFSIZ 128
@@ -43,19 +46,35 @@
 #endif /* !VN_BTRACE */
 
 #ifndef VN_STOP
-#define VN_STOP(msg) {                                   \
-    if (msg)                                             \
-      (void)fprintf(stderr, "%s(%d) in thread %p: %s\n", \
-                    __FILE__, __LINE__,                  \
-                    (const void*)pthread_self(), (msg)); \
-    else                                                 \
-      (void)fprintf(stderr, "%s(%d) in thread %p:\n",    \
-                    __FILE__, __LINE__,                  \
-                    (const void*)pthread_self());        \
-    (void)fflush(stderr);                                \
-    VN_BTRACE;                                           \
-    exit(EXIT_FAILURE);                                  \
+#ifdef _OPENMP
+#define VN_STOP(msg) {                                          \
+    if (msg)                                                    \
+      (void)fprintf(stderr, "%s(%d) in thread %d (%p): %s\n",   \
+                    __FILE__, __LINE__, omp_get_thread_num(),   \
+                    (const void*)pthread_self(), (msg));        \
+    else                                                        \
+      (void)fprintf(stderr, "%s(%d) in thread %d (%p):\n",      \
+                    __FILE__, __LINE__, omp_get_thread_num(),   \
+                    (const void*)pthread_self());               \
+    (void)fflush(stderr);                                       \
+    VN_BTRACE;                                                  \
+    exit(EXIT_FAILURE);                                         \
   }
+#else /* !_OPENMP */
+#define VN_STOP(msg) {                                          \
+    if (msg)                                                    \
+      (void)fprintf(stderr, "%s(%d) in thread %d (%p): %s\n",   \
+                    __FILE__, __LINE__, -1,                     \
+                    (const void*)pthread_self(), (msg));        \
+    else                                                        \
+      (void)fprintf(stderr, "%s(%d) in thread %d (%p):\n",      \
+                    __FILE__, __LINE__, -1,                     \
+                    (const void*)pthread_self());               \
+    (void)fflush(stderr);                                       \
+    VN_BTRACE;                                                  \
+    exit(EXIT_FAILURE);                                         \
+  }
+#endif /* ?_OPENMP */
 #else /* VN_STOP */
 #error VN_STOP already defined
 #endif /* !VN_STOP */
