@@ -1,27 +1,31 @@
 ifeq ($(CPU),x64) # Xeon / Intel C
 include ../x64.mk
 MKFS=GNUmakefile ../x64.mk
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -pthread
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -qopenmp
 else ifeq ($(CPU),x100) # Knights Corner / Intel C
 include ../x100.mk
 MKFS=GNUmakefile ../x100.mk
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -pthread
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -qopenmp
 else ifeq ($(CPU),x200) # Knights Landing / Intel C
 include ../x200.mk
 MKFS=GNUmakefile ../x200.mk
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -pthread
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -mkl -qopenmp
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU C
 include ../power8.mk
 MKFS=GNUmakefile ../power8.mk
-LIBFLAGS=-DUSE_ATLAS -I$(HOME)/atlas/include -pthread
+LIBFLAGS=-DUSE_ATLAS -I$(HOME)/atlas/include -fopenmp
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL C
 include ../pwr8.mk
 MKFS=GNUmakefile ../pwr8.mk
-LIBFLAGS=-DUSE_ESSL -pthread
+LIBFLAGS=-DUSE_ESSL -qsmp=omp
 else # GNU/Clang C
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
-LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include #-DUSE_OPENBLAS -I$(HOME)/OpenBLAS/include
+ifeq ($(ARCH),Darwin)
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
+else # Linux
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -fopenmp
+endif # ?Darwin
 endif # ?CPU
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
 
