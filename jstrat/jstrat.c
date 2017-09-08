@@ -516,7 +516,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
           const int l_1 = Ja1;
           const int l_2 = Js1;
           const int snd = l_2 + 1;
-          ij[Is1][1][Ia1][0] = (l_1 ? snd : -snd);
+          ij[k_2][1][k_1][0] = (l_1 ? snd : -snd);
         }
       }
     }
