@@ -1,7 +1,7 @@
 ifeq ($(CPU),x64) # Xeon / Intel Fortran
 include x64.mk
 MKFS=GNUmakefile x64.mk
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads # -DMKL_DIRECT_CALL
 ifeq ($(ARCH),Darwin)
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 else # Linux
@@ -10,12 +10,12 @@ endif # ?Darwin
 else ifeq ($(CPU),x100) # Knights Corner / Intel Fortran
 include x100.mk
 MKFS=GNUmakefile x100.mk
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads # -DMKL_DIRECT_CALL
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
 include x200.mk
 MKFS=GNUmakefile x200.mk
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads # -DMKL_DIRECT_CALL
 LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU Fortran
 include power8.mk

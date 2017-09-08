@@ -22,9 +22,9 @@ else # GNU/Clang C
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
 ifeq ($(ARCH),Darwin)
-LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include # -DMKL_DIRECT_CALL
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
 else # Linux
-LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -fopenmp # -DMKL_DIRECT_CALL
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -fopenmp
 endif # ?Darwin
 endif # ?CPU
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
