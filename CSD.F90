@@ -34,7 +34,7 @@ CONTAINS
 ! Timing support.
 #include "TIMER.F90"
 
-#ifdef USE_MKL
+#ifdef MKL_DIRECT_CALL
 #include "mkl_direct_call.fi"
 #endif
 
