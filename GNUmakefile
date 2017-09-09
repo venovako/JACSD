@@ -3,49 +3,58 @@ include x64.mk
 MKFS=GNUmakefile x64.mk
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads # -DMKL_DIRECT_CALL
 ifeq ($(ARCH),Darwin)
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+BARELDF=-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 else # Linux
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+BARELDF=-L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 endif # ?Darwin
 else ifeq ($(CPU),x100) # Knights Corner / Intel Fortran
 include x100.mk
 MKFS=GNUmakefile x100.mk
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -threads # -DMKL_DIRECT_CALL
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+BARELDF=-L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
 include x200.mk
 MKFS=GNUmakefile x200.mk
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -threads # -DMKL_DIRECT_CALL
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
+BARELDF=-L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 else ifeq ($(CPU),power8) # IBM POWER8LE / GNU Fortran
 include power8.mk
 MKFS=GNUmakefile power8.mk
 LIBFLAGS=-I. -DUSE_ATLAS
 ifeq ($(USE_ATLAS),pt)
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -lptlapack -llapack -lptf77blas -lptcblas -latlas
+BARELDF=-L$(HOME)/atlas/lib -lptlapack -llapack -lptf77blas -lptcblas -latlas
+LDFLAGS=-L. -ljstrat -lqxblas $(BARELDF)
 else # sequential ATLAS
-LDFLAGS=-L. -ljstrat -lqxblas -L$(HOME)/atlas/lib -lptlapack -llapack -lf77blas -lcblas -latlas
+BARELDF=-L$(HOME)/atlas/lib -lptlapack -llapack -lf77blas -lcblas -latlas
+LDFLAGS=-L. -ljstrat -lqxblas $(BARELDF)
 endif # ?parallel ATLAS
 else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL Fortran
 include pwr8.mk
 MKFS=GNUmakefile pwr8.mk
 LIBFLAGS=-I. -WF,-DUSE_ESSL #-qessl
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L/usr/lib64 -lesslsmp6464 -lessl6464
+BARELDF=-L/usr/lib64 -lesslsmp6464 -lessl6464
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 else # GNU Fortran
 include gnu.mk
 MKFS=GNUmakefile gnu.mk
 LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
 ifeq ($(ARCH),Darwin)
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl
+BARELDF=-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 else # Linux
-LDFLAGS=-L. -ljstrat -lqxblas -lvn -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+BARELDF=-L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS=-L. -ljstrat -lqxblas -lvn $(BARELDF)
 endif # ?Darwin
 endif # ?CPU
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 
 LIBS=libjstrat.a libqxblas.a libvn.a
 
-.PHONY: all help clean
+.PHONY: all help svd_test clean
 
 all: xVJAC0.exe xVJAC1.exe xVJAC2.exe xDGESVD.exe xCSGEN.exe xLACSD.exe # xDJAC0.exe xDJAC1.exe xDJAC2.exe xJCSD.exe
 
@@ -139,8 +148,14 @@ BSCSD.o bscsd.mod: BSCSD.F90 csd.mod $(MKFS)
 JCSD.o jcsd.mod: JCSD.F90 csd.mod $(MKFS)
 	$(FC) $(FCFLAGS) -c JCSD.F90
 
-CSD.o csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_ESSL.F90 IFACES_IMPL.F90 INTERFACES.F90 JSTRAT_IFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 VJAC0.F90 VJAC1.F90 VJAC2.F90 $(MKFS)
+CSD.o csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_ESSL.F90 IFACES_IMPL.F90 INTERFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 JSTRAT_IFACES.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 VJAC0.F90 VJAC1.F90 VJAC2.F90 $(MKFS)
 	$(FC) $(FCFLAGS) -c CSD.F90
+
+LASVD.o lasvd.mod: BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_ESSL.F90 IFACES_IMPL.F90 INTERFACES.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 $(MKFS)
+	$(FC) $(FCFLAGS) -c LASVD.F90
+
+svd_test: xLASVD.F90 LASVD.o lasvd.mod $(MKFS)
+	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do for z in FA FN FW; do $(FC) $(FCFLAGS) -D$${z} -D$${x}LASVD -D$${y} xLASVD.F90 LASVD.o -o$${x}$${y}$${z}.exe $(BARELDF); done; done; done
 
 clean:
 ifdef NDEBUG
