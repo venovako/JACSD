@@ -4,6 +4,7 @@
 /* Linux: gcc   -std=gnu11 -Ofast [-DNDEBUG]               -march=native                AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
 /* Linux: clang -std=c11   -Ofast [-DNDEBUG] -D_GNU_SOURCE -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
 /* -DNDEBUG => time comparison with DGESVJ for small matrix sizes, i.e., for the innermost blocking level */
+/* Intel: icc -std=gnu11 [-DNDEBUG] -D_GNU_SOURCE -O3 -xHost -no-ftz -prec-div -prec-sqrt -mkl=sequential AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat */
 #include <emmintrin.h>
 #include <immintrin.h>
 /* standard headers */
