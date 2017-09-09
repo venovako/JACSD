@@ -1,4 +1,4 @@
-#ifndef NFMA
+#ifndef NO_FMA
 PURE REAL FUNCTION SFMA(A, B, C)
   IMPLICIT NONE
   REAL, INTENT(IN) :: A, B, C

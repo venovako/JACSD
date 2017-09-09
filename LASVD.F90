@@ -1,4 +1,4 @@
-MODULE CSD
+MODULE LASVD
 
 #include "USE_MODULES.F90"
 
@@ -8,7 +8,6 @@ MODULE CSD
 #include "VEC_PARAMS.F90"
 #include "CONSTANTS.F90"
 #include "INTERFACES.F90"
-#include "JSTRAT_IFACES.F90"
 
 #ifdef USE_MKL
 #ifndef USE_INTEL
@@ -38,12 +37,4 @@ CONTAINS
 #include "mkl_direct_call.fi"
 #endif
 
-#include "JAC0.F90"
-#include "JAC1.F90"
-#include "JAC2.F90"
-
-#include "VJAC0.F90"
-#include "VJAC1.F90"
-#include "VJAC2.F90"
-
-END MODULE CSD
+END MODULE LASVD

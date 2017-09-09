@@ -5,13 +5,16 @@
 #error vn_alloc.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifndef USE_CLANG
+#ifdef USE_CLANG
+#include <alloca.h>
+#else /* !USE_CLANG */
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
-#endif /* !USE_CLANG */
+#endif /* !_GNU_SOURCE */
 #include <alloca.h>
 #include <malloc.h>
+#endif /* ?USE_CLANG */
 #include <stdlib.h>
-
 /*
   act:
    0 - compute ldA

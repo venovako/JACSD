@@ -31,14 +31,14 @@ FMAFLAGS=/Qfma
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
 FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
-LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads
+LIBFLAGS=/DUSE_MKL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads # /DMKL_DIRECT_CALL
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /RELEASE /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)
 !ELSE # DEBUG
 OPTFLAGS=/Od /QxHost
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
 FPUFLAGS=$(FMAFLAGS) /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
-LIBFLAGS=/DUSE_MKL /DMKL_DIRECT_CALL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads /dbglibs
+LIBFLAGS=/DUSE_MKL /I. /I"%MKLROOT%\include\intel64\ilp64" /I"%MKLROOT%\include" /libs:dll /threads /dbglibs # /DMKL_DIRECT_CALL
 # /STACK:8388608 8 MiB stack
 LDFLAGS=/link /DEBUG /LIBPATH:. $(LIBS) /LIBPATH:"%MKLROOT%\lib\intel64_win" $(MKLLIBS)
 !ENDIF # ?NDEBUG
@@ -129,7 +129,7 @@ BSCSD.obj bscsd.mod: BSCSD.F90 csd.mod Makefile
 JCSD.obj jcsd.mod: JCSD.F90 csd.mod Makefile
 	$(FC) $(FCFLAGS) /c JCSD.F90
 
-CSD.obj csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 VJAC0.F90 VJAC1.F90 VJAC2.F90 Makefile
+CSD.obj csd.mod: CSD.F90 BIN_IO.F90 BLAS.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 JSTRAT_IFACES.F90 JAC0.F90 JAC1.F90 JAC2.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 VJAC0.F90 VJAC1.F90 VJAC2.F90 Makefile
 	$(FC) $(FCFLAGS) /c CSD.F90
 
 clean:
