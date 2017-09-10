@@ -313,7 +313,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
 
 #ifdef NDEBUG
 EXTERN_C void dlacpy_(const char *const UPLO, const USGN int *const M, const USGN int *const N, const double *const A, const USGN int *const LDA, double *const B, const USGN int *const LDB);
-#define MAX_LDA 176
+#define MAX_LDA 256
 static const USGN int ldA = MAX_LDA;
 static double A[MAX_LDA][MAX_LDA] __attribute__((aligned(VSIZE_B)));
 static double G[MAX_LDA][MAX_LDA] __attribute__((aligned(VSIZE_B)));
