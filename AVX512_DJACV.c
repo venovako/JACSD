@@ -206,7 +206,7 @@ unsigned long avx512_djacv0_execute(const unsigned m, const unsigned n, double *
   unsigned s = 0u;
   unsigned long R = 0ul, r;
   do {
-    R += (r = avx512_djacv(np, m, tol, Gp, Gq, Vp, Vq));
+    R += (r = avx512_djacv(np, m, G, V, tol, Sp, Sq));
     if (++s >= swp_)
       break;
   } while (r >= (1ul << 32u));
