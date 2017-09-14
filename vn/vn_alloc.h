@@ -5,15 +5,15 @@
 #error vn_alloc.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifdef USE_CLANG
+#ifdef __APPLE__
 #include <alloca.h>
-#else /* !USE_CLANG */
+#else /* !__APPLE__ */
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif /* !_GNU_SOURCE */
 #include <alloca.h>
 #include <malloc.h>
-#endif /* ?USE_CLANG */
+#endif /* ?__APPLE__ */
 #include <stdlib.h>
 /*
   act:

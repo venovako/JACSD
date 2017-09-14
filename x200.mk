@@ -12,10 +12,10 @@ FC=mpiifort -ilp64
 else # DEBUG
 FC=mpiifort -ilp64 -trace # -tcollect
 endif # ?NDEBUG
-FORFLAGS=-DUSE_INTEL -DUSE_X200 -DUSE_MPI -i8 -qopenmp -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X200 -DUSE_MPI -i8 -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_X200 -i8 -qopenmp -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X200 -i8 -fexceptions -standard-semantics
 endif # ?USE_MPI
 #-prof-gen=srcpos,globdata,threadsafe
 CC=icc
@@ -35,3 +35,7 @@ DBGCFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug 
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 FPUCFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -qopenmp
+LDFLAGS=-L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl -lmemkind
+FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
+CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)

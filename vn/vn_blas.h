@@ -39,29 +39,6 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by Intel MKL
 #endif /* ?VN_REAL_KIND */
-#elif defined(USE_ESSL)
-#if (8 == VN_INTEGER_KIND)
-#ifndef _ESV6464
-#define _ESV6464
-#endif /* !_ESV6464 */
-#else /* 8 > VN_INTEGER_KIND */
-#ifdef _ESV6464
-#undef _ESV6464
-#endif /* _ESV6464 */
-#endif /* ?VN_INTEGER_KIND */
-#include <essl.h>
-#if (4 == VN_REAL_KIND)
-#define VN_BLAS_R(name) s##name
-#define VN_BLAS_C(name) c##name
-#elif (8 == VN_REAL_KIND)
-#define VN_BLAS_R(name) d##name
-#define VN_BLAS_C(name) z##name
-#else /* unsupported */
-#error BLAS(VN_REAL_KIND) not supported by IBM ESSL
-#endif /* ?VN_REAL_KIND */
-#ifndef VN_BLAS_NO_PROTO_SYRK
-#define VN_BLAS_NO_PROTO_SYRK
-#endif /* !VN_BLAS_NO_PROTO_SYRK */
 #elif defined(USE_OPENBLAS)
 #include "f77blas.h"
 #if (4 == VN_REAL_KIND)
@@ -76,26 +53,9 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by OpenBLAS
 #endif /* ?VN_REAL_KIND */
-#elif defined(USE_ATLAS)
-#if (4 == VN_REAL_KIND)
-#define VN_BLAS_R(name) s##name##_
-#define VN_BLAS_C(name) c##name##_
-#elif (8 == VN_REAL_KIND)
-#define VN_BLAS_R(name) d##name##_
-#define VN_BLAS_C(name) z##name##_
-#else /* unsupported */
-#error BLAS(VN_REAL_KIND) not supported by ATLAS
-#endif /* ?VN_REAL_KIND */
-#ifndef VN_BLAS_NO_PROTO_SYRK
-#define VN_BLAS_NO_PROTO_SYRK
-#endif /* !VN_BLAS_NO_PROTO_SYRK */
 #else /* unsupported BLAS */
 #error BLAS library not supported
 #endif /* ?BLAS */
-
-#ifdef VN_BLAS_NO_PROTO_SYRK
-VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const UPLO, const vn_character *const TRANS, const vn_integer *const N, const vn_integer *const K, const vn_real *const ALPHA, const vn_real *const A, const vn_integer *const LDA, const vn_real *const BETA, vn_real *const C, const vn_integer *const LDC);
-#endif /* VN_BLAS_NO_PROTO_SYRK */
 
 VN_EXTERN_C vn_integer vn_blas_prepare();
 VN_EXTERN_C vn_integer vn_blas_finish(vn_integer *const curr, vn_integer *const nbuf);

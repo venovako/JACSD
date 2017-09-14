@@ -1,33 +1,16 @@
 ifeq ($(CPU),x64) # Xeon / Intel C
 include ../x64.mk
 MKFS=GNUmakefile ../x64.mk
-LIBFLAGS=-DUSE_MKL -mkl -qopenmp # -DMKL_DIRECT_CALL
 else ifeq ($(CPU),x100) # Knights Corner / Intel C
 include ../x100.mk
 MKFS=GNUmakefile ../x100.mk
-LIBFLAGS=-DUSE_MKL -mkl -qopenmp # -DMKL_DIRECT_CALL
 else ifeq ($(CPU),x200) # Knights Landing / Intel C
 include ../x200.mk
 MKFS=GNUmakefile ../x200.mk
-LIBFLAGS=-DUSE_MKL -mkl -qopenmp # -DMKL_DIRECT_CALL
-else ifeq ($(CPU),power8) # IBM POWER8LE / GNU C
-include ../power8.mk
-MKFS=GNUmakefile ../power8.mk
-LIBFLAGS=-DUSE_ATLAS -I$(HOME)/atlas/include -fopenmp
-else ifeq ($(CPU),pwr8) # IBM POWER8LE / XL C
-include ../pwr8.mk
-MKFS=GNUmakefile ../pwr8.mk
-LIBFLAGS=-DUSE_ESSL -qsmp=omp
 else # GNU/Clang C
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
-ifeq ($(ARCH),Darwin)
-LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
-else # Linux
-LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -fopenmp
-endif # ?Darwin
 endif # ?CPU
-CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
 
 SRC=\
 vn_align.c  \
@@ -46,16 +29,15 @@ vn_types.c
 
 OBJS=$(SRC:.c=.o)
 HDRS=$(SRC:.c=.h)
-LIBS=libvn.a
 
 .PHONY: all help clean
 
-all: ../$(LIBS)
+all: ../libvn.a
 
 help:
-	@echo "make [CPU=x64|x100|power8|pwr8] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-../$(LIBS): $(OBJS) $(MKFS)
+../libvn.a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 vn_align.o: vn_align.c $(HDRS) $(MKFS)
@@ -100,5 +82,5 @@ vn_types.o: vn_types.c $(HDRS) $(MKFS)
 clean:
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
-	-$(RM) ../$(LIBS)
+	-$(RM) ../libvn.a
 	-$(RM) *.dSYM

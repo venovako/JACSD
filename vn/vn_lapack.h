@@ -13,17 +13,6 @@
 #error VN_LAPACK_C already defined
 #endif /* VN_LAPACK_C */
 
-#ifdef USE_ESSL
-#if (4 == VN_REAL_KIND)
-#define VN_LAPACK_R(name) s##name
-#define VN_LAPACK_C(name) c##name
-#elif (8 == VN_REAL_KIND)
-#define VN_LAPACK_R(name) d##name
-#define VN_LAPACK_C(name) z##name
-#else /* unsupported */
-#error LAPACK(VN_REAL_KIND) not supported
-#endif /* ?VN_REAL_KIND */
-#else /* !USE_ESSL */
 #if (4 == VN_REAL_KIND)
 #define VN_LAPACK_R(name) s##name##_
 #define VN_LAPACK_C(name) c##name##_
@@ -33,6 +22,5 @@
 #else /* unsupported */
 #error LAPACK(VN_REAL_KIND) not supported
 #endif /* ?VN_REAL_KIND */
-#endif /* ?USE_ESSL */
 
 #endif /* !VN_LAPACK_H */

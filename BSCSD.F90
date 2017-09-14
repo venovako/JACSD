@@ -1,7 +1,6 @@
-!TODO: decide what arrays to put into FASTMEM for KNL.
 MODULE BSCSD
 
-  USE CSD
+  USE FTNUTILS
   IMPLICIT NONE
 
 CONTAINS
@@ -82,9 +81,7 @@ CONTAINS
 
     REAL, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
-#ifndef USE_ESSL
     EXTERNAL :: SLASET
-#endif
 
     IF (M .LT. 0) THEN
        INFO = -1
@@ -318,9 +315,7 @@ CONTAINS
 
     DOUBLE PRECISION, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
-#ifndef USE_ESSL
     EXTERNAL :: DLASET
-#endif
 
     IF (M .LT. 0) THEN
        INFO = -1
@@ -569,9 +564,7 @@ CONTAINS
 
     COMPLEX, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
-#ifndef USE_ESSL
     EXTERNAL :: CLASET
-#endif
 
     IF (M .LT. 0) THEN
        INFO = -1
@@ -820,9 +813,7 @@ CONTAINS
 
     DOUBLE COMPLEX, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
-#ifndef USE_ESSL
     EXTERNAL :: ZLASET
-#endif
 
     IF (M .LT. 0) THEN
        INFO = -1

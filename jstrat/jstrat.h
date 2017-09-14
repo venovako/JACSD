@@ -1,15 +1,13 @@
 #ifndef JSTRAT_H
 #define JSTRAT_H
 
-#ifdef EXTERN_C
-#error EXTERN_C already defined
-#else /* !EXTERN_C */
+#ifndef EXTERN_C
 #ifdef __cplusplus
 #define EXTERN_C extern "C"
 #else /* !__cplusplus */
 #define EXTERN_C extern
 #endif /* ?__cplusplus */
-#endif /* ?EXTERN_C */
+#endif /* !EXTERN_C */
 
 #ifdef _WIN32
 typedef long long integer;

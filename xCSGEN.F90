@@ -1,7 +1,6 @@
-!TODO: decide what arrays (if any) to put into FASTMEM for KNL.
 PROGRAM xCSGEN
 
-  USE CSD
+  USE FTNUTILS
   IMPLICIT NONE
   INCLUDE 'qx_wp.fi'
 
@@ -91,7 +90,7 @@ PROGRAM xCSGEN
   END DO
 
   DO I = 1, P-1
-     IF (QC(I) .LT. QC(I+1)) STOP 'ZLO'
+     IF (QC(I) .LT. QC(I+1)) STOP 'impossible'
   END DO
   ALLOCATE(T(P))
 

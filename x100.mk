@@ -16,10 +16,10 @@ FC=mpiifort -ilp64
 else # DEBUG
 FC=mpiifort -ilp64 -trace # -tcollect
 endif # ?NDEBUG
-FORFLAGS=-DUSE_INTEL -DUSE_X100 -DUSE_MPI -mmic -i8 -qopenmp -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X100 -DUSE_MPI -mmic -i8 -fexceptions -standard-semantics
 else # no MPI
 FC=ifort
-FORFLAGS=-DUSE_INTEL -DUSE_X100 -mmic -i8 -qopenmp -fexceptions -standard-semantics
+FORFLAGS=-DUSE_INTEL -DUSE_X100 -mmic -i8 -fexceptions -standard-semantics
 endif # ?USE_MPI
 CC=icc
 C11FLAGS=-DUSE_INTEL -DUSE_X100 -DVN_INTEGER_KIND=8 -std=c11 -mmic -fexceptions
@@ -38,3 +38,7 @@ DBGCFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug 
 FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -assume ieee_fpe_flags -fp-stack-check
 FPUCFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?NDEBUG
+LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/mic/ilp64 -I${MKLROOT}/include -qopenmp
+LDFLAGS=-L${MKLROOT}/lib/mic -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
+CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
