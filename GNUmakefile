@@ -80,7 +80,7 @@ FTNUTILS.o ftnutils.mod: FTNUTILS.F90 BIN_IO.F90 BIN_IO_IFACES.F90 BLAS.F90 CONS
 
 ifeq ($(CPU),x200)
 svd_test: xLASVD.F90 FTNUTILS.o ftnutils.mod $(MKFS)
-	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do for z in FA FN FW; do $(FC) $(FCFLAGS) -D$${z} -D$${x}LASVD -D$${y} xLASVD.F90 FTNUTILS.o -o$${x}$${y}$${z}.exe $(LDFLAGS); done; done; done
+	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do for z in FN FW; do $(FC) $(FCFLAGS) -D$${z} -D$${x}LASVD -D$${y} xLASVD.F90 FTNUTILS.o -o$${x}$${y}$${z}.exe $(LDFLAGS); done; done; done
 else # non-KNL
 svd_test: xLASVD.F90 FTNUTILS.o ftnutils.mod $(MKFS)
 	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do $(FC) $(FCFLAGS) -D$${x}LASVD -D$${y} xLASVD.F90 FTNUTILS.o -o$${x}$${y}.exe $(LDFLAGS); done; done
