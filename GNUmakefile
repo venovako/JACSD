@@ -17,7 +17,7 @@ LIBS=libl0c.a libjstrat.a libqxblas.a libvn.a
 
 .PHONY: all help svd_test clean
 
-all: xCSGEN.exe xLACSD.exe svd_test
+all: xCSGEN.exe xLACSD.exe xL0.exe svd_test
 
 help:
 	@echo "make [WP=4|8|10|16] [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -33,6 +33,12 @@ xLACSD.exe: xLACSD.o BSCSD.o FTNUTILS.o $(MKFS)
 
 xLACSD.o: xLACSD.F90 bscsd.mod $(MKFS)
 	$(FC) $(FCFLAGS) -c xLACSD.F90
+
+xL0.exe: xL0.o JACSVD.o FTNUTILS.o libl0c.a libjstrat.a $(MKFS)
+	$(FC) $(FCFLAGS) xL0.o JACSVD.o FTNUTILS.o -o$@ -L. -ll0c -ljstrat $(LDFLAGS)
+
+xL0.o: xL0.F90 jacsvd.mod $(MKFS)
+	$(FC) $(FCFLAGS) -c xL0.F90
 
 ifeq ($(CPU),x200)
 AVX512_DJACV.o: AVX512_DJACV.c AVX512_DJACV.h $(MKFS)
