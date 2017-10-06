@@ -47,4 +47,11 @@ static natural KNL_SNC2[4][4] = {
   {41,31,41,10}
 };
 
+static natural P100_4_1[4][4] = {
+  {1,2,4,4},
+  {2,1,4,4},
+  {4,4,1,2},
+  {4,4,2,1}
+};
+
 #endif /* !DISTANCES_H */

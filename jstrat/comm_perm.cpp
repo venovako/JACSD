@@ -1,5 +1,6 @@
 // clang++ -DDistance=KNL_QHA2A -O3 -march=native -integrated-as -DNDEBUG -DN=4 -DStrat=ME0004 comm_perm.cpp
 // clang++ -DDistance=KNL_SNC2  -O3 -march=native -integrated-as -DNDEBUG -DN=8 -DStrat=ME0008 comm_perm.cpp
+// clang++ -DDistance=P100_4_1  -O3 -march=native -integrated-as -DNDEBUG -DN=8 -DStrat=ME0008 comm_perm.cpp
 
 #include <algorithm>
 #include <csignal>
