@@ -20,6 +20,8 @@ static void op_At(const vn_integer mA, const vn_integer nA, const vn_real *const
       C[MkIx2(j, i, ldC)] = A[MkIx2(i, j, ldA)];
 }
 
+#ifndef VN_NO_BLAS
+
 static void op_AAt(const vn_integer mA, const vn_integer nA, const vn_real *const A, const vn_integer ldA, vn_real *const C, const vn_integer ldC)
 {
   static const vn_real one = MkReal(+1.0);
@@ -47,6 +49,8 @@ static void op_AtA(const vn_integer mA, const vn_integer nA, const vn_real *cons
     for (vn_integer i = j + MkInt(1); i < n; ++i)
       C[MkIx2(j, i, ldC)] = C[MkIx2(i, j, ldC)];
 }
+
+#endif /* !VN_NO_BLAS */
 
 static vn_real fn_id(const vn_real x)
 {
@@ -152,6 +156,7 @@ vn_integer vn_mtxvis_start(vn_mtxvis_ctx **const ctx, const char *const fname, c
     (*ctx)->nC = (*ctx)->mA;
     (*ctx)->op = op_At;
     break;
+#ifndef VN_NO_BLAS
   case VN_MTXVIS_OP_AAt:
     (*ctx)->mC = (*ctx)->mA;
     (*ctx)->nC = (*ctx)->mA;
@@ -162,6 +167,7 @@ vn_integer vn_mtxvis_start(vn_mtxvis_ctx **const ctx, const char *const fname, c
     (*ctx)->nC = (*ctx)->nA;
     (*ctx)->op = op_AtA;
     break;
+#endif /* !VN_NO_BLAS */
   default:
     VN_DEAD_CODE;
   }

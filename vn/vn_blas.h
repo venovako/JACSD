@@ -1,6 +1,8 @@
 #ifndef VN_BLAS_H
 #define VN_BLAS_H
 
+#ifndef VN_NO_BLAS
+
 #ifndef VN_LIB_H
 #error vn_blas.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
@@ -60,5 +62,7 @@
 VN_EXTERN_C vn_integer vn_blas_prepare();
 VN_EXTERN_C vn_integer vn_blas_finish(vn_integer *const curr, vn_integer *const nbuf);
 VN_EXTERN_C vn_integer vn_blas_set_num_threads(const vn_integer nt);
+
+#endif /* !VN_NO_BLAS */
 
 #endif /* !VN_BLAS_H */

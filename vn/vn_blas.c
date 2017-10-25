@@ -6,7 +6,7 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
   return EXIT_SUCCESS;
 }
 #else /* !VN_TEST */
-
+#ifndef VN_NO_BLAS
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -89,4 +89,5 @@ vn_integer vn_blas_set_num_threads(const vn_integer nt)
   return ret;
 #endif /* ?USE_MKL */
 }
+#endif /* !VN_NO_BLAS */
 #endif /* VN_TEST */

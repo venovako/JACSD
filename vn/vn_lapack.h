@@ -5,6 +5,14 @@
 #error vn_lapack.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
+#ifdef VN_NO_BLAS
+#ifndef VN_NO_LAPACK
+#define VN_NO_LAPACK
+#endif /* !VN_NO_LAPACK */
+#endif /* VN_NO_BLAS */
+
+#ifndef VN_NO_LAPACK
+
 #ifdef VN_LAPACK_R
 #error VN_LAPACK_R already defined
 #endif /* VN_LAPACK_R */
@@ -22,5 +30,7 @@
 #else /* unsupported */
 #error LAPACK(VN_REAL_KIND) not supported
 #endif /* ?VN_REAL_KIND */
+
+#endif /* !VN_NO_LAPACK */
 
 #endif /* !VN_LAPACK_H */

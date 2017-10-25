@@ -34,6 +34,8 @@ typedef struct {
 #error VN_MTXVIS_OP_At already defined
 #endif /* !VN_MTXVIS_OP_At */
 
+#ifndef VN_NO_BLAS
+
 #ifndef VN_MTXVIS_OP_AAt
 #define VN_MTXVIS_OP_AAt 2
 #else /* VN_MTXVIS_OP_AAt */
@@ -45,6 +47,8 @@ typedef struct {
 #else /* VN_MTXVIS_OP_AtA */
 #error VN_MTXVIS_OP_AtA already defined
 #endif /* !VN_MTXVIS_OP_AtA */
+
+#endif /* !VN_NO_BLAS */
 
 #ifndef VN_MTXVIS_FN_Id
 #define VN_MTXVIS_FN_Id 0

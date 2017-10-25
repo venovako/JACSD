@@ -43,10 +43,12 @@ PROGRAM XDMTXVIS
   INTEGER, PARAMETER :: VN_MTXVIS_OP_A   =  0
   ! Let B = A^T.
   INTEGER, PARAMETER :: VN_MTXVIS_OP_At  =  1
+#ifndef VN_NO_BLAS
   ! Let B = A A^T.
   INTEGER, PARAMETER :: VN_MTXVIS_OP_AAt =  2
   ! Let B = A^T A.
   INTEGER, PARAMETER :: VN_MTXVIS_OP_AtA =  3
+#endif
 
   ! Visualise C = Id(B) (i.e., B).
   INTEGER, PARAMETER :: VN_MTXVIS_FN_Id  =  0
