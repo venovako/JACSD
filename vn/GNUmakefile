@@ -25,6 +25,7 @@ vn_lapack.c \
 vn_lib.c    \
 vn_mtxvis.c \
 vn_simd.c   \
+vn_stdc11.c \
 vn_timer.c  \
 vn_types.c
 

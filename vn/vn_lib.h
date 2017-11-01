@@ -1,6 +1,7 @@
 #ifndef VN_LIB_H
 #define VN_LIB_H
 
+#include "vn_stdc11.h"
 #include "vn_attrs.h"
 #include "vn_assert.h"
 #include "vn_types.h"
