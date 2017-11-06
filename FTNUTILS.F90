@@ -30,8 +30,4 @@ CONTAINS
 ! Timing support.
 #include "TIMER.F90"
 
-#ifdef MKL_DIRECT_CALL
-#include "mkl_direct_call.fi"
-#endif
-
 END MODULE FTNUTILS
