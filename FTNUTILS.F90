@@ -9,11 +9,6 @@ MODULE FTNUTILS
 #include "CONSTANTS.F90"
 #include "INTERFACES.F90"
 #include "BIN_IO_IFACES.F90"
-#ifdef USE_MKL
-#ifndef USE_INTEL
-#include "mkl_service.fi"
-#endif
-#endif
 
 CONTAINS
 
@@ -25,7 +20,6 @@ CONTAINS
 
 ! Threading support.
 #include "GET_NTHR.F90"
-#include "BLAS.F90"
 
 ! Timing support.
 #include "TIMER.F90"

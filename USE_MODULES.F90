@@ -1,7 +1,2 @@
   USE, INTRINSIC :: ISO_C_BINDING
   USE OMP_LIB
-#ifdef USE_MKL
-#ifdef USE_INTEL
-  USE MKL_SERVICE
-#endif
-#endif
