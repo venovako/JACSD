@@ -23,18 +23,26 @@ CONTAINS
 
     LOGICAL, INTENT(IN), OPTIONAL :: NEST, DYN
 
-    LOGICAL :: MY_NEST, MY_DYN
+    LOGICAL(4) :: MY_NEST, MY_DYN
 
     IF (PRESENT(NEST)) THEN
-       MY_NEST = NEST
+       IF (NEST) THEN
+          MY_NEST = .TRUE._4
+       ELSE
+          MY_NEST = .FALSE._4
+       END IF
     ELSE
-       MY_NEST = .TRUE.
+       MY_NEST = .TRUE._4
     END IF
 
     IF (PRESENT(DYN)) THEN
-       MY_DYN = DYN
+       IF (DYN) THEN
+          MY_DYN = .TRUE._4
+       ELSE
+          MY_DYN = .FALSE._4
+       END IF
     ELSE
-       MY_DYN = .TRUE.
+       MY_DYN = .TRUE._4
     END IF
 
     IF (OMP_GET_NESTED() .NEQV. MY_NEST) CALL OMP_SET_NESTED(MY_NEST)
