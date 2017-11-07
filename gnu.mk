@@ -8,14 +8,14 @@ endif # !WP
 ARFLAGS=rsv
 ifdef USE_MPI
 FC=mpifort
-FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -DUSE_MPI -fdefault-integer-8 -fstack-arrays -std=f2008ts
+FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -DUSE_MPI -ffree-line-length-none -fdefault-integer-8 -fstack-arrays
 else # no MPI
 ifeq ($(ARCH),Darwin)
 FC=gfortran-7
 else # Linux
 FC=gfortran
 endif # ?Darwin
-FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -fdefault-integer-8 -fstack-arrays
+FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -ffree-line-length-none -fdefault-integer-8 -fstack-arrays
 endif # ?USE_MPI
 ifeq ($(ARCH),Darwin)
 CC=gcc-7
