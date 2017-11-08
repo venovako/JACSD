@@ -45,7 +45,7 @@ OPTCFLAGS=-Og -march=native
 endif # ?Darwin
 DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=-g -ftrapv
-FPUFLAGS=-ffpe-trap=invalid,zero,overflow
+FPUFLAGS=-ffp-contract=fast -ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=-ffp-contract=fast
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -fopenmp
