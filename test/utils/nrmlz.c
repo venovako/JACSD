@@ -4,26 +4,20 @@
 #include <complex.h>
 #include <math.h>
 
-void cnrmlz_(float _Complex *const c_out, const float _Complex *const c_in)
+float _Complex cnrmlz_(const float _Complex *const z)
 {
-  assert(c_out);
-  assert(c_in);
-  const long double c_in_re = (long double)crealf(*c_in);
-  const long double c_in_im = (long double)cimagf(*c_in);
-  const long double magnl = hypotl(c_in_re, c_in_im);
-  float *const c_out_f = (float*)c_out;
-  c_out_f[0] = (float)(c_in_re / magnl);
-  c_out_f[1] = (float)(c_in_im / magnl);
+  assert(z);
+  const long double z_re = (long double)crealf(*z);
+  const long double z_im = (long double)cimagf(*z);
+  const long double magn = hypotl(z_re, z_im);
+  return ((float)(z_re / magn) + _Complex_I * (float)(z_im / magn));
 }
 
-void znrmlz_(double _Complex *const z_out, const double _Complex *const z_in)
+double _Complex znrmlz_(const double _Complex *const z)
 {
-  assert(z_out);
-  assert(z_in);
-  const long double z_in_re = (long double)creal(*z_in);
-  const long double z_in_im = (long double)cimag(*z_in);
-  const long double magnl = hypotl(z_in_re, z_in_im);
-  double *const z_out_d = (double*)z_out;
-  z_out_d[0] = (double)(z_in_re / magnl);
-  z_out_d[1] = (double)(z_in_im / magnl);
+  assert(z);
+  const long double z_re = (long double)creal(*z);
+  const long double z_im = (long double)cimag(*z);
+  const long double magn = hypotl(z_re, z_im);
+  return ((double)(z_re / magn) + _Complex_I * (double)(z_im / magn));
 }

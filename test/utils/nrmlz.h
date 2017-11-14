@@ -5,12 +5,12 @@ extern
 #ifdef __cplusplus
 "C"
 #endif /* __cplusplus */
-void cnrmlz_(float _Complex *const c_out, const float _Complex *const c_in);
+float _Complex cnrmlz_(const float _Complex *const z);
 
 extern
 #ifdef __cplusplus
 "C"
 #endif /* __cplusplus */
-void znrmlz_(double _Complex *const z_out, const double _Complex *const z_in);
+double _Complex znrmlz_(const double _Complex *const z);
 
 #endif /* !NRMLZ_H */
