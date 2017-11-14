@@ -7,7 +7,7 @@ MKFS=GNUmakefile ../x100.mk
 else ifeq ($(CPU),x200) # Knights Landing / Intel C
 include ../x200.mk
 MKFS=GNUmakefile ../x200.mk
-else # GNU/Clang C
+else # GNU C
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
 CFLAGS += -DVN_NO_BLAS

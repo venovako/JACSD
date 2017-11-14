@@ -4,9 +4,6 @@ endif # !SHELL
 ifndef ARCH
 ARCH=$(shell uname)
 endif # !ARCH
-ifndef WP
-WP=16
-endif # !WP
 ifndef RM
 RM=rm -fv
 endif # !RM
@@ -23,6 +20,9 @@ else # GNU Fortran
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
 endif # ?CPU
+ifndef WP
+WP=16
+endif # !WP
 
 SOURCES=     \
 iqamax.F90   \
