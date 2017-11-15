@@ -70,11 +70,11 @@ LDFLAGS += -lmkl_intel_lp64
 endif # ?ILP64
 LDFLAGS += -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl
 else # Linux
-LDFLAGS=-L${MKLROOT}/lib/intel64
+LDFLAGS=-L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -L${MKLROOT}/../compiler/lib/intel64 -Wl,-rpath=${MKLROOT}/../compiler/lib/intel64 -Wl,--no-as-needed
 ifdef ILP64
-LDFLAGS += -lmkl_intel_ilp64
+LDFLAGS += -lmkl_gf_ilp64
 else # LP64
-LDFLAGS += -lmkl_intel_lp64
+LDFLAGS += -lmkl_gf_lp64
 endif # ?ILP64
 LDFLAGS += -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 endif # ?Darwin
