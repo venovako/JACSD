@@ -10,7 +10,6 @@ MKFS=GNUmakefile ../x200.mk
 else # GNU C
 include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
-# CFLAGS += -DVN_NO_BLAS
 endif # ?CPU
 
 SRC=\

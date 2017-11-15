@@ -17,7 +17,7 @@ LIBS=libl0c.a libjstrat.a libqxblas.a libvn.a
 
 .PHONY: all help svd_test clean
 
-all: xCSGEN.exe xLACSD.exe svd_test # xL0.exe
+all: xCSGEN.exe xLACSD.exe svd_test xL0.exe
 
 help:
 	@echo "make [WP=4|8|10|16] [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
