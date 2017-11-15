@@ -18,13 +18,9 @@
 #if defined(USE_MKL)
 #ifndef MKL_Complex8
 #define MKL_Complex8 vn_complex_4
-#else /* MKL_Complex8 */
-#error MKL_Complex8 already defined
 #endif /* !MKL_Complex8 */
 #ifndef MKL_Complex16
 #define MKL_Complex16 vn_complex_8
-#else /* MKL_Complex16 */
-#error MKL_Complex16 already defined
 #endif /* !MKL_Complex16 */
 #if (8 == VN_INTEGER_KIND)
 #ifndef MKL_ILP64

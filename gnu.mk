@@ -2,10 +2,9 @@ SHELL=/bin/bash
 ARCH=$(shell uname)
 RM=rm -rfv
 AR=ar
-# ALWAYS use ILP64!
-ifndef ILP64
+ifndef LP64
 ILP64=1
-endif # !ILP64
+endif # !LP64
 ifndef WP
 WP=10
 endif # !WP
