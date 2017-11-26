@@ -19,30 +19,31 @@ CONTAINS
 
   INTEGER FUNCTION BLAS_PREPARE(NEST, DYN)
 
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
 
     LOGICAL, INTENT(IN), OPTIONAL :: NEST, DYN
 
-    LOGICAL(4) :: MY_NEST, MY_DYN
+    LOGICAL(c_int) :: MY_NEST, MY_DYN
 
     IF (PRESENT(NEST)) THEN
        IF (NEST) THEN
-          MY_NEST = .TRUE._4
+          MY_NEST = .TRUE._c_int
        ELSE
-          MY_NEST = .FALSE._4
+          MY_NEST = .FALSE._c_int
        END IF
     ELSE
-       MY_NEST = .TRUE._4
+       MY_NEST = .TRUE._c_int
     END IF
 
     IF (PRESENT(DYN)) THEN
        IF (DYN) THEN
-          MY_DYN = .TRUE._4
+          MY_DYN = .TRUE._c_int
        ELSE
-          MY_DYN = .FALSE._4
+          MY_DYN = .FALSE._c_int
        END IF
     ELSE
-       MY_DYN = .TRUE._4
+       MY_DYN = .TRUE._c_int
     END IF
 
     IF (OMP_GET_NESTED() .NEQV. MY_NEST) CALL OMP_SET_NESTED(MY_NEST)
@@ -98,7 +99,7 @@ CONTAINS
     BLAS_SET_NUM_THREADS = INT(MKL_SET_NUM_THREADS_LOCAL(INT(NT,c_int)))
 #else
     BLAS_SET_NUM_THREADS = INT(OMP_GET_NUM_THREADS())
-    CALL OMP_SET_NUM_THREADS(NT)
+    CALL OMP_SET_NUM_THREADS(INT(NT,c_int))
 #endif
 
   END FUNCTION BLAS_SET_NUM_THREADS
