@@ -17,6 +17,7 @@ vn_align.c  \
 vn_alloc.c  \
 vn_assert.c \
 vn_attrs.c  \
+vn_binio.c  \
 vn_blas.c   \
 vn_bmp.c    \
 vn_error.c  \
@@ -51,6 +52,9 @@ vn_assert.o: vn_assert.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_attrs.o: vn_attrs.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -c $<
+
+vn_binio.o: vn_binio.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_blas.o: vn_blas.c $(HDRS) $(MKFS)

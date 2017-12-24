@@ -10,6 +10,7 @@
 #include "vn_align.h"
 #include "vn_alloc.h"
 #include "vn_timer.h"
+#include "vn_binio.h"
 
 #include "vn_blas.h"
 #include "vn_lapack.h"
