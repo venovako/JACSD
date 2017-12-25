@@ -39,4 +39,16 @@
 #error VN_VAR_UNUSED already defined
 #endif /* !VN_VAR_UNUSED */
 
+#ifndef VN_SHARED
+#define VN_SHARED /* value shared across all threads */
+#else /* VN_SHARED */
+#error VN_SHARED already defined
+#endif /* !VN_SHARED */
+
+#ifndef VN_PRIVATE
+#define VN_PRIVATE /* value private for each thread */
+#else /* VN_PRIVATE */
+#error VN_PRIVATE already defined
+#endif /* !VN_PRIVATE */
+
 #endif /* !VN_ATTRS_H */
