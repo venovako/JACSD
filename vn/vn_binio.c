@@ -20,15 +20,22 @@ int vn_bopen_ro(const char *const fn, off_t *const sz)
   return fd;
 }
 
-int vn_bopen_rw(const char *const fn, const off_t sz)
+int vn_bopen_rw(const char *const fn, off_t *const sz)
 {
   const int fd = (fn ? open(fn, (O_RDWR | O_CREAT), (S_IRUSR | S_IWUSR)) : -2);
   if (fd >= 0) {
-    if (sz >= 0) {
-      const int ft = ftruncate(fd, sz);
-      if (ft < 0)
-        return -fd;
-      (void)fsync(fd);
+    if (sz) {
+      if (*sz >= 0) {
+        if (ftruncate(fd, *sz) < 0)
+          return -fd;
+        (void)fsync(fd);
+      }
+      else {
+        struct stat buf;
+        if (fstat(fd, &buf) < 0)
+          return -fd;
+        *sz = buf.st_size;
+      }
     }
   }
   return fd;
