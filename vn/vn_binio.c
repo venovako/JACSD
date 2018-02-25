@@ -12,6 +12,7 @@ int vn_bopen_ro(const char *const fn, off_t *const sz)
   if (fd >= 0) {
     if (sz) {
       struct stat buf;
+      *sz = -1;
       if (fstat(fd, &buf) < 0)
         return -fd;
       *sz = buf.st_size;
@@ -32,6 +33,7 @@ int vn_bopen_rw(const char *const fn, off_t *const sz)
       }
       else {
         struct stat buf;
+        *sz = -1;
         if (fstat(fd, &buf) < 0)
           return -fd;
         *sz = buf.st_size;
