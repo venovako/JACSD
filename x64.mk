@@ -26,7 +26,7 @@ else # FMA
 FMAFLAGS=-fma
 endif # ?NFMA
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xHost
+OPTFLAGS=-O$(NDEBUG) -xHost -DMKL_DIRECT_CALL
 OPTCFLAGS=-O$(NDEBUG) -xHost
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
 DBGCFLAGS=-DNDEBUG -qopt-report=5 -traceback -w3 -diag-disable=1572,2547,10397
@@ -49,7 +49,7 @@ FPUFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast
 FPUCFLAGS=$(FMAFLAGS) -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt #-fp-model strict -fp-stack-check
 endif # ?Darwin
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_MKL -DMKL_DIRECT_CALL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -qopenmp
+LIBFLAGS=-DUSE_MKL -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -qopenmp
 ifeq ($(ARCH),Darwin)
 LDFLAGS=-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
 else # Linux
