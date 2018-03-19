@@ -164,7 +164,7 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
     return (integer)-2;
   if (n < (integer)2)
     return (integer)-3;
-  integer info /* = (integer)0 */;
+  integer info = (integer)0;
 
   if ((id & ~(integer)1) == (integer)0) { /* row/col-cyclic */
     (void)memset(js, 0, sizeof(jstrat_rolcyc));
