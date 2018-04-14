@@ -23,6 +23,9 @@ endif # ?CPU
 ifndef WP
 WP=16
 endif # !WP
+ifdef PAROPTS
+FCFLAGS+= $(PAROPTS)
+endif
 
 SOURCES=     \
 iqamax.F90   \

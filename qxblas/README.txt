@@ -23,6 +23,9 @@ The only option for Windows, for now.
 CPU=x100
 Intel Xeon Phi (KNC) with IFORT.
 
+CPU=x200
+Intel Xeon Phi (KNL) with IFORT.
+
 CPU=pwr8
 IBM POWER8 with XLF.
 
