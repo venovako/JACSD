@@ -14,7 +14,7 @@ FC=mpifort
 FORFLAGS=-cpp -DUSE_GNU -DUSE_X64 -DUSE_MPI -ffree-line-length-none -fstack-arrays
 else # no MPI
 ifeq ($(ARCH),Darwin)
-FC=gfortran-7
+FC=gfortran-8
 else # Linux
 FC=gfortran
 endif # ?Darwin
@@ -24,7 +24,7 @@ ifdef ILP64
 FORFLAGS += -fdefault-integer-8
 endif # ILP64
 ifeq ($(ARCH),Darwin)
-CC=gcc-7
+CC=gcc-8
 else # Linux
 CC=gcc
 endif # ?Darwin
@@ -73,6 +73,7 @@ LDFLAGS += -lmkl_intel_lp64
 endif # ?ILP64
 LDFLAGS += -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl
 else # Linux
+LIBFLAGS += -D_GNU_SOURCE
 LDFLAGS=-L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -L${MKLROOT}/../compiler/lib/intel64 -Wl,-rpath=${MKLROOT}/../compiler/lib/intel64 -Wl,--no-as-needed
 ifdef ILP64
 LDFLAGS += -lmkl_gf_ilp64
