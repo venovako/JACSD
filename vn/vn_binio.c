@@ -86,7 +86,7 @@ ssize_t vn_bwrite(const int fd, const void *buf, size_t nB, off_t off)
     return ret1;
   ret += ret1;
   (void)fsync(fd);
-  if (ret1 > GiB)
+  if (ret1 > nB)
     return -(int)ret1;
   return ret;
 }
@@ -124,7 +124,7 @@ ssize_t vn_bread(const int fd, void *buf, size_t nB, off_t off)
   if (ret1 < 0)
     return ret1;
   ret += ret1;
-  if (ret1 > GiB)
+  if (ret1 > nB)
     return -(int)ret1;
   return ret;
 }
