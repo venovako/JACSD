@@ -1,5 +1,7 @@
 #include "vn_lib.h"
 
+static const size_t GiB = (1ull << 30u);
+
 #ifdef VN_TEST
 int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 {
@@ -48,7 +50,7 @@ int vn_bclose(const int fd)
   return ((fd < 0) ? -2 : close(fd));
 }
 
-ssize_t vn_bwrite(const int fd, const void *const buf, const size_t nB, const off_t off)
+ssize_t vn_bwrite(const int fd, const void *buf, size_t nB, off_t off)
 {
   if (fd < 0)
     return -2;
@@ -58,15 +60,38 @@ ssize_t vn_bwrite(const int fd, const void *const buf, const size_t nB, const of
     return 0;
   if (off < 0)
     return -5;
-  const ssize_t ret = pwrite(fd, buf, nB, off);
-  if (!ret)
-    return -4;
-  if (ret > 0)
+
+  const size_t qGiB = (nB >> 30u);
+  ssize_t ret = 0;
+  for (size_t i = 0u; i < qGiB; ++i) {
+    const ssize_t ret1 = pwrite(fd, buf, GiB, off);
+    if (!ret1)
+      return -4;
+    if (ret1 < 0)
+      return ret1;
+    ret += ret1;
     (void)fsync(fd);
+    if (ret1 < GiB)
+      return ret;
+    if (ret1 > GiB)
+      return -(int)ret1;
+    buf = (const void*)(((const char*)buf) + ret1);
+    off += ret1;
+    nB -= ret1;
+  }
+  const ssize_t ret1 = pwrite(fd, buf, nB, off);
+  if (!ret1)
+    return -4;
+  if (ret1 < 0)
+    return ret1;
+  ret += ret1;
+  (void)fsync(fd);
+  if (ret1 > GiB)
+    return -(int)ret1;
   return ret;
 }
 
-ssize_t vn_bread(const int fd, void *const buf, const size_t nB, const off_t off)
+ssize_t vn_bread(const int fd, void *buf, size_t nB, off_t off)
 {
   if (fd < 0)
     return -2;
@@ -76,9 +101,31 @@ ssize_t vn_bread(const int fd, void *const buf, const size_t nB, const off_t off
     return 0;
   if (off < 0)
     return -5;
-  const ssize_t ret = pread(fd, buf, nB, off);
-  if (!ret)
+  const size_t qGiB = (nB >> 30u);
+  ssize_t ret = 0;
+  for (size_t i = 0u; i < qGiB; ++i) {
+    const ssize_t ret1 = pread(fd, buf, GiB, off);
+    if (!ret1)
+      return -4;
+    if (ret1 < 0)
+      return ret1;
+    ret += ret1;
+    if (ret1 < GiB)
+      return ret;
+    if (ret1 > GiB)
+      return -(int)ret1;
+    buf = (void*)(((char*)buf) + ret1);
+    off += ret1;
+    nB -= ret1;
+  }
+  const ssize_t ret1 = pread(fd, buf, nB, off);
+  if (!ret1)
     return -4;
+  if (ret1 < 0)
+    return ret1;
+  ret += ret1;
+  if (ret1 > GiB)
+    return -(int)ret1;
   return ret;
 }
 #endif /* VN_TEST */
