@@ -42,3 +42,6 @@
 *.bin
 *.bin.tcs
 qx_wp.fi
+
+# Directories
+old

@@ -5,8 +5,7 @@ MODULE JACSVD
   IMPLICIT NONE
 
 #include "JSTRAT_IFACES.F90"
-#include "L0_IFACES.F90"
-#include "L1_IFACES.F90"
+#include "Lx_IFACES.F90"
 
 CONTAINS
 
