@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
   }
   const integer id = atol(argv[1]);
   const integer n = atol(argv[2]);
-  if ((n <= (integer)1) || (n > (integer)100))
+  if (n <= (integer)1)
     return EXIT_FAILURE;
   integer ret = (integer)0;
   switch (id & ~(integer)1) {
