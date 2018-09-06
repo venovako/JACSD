@@ -45,6 +45,28 @@ int vn_bopen_rw(const char *const fn, off_t *const sz)
   return fd;
 }
 
+int vn_bopen_wo(const char *const fn, off_t *const sz)
+{
+  const int fd = (fn ? open(fn, (O_WRONLY | O_CREAT), S_IWUSR) : -2);
+  if (fd >= 0) {
+    if (sz) {
+      if (*sz >= 0) {
+        if (ftruncate(fd, *sz) < 0)
+          return -fd;
+        (void)fsync(fd);
+      }
+      else {
+        struct stat buf;
+        *sz = -1;
+        if (fstat(fd, &buf) < 0)
+          return -fd;
+        *sz = buf.st_size;
+      }
+    }
+  }
+  return fd;
+}
+
 int vn_bclose(const int fd)
 {
   return ((fd < 0) ? -2 : close(fd));
