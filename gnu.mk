@@ -80,7 +80,7 @@ LDFLAGS += -lmkl_gf_ilp64
 else # LP64
 LDFLAGS += -lmkl_gf_lp64
 endif # ?ILP64
-LDFLAGS += -lmkl_core -lmkl_intel_thread -lpthread -lm -ldl
+LDFLAGS += -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
 endif # ?Darwin
 FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
