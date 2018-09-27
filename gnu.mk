@@ -15,11 +15,7 @@ ifdef USE_MPI
 FC=mpifort
 FORFLAGS += -DUSE_MPI
 else # no MPI
-ifeq ($(ARCH),Darwin)
-FC=gfortran-8
-else # Linux
 FC=gfortran
-endif # ?Darwin
 endif # ?USE_MPI
 ifdef ILP64
 FORFLAGS += -fdefault-integer-8
