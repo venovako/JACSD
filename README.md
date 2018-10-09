@@ -29,3 +29,5 @@ Here, ``NDEBUG`` should be set to the desired optimization level (``3`` is a sen
 If unset, the predefined debug-mode build options will be used.
 
 For example, ``make CPU=x200 NDEBUG=3 clean all`` will trigger a full, release-mode rebuild for the KNLs.
+
+This work has been supported in part by Croatian Science Foundation under the project IP--2014--09--3670.
