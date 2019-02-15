@@ -137,8 +137,8 @@ vn_types.exe: vn_types.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 clean:
+	-$(RM) ../libvn.a
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
-	-$(RM) ../libvn.a
 	-$(RM) *.exe
 	-$(RM) *.dSYM

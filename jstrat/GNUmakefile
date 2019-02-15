@@ -28,7 +28,7 @@ jstrat.o: jstrat.c jstrat.h jstrat_ME.h $(MKFS)
 	$(CC) $(CFLAGS) -c jstrat.c
 
 clean:
+	-$(RM) ../libjstrat.a
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
-	-$(RM) ../libjstrat.a
 	-$(RM) *.dSYM

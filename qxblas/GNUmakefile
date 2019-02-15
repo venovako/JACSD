@@ -137,10 +137,10 @@ prepare:
 	$(FC) -I.. $(FCFLAGS) -c $< -o $@
 
 clean:
-	-$(RM) *.optrpt
-	-$(RM) $(OBJS)
 	-$(RM) ../libqxblas.a
 	-$(RM) ../qx_wp.fi
+	-$(RM) *.optrpt
+	-$(RM) $(OBJS)
 	-$(RM) *__genmod.mod
 	-$(RM) *__genmod.f90
 	-$(RM) *.dSYM
