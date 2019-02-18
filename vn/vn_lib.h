@@ -17,6 +17,7 @@
 
 #include "vn_bmp.h"
 #include "vn_mtxvis.h"
+#include "vn_cmplxvis.h"
 
 #ifdef __cplusplus
 #include <cctype>

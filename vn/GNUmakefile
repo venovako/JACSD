@@ -13,21 +13,22 @@ MKFS=GNUmakefile ../gnu.mk
 endif # ?CPU
 LDFLAGS:=-L.. -lvn $(LDFLAGS)
 
-SRC=\
-vn_align.c  \
-vn_alloc.c  \
-vn_assert.c \
-vn_attrs.c  \
-vn_binio.c  \
-vn_blas.c   \
-vn_bmp.c    \
-vn_error.c  \
-vn_lapack.c \
-vn_lib.c    \
-vn_mtxvis.c \
-vn_simd.c   \
-vn_stdc11.c \
-vn_timer.c  \
+SRC=		\
+vn_align.c	\
+vn_alloc.c	\
+vn_assert.c	\
+vn_attrs.c	\
+vn_binio.c	\
+vn_blas.c	\
+vn_bmp.c	\
+vn_cmplxvis.c	\
+vn_error.c	\
+vn_lapack.c	\
+vn_lib.c	\
+vn_mtxvis.c	\
+vn_simd.c	\
+vn_stdc11.c	\
+vn_timer.c	\
 vn_types.c
 
 OBJS=$(SRC:.c=.o)
@@ -92,6 +93,12 @@ vn_error.o: vn_error.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_error.exe: vn_error.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+vn_cmplxvis.o: vn_cmplxvis.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -c $<
+
+vn_cmplxvis.exe: vn_cmplxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 vn_lapack.o: vn_lapack.c $(HDRS) $(MKFS)
