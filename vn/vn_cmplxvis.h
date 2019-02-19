@@ -23,13 +23,13 @@ typedef struct {
 } vn_cmplxvis_ctx;
 
 #ifndef VN_CMPLXVIS_OP_A
-#define VN_CMPLXVIS_OP_A 0
+#define VN_CMPLXVIS_OP_A MkInt(0)
 #else /* VN_CMPLXVIS_OP_A */
 #error VN_CMPLXVIS_OP_A already defined
 #endif /* !VN_CMPLXVIS_OP_A */
 
 #ifndef VN_CMPLXVIS_OP_Ah
-#define VN_CMPLXVIS_OP_Ah 1
+#define VN_CMPLXVIS_OP_Ah MkInt(1)
 #else /* VN_CMPLXVIS_OP_Ah */
 #error VN_CMPLXVIS_OP_Ah already defined
 #endif /* !VN_CMPLXVIS_OP_Ah */
@@ -37,13 +37,13 @@ typedef struct {
 #ifndef VN_NO_BLAS
 
 #ifndef VN_CMPLXVIS_OP_AAh
-#define VN_CMPLXVIS_OP_AAh 2
+#define VN_CMPLXVIS_OP_AAh MkInt(2)
 #else /* VN_CMPLXVIS_OP_AAh */
 #error VN_CMPLXVIS_OP_AAh already defined
 #endif /* !VN_CMPLXVIS_OP_AAh */
 
 #ifndef VN_CMPLXVIS_OP_AhA
-#define VN_CMPLXVIS_OP_AhA 3
+#define VN_CMPLXVIS_OP_AhA MkInt(3)
 #else /* VN_CMPLXVIS_OP_AhA */
 #error VN_CMPLXVIS_OP_AhA already defined
 #endif /* !VN_CMPLXVIS_OP_AhA */
@@ -51,31 +51,31 @@ typedef struct {
 #endif /* !VN_NO_BLAS */
 
 #ifndef VN_CMPLXVIS_FN_Id
-#define VN_CMPLXVIS_FN_Id 0
+#define VN_CMPLXVIS_FN_Id MkInt(0)
 #else /* VN_CMPLXVIS_FN_Id */
 #error VN_CMPLXVIS_FN_Id already defined
 #endif /* !VN_CMPLXVIS_FN_Id */
 
 #ifndef VN_CMPLXVIS_FN_Lg
-#define VN_CMPLXVIS_FN_Lg 4
+#define VN_CMPLXVIS_FN_Lg MkInt(4)
 #else /* VN_CMPLXVIS_FN_Lg */
 #error VN_CMPLXVIS_FN_Lg already defined
 #endif /* !VN_CMPLXVIS_FN_Lg */
 
 #ifndef VN_CMPLXVIS_FN_Ln
-#define VN_CMPLXVIS_FN_Ln 8
+#define VN_CMPLXVIS_FN_Ln MkInt(8)
 #else /* VN_CMPLXVIS_FN_Ln */
 #error VN_CMPLXVIS_FN_Ln already defined
 #endif /* !VN_CMPLXVIS_FN_Ln */
 
 #ifndef VN_CMPLXVIS_FN_Log
-#define VN_CMPLXVIS_FN_Log 12
+#define VN_CMPLXVIS_FN_Log MkInt(12)
 #else /* VN_CMPLXVIS_FN_Log */
 #error VN_CMPLXVIS_FN_Log already defined
 #endif /* !VN_CMPLXVIS_FN_Log */
 
 #ifndef VN_CMPLXVIS_FN_Arg2PI
-#define VN_CMPLXVIS_FN_Arg2PI 16
+#define VN_CMPLXVIS_FN_Arg2PI MkInt(16)
 #else /* VN_CMPLXVIS_FN_Arg2PI */
 #error VN_CMPLXVIS_FN_Arg2PI already defined
 #endif /* !VN_CMPLXVIS_FN_Arg2PI */

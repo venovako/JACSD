@@ -23,13 +23,13 @@ typedef struct {
 } vn_mtxvis_ctx;
 
 #ifndef VN_MTXVIS_OP_A
-#define VN_MTXVIS_OP_A 0
+#define VN_MTXVIS_OP_A MkInt(0)
 #else /* VN_MTXVIS_OP_A */
 #error VN_MTXVIS_OP_A already defined
 #endif /* !VN_MTXVIS_OP_A */
 
 #ifndef VN_MTXVIS_OP_At
-#define VN_MTXVIS_OP_At 1
+#define VN_MTXVIS_OP_At MkInt(1)
 #else /* VN_MTXVIS_OP_At */
 #error VN_MTXVIS_OP_At already defined
 #endif /* !VN_MTXVIS_OP_At */
@@ -37,13 +37,13 @@ typedef struct {
 #ifndef VN_NO_BLAS
 
 #ifndef VN_MTXVIS_OP_AAt
-#define VN_MTXVIS_OP_AAt 2
+#define VN_MTXVIS_OP_AAt MkInt(2)
 #else /* VN_MTXVIS_OP_AAt */
 #error VN_MTXVIS_OP_AAt already defined
 #endif /* !VN_MTXVIS_OP_AAt */
 
 #ifndef VN_MTXVIS_OP_AtA
-#define VN_MTXVIS_OP_AtA 3
+#define VN_MTXVIS_OP_AtA MkInt(3)
 #else /* VN_MTXVIS_OP_AtA */
 #error VN_MTXVIS_OP_AtA already defined
 #endif /* !VN_MTXVIS_OP_AtA */
@@ -51,37 +51,37 @@ typedef struct {
 #endif /* !VN_NO_BLAS */
 
 #ifndef VN_MTXVIS_FN_Id
-#define VN_MTXVIS_FN_Id 0
+#define VN_MTXVIS_FN_Id MkInt(0)
 #else /* VN_MTXVIS_FN_Id */
 #error VN_MTXVIS_FN_Id already defined
 #endif /* !VN_MTXVIS_FN_Id */
 
 #ifndef VN_MTXVIS_FN_Abs
-#define VN_MTXVIS_FN_Abs 4
+#define VN_MTXVIS_FN_Abs MkInt(4)
 #else /* VN_MTXVIS_FN_Abs */
 #error VN_MTXVIS_FN_Abs already defined
 #endif /* !VN_MTXVIS_FN_Abs */
 
 #ifndef VN_MTXVIS_FN_Lg
-#define VN_MTXVIS_FN_Lg 8
+#define VN_MTXVIS_FN_Lg MkInt(8)
 #else /* VN_MTXVIS_FN_Lg */
 #error VN_MTXVIS_FN_Lg already defined
 #endif /* !VN_MTXVIS_FN_Lg */
 
 #ifndef VN_MTXVIS_FN_Log
-#define VN_MTXVIS_FN_Log 12
+#define VN_MTXVIS_FN_Log MkInt(12)
 #else /* VN_MTXVIS_FN_Log */
 #error VN_MTXVIS_FN_Log already defined
 #endif /* !VN_MTXVIS_FN_Log */
 
 #ifndef VN_MTXVIS_FF_Bin
-#define VN_MTXVIS_FF_Bin 0
+#define VN_MTXVIS_FF_Bin MkInt(0)
 #else /* VN_MTXVIS_FF_Bin */
 #error VN_MTXVIS_FF_Bin already defined
 #endif /* !VN_MTXVIS_FF_Bin */
 
 #ifndef VN_MTXVIS_FF_Asc
-#define VN_MTXVIS_FF_Asc 16
+#define VN_MTXVIS_FF_Asc MkInt(16)
 #else /* VN_MTXVIS_FF_Asc */
 #error VN_MTXVIS_FF_Asc already defined
 #endif /* !VN_MTXVIS_FF_Asc */
