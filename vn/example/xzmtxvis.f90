@@ -1,78 +1,72 @@
-! Build and run: please, see `xdmtxvis.sh`.
-PROGRAM XDMTXVIS
+! Build and run: please, see `xzmtxvis.sh`.
+PROGRAM XZMTXVIS
   USE, INTRINSIC :: ISO_C_BINDING
   IMPLICIT NONE
 
   ! Please read ALL the comments below for details about the routines.
 
   INTERFACE
-     FUNCTION VN_MTXVIS_START(ctx, fname, act, mA, nA, sx, sy, fname_len) BIND(C,name='vn_mtxvis_start')
+     FUNCTION VN_CMPLXVIS_START(ctx, fname, act, mA, nA, sx, sy, fname_len) BIND(C,name='vn_cmplxvis_start')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(OUT) :: ctx
        INTEGER, INTENT(IN), VALUE :: act, mA, nA, sx, sy, fname_len
        CHARACTER(c_char), INTENT(IN) :: fname(*)
-       INTEGER :: VN_MTXVIS_START
-     END FUNCTION VN_MTXVIS_START
+       INTEGER :: VN_CMPLXVIS_START
+     END FUNCTION VN_CMPLXVIS_START
   END INTERFACE
 
   INTERFACE
-     FUNCTION VN_MTXVIS_FRAME(ctx, A, ldA) BIND(C,name='vn_mtxvis_frame')
+     FUNCTION VN_CMPLXVIS_FRAME(ctx, A, ldA) BIND(C,name='vn_cmplxvis_frame')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER, INTENT(IN), VALUE :: ldA
-       REAL(c_double), INTENT(IN) :: A(ldA,*)
-       INTEGER :: VN_MTXVIS_FRAME
-     END FUNCTION VN_MTXVIS_FRAME
+       COMPLEX(c_double), INTENT(IN) :: A(ldA,*)
+       INTEGER :: VN_CMPLXVIS_FRAME
+     END FUNCTION VN_CMPLXVIS_FRAME
   END INTERFACE
 
   INTERFACE
-     FUNCTION VN_MTXVIS_STOP(ctx) BIND(C,name='vn_mtxvis_stop')
+     FUNCTION VN_CMPLXVIS_STOP(ctx) BIND(C,name='vn_cmplxvis_stop')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
-       INTEGER :: VN_MTXVIS_STOP
-     END FUNCTION VN_MTXVIS_STOP
+       INTEGER :: VN_CMPLXVIS_STOP
+     END FUNCTION VN_CMPLXVIS_STOP
   END INTERFACE
 
   ! Let B = A (the input matrix).
-  INTEGER, PARAMETER :: VN_MTXVIS_OP_A   =  0
-  ! Let B = A^T.
-  INTEGER, PARAMETER :: VN_MTXVIS_OP_At  =  1
+  INTEGER, PARAMETER :: VN_CMPLXVIS_OP_A   =  0
+  ! Let B = A^H.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_OP_At  =  1
 #ifndef VN_NO_BLAS
-  ! Let B = A A^T.
-  INTEGER, PARAMETER :: VN_MTXVIS_OP_AAt =  2
-  ! Let B = A^T A.
-  INTEGER, PARAMETER :: VN_MTXVIS_OP_AtA =  3
+  ! Let B = A A^H.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_OP_AAh =  2
+  ! Let B = A^H A.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_OP_AhA =  3
 #endif
 
-  ! Visualise C = Id(B) (i.e., B).
-  INTEGER, PARAMETER :: VN_MTXVIS_FN_Id  =  0
-  ! Visualise C = |B| (C_{ij} = fabs(B_{ij})).
-  INTEGER, PARAMETER :: VN_MTXVIS_FN_Abs =  4
-  ! Visualise C = Lg(|B|) (C_{ij} = log2(fabs(B_{ij}))).
-  ! If the input is zero or subnormal, set C_{ij} = -\infty.
-  INTEGER, PARAMETER :: VN_MTXVIS_FN_Lg  =  8
-  ! Visualise C = Log(|B|) (C_{ij} = log10(fabs(B_{ij}))).
-  ! If the input is zero or subnormal, set C_{ij} = -\infty.
-  INTEGER, PARAMETER :: VN_MTXVIS_FN_Log = 12
+  ! Visualise the absolute value of B.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_FN_Id     =  0
+  ! Visualise log_2 of the absolute value of B.
+  ! If the input is zero or subnormal, take -\infty.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_FN_Lg     =  4
+  ! Visualise log_e of the absolute value of B.
+  ! If the input is zero or subnormal, take -\infty.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_FN_Ln     =  8
+  ! Visualise log_10 of the absolute value of B.
+  ! If the input is zero or subnormal take -\infty.
+  INTEGER, PARAMETER :: VN_CMPLXVIS_FN_Log    = 12
+  ! Visualise the phase of B in [0, 2\pi] instead of [-\pi, \pi].
+  INTEGER, PARAMETER :: VN_CMPLXVIS_FN_Arg2PI = 16
 
   ! A temporary file is created to hold the frame dumps.
 
   ! Visualisation cannot proceed until the range of data in ALL frames is known,
   ! and is mapped to the chosen 256-colour (8-bit) palette.  The range and other
-  ! needed metadata is written in the first 128 bytes of the dump file in ASCII
-  ! form, so it is easily readable even if the rest of data is in binary form.
-  ! The file is not auto-deleted, so it can be used as a dumping/tracing facility
-  ! in its own right, if the frames are written in ASCII form (25 characters per
-  ! field, 17 digits after decimal point, one space as the field separator, each
-  ! matrix row in its own line), or if read from the binary form into memory.
-
-  ! Create a temporary file containing the frame dumps in binary (machine) form.
-  INTEGER, PARAMETER :: VN_MTXVIS_FF_Bin =  0
-  ! Create a temporary file containing the frame dumps in ASCII (text) form.
-  INTEGER, PARAMETER :: VN_MTXVIS_FF_Asc = 16
+  ! needed metadata is written in the first 184 bytes of the dump file in ASCII
+  ! form, so it is easily readable even when the rest of data is in binary form.
 
   ! With a given file prefix F, there has to be a palette file present in the
   ! current working directory, named F.plt and of the same form as examples in
@@ -84,19 +78,19 @@ PROGRAM XDMTXVIS
   ! Palette colour 0 is reserved for negative infinites, and colour 255 for
   ! positive infinities and NaNs.  Apart from these special floating-point values,
   ! the data range is assumed to be finite, and is mapped to the remaining
-  ! 254 palette colours (see normalise() function definition in vn_mtxvis.c).
+  ! 254 palette colours (see normalise() function definition in vn_cmplxvis.c).
 
   ! The dump file is created in the current working directory, and is named
-  ! F.txt or F.dat, depending on whether the frames are written in ASCII or
-  ! binary form, respectively.  It may be deleted once the bitmaps are created.
+  ! F.dat.  It may be deleted once the bitmaps are created.
 
-  ! The bitmaps are named F-%010d.bmp, i.e., with 0-padded 10-digit frame number.
+  ! The bitmaps for each frame are named FA%010d.bmp (the phase) and FR%010d.bmp
+  ! (the absolute value), i.e., with a 0-padded 10-digit frame number.
 
   ! File name prefix of length at most 7 for the dump, palette, and bitmap files.
-  CHARACTER(LEN=7), PARAMETER :: fname = 'dmtxvis'
+  CHARACTER(LEN=7), PARAMETER :: fname = 'zmtxvis'
 
   ! Specify the action to be taken as a bitwise-OR of one _OP_, one _FN_, and one _FF_ flag.
-  INTEGER, PARAMETER :: act = IOR(IOR(VN_MTXVIS_OP_A, VN_MTXVIS_FN_Id), VN_MTXVIS_FF_Bin)
+  INTEGER, PARAMETER :: act = IOR(VN_CMPLXVIS_OP_A, VN_CMPLXVIS_FN_Id)
 
   ! Dimensions of A.
   INTEGER, PARAMETER :: mA = 200
@@ -110,13 +104,14 @@ PROGRAM XDMTXVIS
   INTEGER, PARAMETER :: sy = 2
 
   ! The input matrix.
-  REAL(c_double) :: A(ldA, nA)
+  COMPLEX(c_double) :: A(ldA, nA)
+  REAL(c_double) :: DRE, DIM
 
-  ! A pointer to a context (see vn_mtxvis.h).
+  ! A pointer to a context (see vn_cmplxvis.h).
   TYPE(c_ptr) :: ctx
 
   ! If < 0, info signals an error with the |info|-th parameter.
-  ! If > 0, there was another kind of error (see the code in vn_mtxvis.c).
+  ! If > 0, there was another kind of error (see the code in vn_cmplxvis.c).
   ! If = 0, there was no error (all OK).
   INTEGER :: info
 
@@ -128,10 +123,10 @@ PROGRAM XDMTXVIS
   ! palette, and produces its own dump file and bitmaps.
 
   ! Call (only!) once per a recording session, at the beginning.
-  info = VN_MTXVIS_START(ctx, fname, act, mA, nA, sx, sy, LEN_TRIM(fname))
+  info = VN_CMPLXVIS_START(ctx, fname, act, mA, nA, sx, sy, LEN_TRIM(fname))
   IF (info .NE. 0) THEN
      PRINT *, info
-     STOP 'VN_MTXVIS_START'
+     STOP 'VN_CMPLXVIS_START'
   ELSE
      PRINT *, 'Recording started.'
   END IF
@@ -140,7 +135,9 @@ PROGRAM XDMTXVIS
   ! The bitmap's upper-left corner will correspond to element A(1,1).
   DO I = 1, mA
      DO J = 1, nA
-        A(I, J) = DBLE(MOD(I + J - 2, 254))
+        DRE = DBLE(MOD(I + J - 2, 254))
+        DIM = DBLE(MOD(I * J, 254))
+        A(I, J) = DCMPLX(DRE, DIM)
      END DO
   END DO
 
@@ -148,10 +145,10 @@ PROGRAM XDMTXVIS
   ! Note that the leading dimension of A may vary form one call to another, but
   ! not the actual number of rows or columns.  Therefore, all the frames have to
   ! be of the same size!  Different-sized frames require different contexts.
-  info = VN_MTXVIS_FRAME(ctx, A, ldA)
+  info = VN_CMPLXVIS_FRAME(ctx, A, ldA)
   IF (info .NE. 0) THEN
      PRINT *, info
-     STOP 'VN_MTXVIS_FRAME'
+     STOP 'VN_CMPLXVIS_FRAME'
   ELSE
      PRINT *, 'Recorded 1 frame.'
   END IF
@@ -159,12 +156,12 @@ PROGRAM XDMTXVIS
   ! ...dump another frames...
 
   ! Call (only!) once per a recording session, at the end.
-  info = VN_MTXVIS_STOP(ctx)
+  info = VN_CMPLXVIS_STOP(ctx)
   IF (info .NE. 0) THEN
      PRINT *, info
-     STOP 'VN_MTXVIS_STOP'
+     STOP 'VN_CMPLXVIS_STOP'
   ELSE
      PRINT *, 'Recording stopped.'
   END IF
 
-END PROGRAM XDMTXVIS
+END PROGRAM XZMTXVIS
