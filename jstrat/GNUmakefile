@@ -12,7 +12,8 @@ include ../gnu.mk
 MKFS=GNUmakefile ../gnu.mk
 endif # ?CPU
 
-OBJS=jstrat.o
+OBJS=jstrat.o jstrat_f.o
+MODS=jstrat_f.mod
 
 .PHONY: all help clean
 
@@ -27,8 +28,12 @@ help:
 jstrat.o: jstrat.c jstrat.h jstrat_ME.h $(MKFS)
 	$(CC) $(CFLAGS) -c jstrat.c
 
+jstrat_f.o jstrat_f.mod: jstrat_f.F90 jstrat.h $(MKFS)
+	$(FC) $(FCFLAGS) -c jstrat_f.F90
+
 clean:
 	-$(RM) ../libjstrat.a
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
+	-$(RM) $(MODS)
 	-$(RM) *.dSYM
