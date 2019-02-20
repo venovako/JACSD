@@ -32,6 +32,7 @@ vn_timer.c	\
 vn_types.c
 
 SRCF=			\
+vn_binio_f.F90		\
 vn_cmplxvis_f.F90	\
 vn_mtxvis_f.F90
 
@@ -81,6 +82,9 @@ vn_attrs.exe: vn_attrs.c $(HDRS) $(MKFS)
 
 vn_binio.o: vn_binio.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
+
+vn_binio_f.o vn_binio_f.mod: vn_binio_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FCFLAGS) -c $<
 
 vn_binio.exe: vn_binio.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
