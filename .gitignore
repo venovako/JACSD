@@ -36,6 +36,9 @@
 *.dSYM
 *.pdb
 
+# Module files
+*.mod
+
 # Generated files
 *__genmod.f90
 *__genmod.mod

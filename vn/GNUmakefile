@@ -13,7 +13,7 @@ MKFS=GNUmakefile ../gnu.mk
 endif # ?CPU
 LDFLAGS:=-L.. -lvn $(LDFLAGS)
 
-SRC=		\
+SRCC=		\
 vn_align.c	\
 vn_alloc.c	\
 vn_assert.c	\
@@ -31,9 +31,17 @@ vn_stdc11.c	\
 vn_timer.c	\
 vn_types.c
 
-OBJS=$(SRC:.c=.o)
-HDRS=$(SRC:.c=.h)
-EXES=$(SRC:.c=.exe)
+SRCF=			\
+vn_cmplxvis_f.F90	\
+vn_mtxvis_f.F90
+
+SRC=$(SRCC) $(SRCF)
+OBJSC=$(SRCC:.c=.o)
+OBJSF=$(SRCF:.F90=.o)
+OBJS=$(OBJSC) $(OBJSF)
+HDRS=$(SRCC:.c=.h)
+MODS=$(SRCF:.F90=.mod)
+EXES=$(SRCC:.c=.exe)
 
 .PHONY: all test help clean
 
@@ -98,6 +106,9 @@ vn_error.exe: vn_error.c $(HDRS) $(MKFS)
 vn_cmplxvis.o: vn_cmplxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
+vn_cmplxvis_f.o vn_cmplxvis_f.mod: vn_cmplxvis_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FCFLAGS) -c $<
+
 vn_cmplxvis.exe: vn_cmplxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
@@ -115,6 +126,9 @@ vn_lib.exe: vn_lib.c $(HDRS) $(MKFS)
 
 vn_mtxvis.o: vn_mtxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
+
+vn_mtxvis_f.o vn_mtxvis_f.mod: vn_mtxvis_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FCFLAGS) -c $<
 
 vn_mtxvis.exe: vn_mtxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
@@ -147,5 +161,6 @@ clean:
 	-$(RM) ../libvn.a
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
-	-$(RM) *.exe
+	-$(RM) $(EXES)
+	-$(RM) $(MODS)
 	-$(RM) *.dSYM
