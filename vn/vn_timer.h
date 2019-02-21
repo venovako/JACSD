@@ -13,6 +13,7 @@
 
 #include <sys/time.h>
 
-VN_EXTERN_C vn_integer_8 vn_timer();
+VN_EXTERN_C vn_integer_8 vn_get_thread_ns();
+VN_EXTERN_C vn_integer_8 vn_get_sys_us();
 
 #endif /* !VN_TIMER_H */
