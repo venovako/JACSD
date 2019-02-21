@@ -36,7 +36,7 @@ MODULE VN_BINIO_F
      FUNCTION VN_BCLOSE(FD) BIND(C,NAME='vn_bclose')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
-       INTEGER(KIND=c_int), VALUE :: FD
+       INTEGER(KIND=c_int), INTENT(IN), VALUE :: FD
        INTEGER(KIND=c_int) :: VN_BCLOSE
      END FUNCTION VN_BCLOSE
   END INTERFACE
@@ -45,9 +45,9 @@ MODULE VN_BINIO_F
      FUNCTION VN_BWRITE(FD, BUF, nB, OFF) BIND(C,NAME='vn_bwrite')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
-       INTEGER(KIND=c_int), VALUE :: FD
-       TYPE(c_ptr), VALUE :: BUF
-       INTEGER(KIND=c_size_t), VALUE :: nB, OFF
+       INTEGER(KIND=c_int), INTENT(IN), VALUE :: FD
+       TYPE(c_ptr), INTENT(IN), VALUE :: BUF
+       INTEGER(KIND=c_size_t), INTENT(IN), VALUE :: nB, OFF
        INTEGER(KIND=c_size_t) :: VN_BWRITE
      END FUNCTION VN_BWRITE
   END INTERFACE
@@ -56,9 +56,9 @@ MODULE VN_BINIO_F
      FUNCTION VN_BREAD(FD, BUF, nB, OFF) BIND(C,NAME='vn_bread')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
-       INTEGER(KIND=c_int), VALUE :: FD
-       TYPE(c_ptr), VALUE :: BUF
-       INTEGER(KIND=c_size_t), VALUE :: nB, OFF
+       INTEGER(KIND=c_int), INTENT(IN), VALUE :: FD
+       TYPE(c_ptr), INTENT(IN), VALUE :: BUF
+       INTEGER(KIND=c_size_t), INTENT(IN), VALUE :: nB, OFF
        INTEGER(KIND=c_size_t) :: VN_BREAD
      END FUNCTION VN_BREAD
   END INTERFACE
