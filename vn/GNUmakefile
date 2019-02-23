@@ -1,9 +1,6 @@
 ifeq ($(CPU),x64) # Xeon / Intel C
 include ../x64.mk
 MKFS=GNUmakefile ../x64.mk
-else ifeq ($(CPU),x100) # Knights Corner / Intel C
-include ../x100.mk
-MKFS=GNUmakefile ../x100.mk
 else ifeq ($(CPU),x200) # Knights Landing / Intel C
 include ../x200.mk
 MKFS=GNUmakefile ../x200.mk

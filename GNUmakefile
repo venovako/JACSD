@@ -1,9 +1,6 @@
 ifeq ($(CPU),x64) # Xeon / Intel Fortran
 include x64.mk
 MKFS=GNUmakefile x64.mk
-else ifeq ($(CPU),x100) # Knights Corner / Intel Fortran
-include x100.mk
-MKFS=GNUmakefile x100.mk
 else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
 include x200.mk
 MKFS=GNUmakefile x200.mk
