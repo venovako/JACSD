@@ -1,85 +1,66 @@
+ifndef WP
+WP=10
+endif # !WP
 SHELL=/bin/bash
 ARCH=$(shell uname)
 RM=rm -rfv
 AR=ar
-ifndef LP64
-ILP64=1
-endif # !LP64
-ifndef WP
-WP=10
-endif # !WP
 ARFLAGS=rsv
 CPUFLAGS=-DUSE_GNU -DUSE_X64
-FORFLAGS=-cpp $(CPUFLAGS) -ffree-line-length-none -fopenmp -fstack-arrays
-ifdef USE_MPI
-FC=mpifort
-FORFLAGS += -DUSE_MPI
-else # no MPI
-FC=gfortran
-endif # ?USE_MPI
-ifdef ILP64
-FORFLAGS += -fdefault-integer-8
-endif # ILP64
+FORFLAGS=-cpp $(CPUFLAGS) -fdefault-integer-8 -ffree-line-length-none -fopenmp -fstack-arrays
+C11FLAGS=$(CPUFLAGS) -DVN_INTEGER_KIND=8 -std=gnu17
 ifeq ($(ARCH),Darwin)
 CC=clang
-C11FLAGS=$(CPUFLAGS) -std=gnu17 -pthread
+FC=gfortran
+C11FLAGS += -pthread
 else # Linux
 CC=gcc
-C11FLAGS=$(CPUFLAGS) -std=gnu11 -fopenmp
+FC=gfortran
+C11FLAGS += -fopenmp
 endif # ?Darwin
-ifdef ILP64
-C11FLAGS += -DVN_INTEGER_KIND=8
-endif # ILP64
 ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG) -march=native
+DBGFLAGS=-DNDEBUG
 ifeq ($(ARCH),Darwin)
-OPTFLAGS=-O$(NDEBUG) -march=native -Wa,-q -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-OPTCFLAGS=-O$(NDEBUG) -march=native -integrated-as
-DBGCFLAGS=-DNDEBUG
+OPTFFLAGS=$(OPTFLAGS) -Wa,-q -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+OPTCFLAGS=$(OPTFLAGS) -integrated-as
+DBGFFLAGS=$(DBGFLAGS) -fopt-info-optimized-vec -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGCFLAGS=$(DBGFLAGS)
 else # Linux
-OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-OPTCFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-DBGCFLAGS=-DNDEBUG -fopt-info-optimized-vec
+OPTFLAGS += -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+OPTFFLAGS=$(OPTFLAGS)
+OPTCFLAGS=$(OPTFLAGS)
+DBGFLAGS += -fopt-info-optimized-vec
+DBGFFLAGS=$(DBGFLAGS) -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGCFLAGS=$(DBGFLAGS)
 endif # ?Darwin
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 FPUFLAGS=-ffp-contract=fast
-FPUCFLAGS=-ffp-contract=fast -fno-math-errno
-OPTFLAGS += -DMKL_DIRECT_CALL
+FPUFFLAGS=$(FPUFLAGS)
+FPUCFLAGS=$(FPUFLAGS) -fno-math-errno
+OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
-ifeq ($(ARCH),Darwin)
-OPTFLAGS=-Og -march=native -Wa,-q
-OPTCFLAGS=-Og -march=native -integrated-as
-else # Linux
 OPTFLAGS=-Og -march=native
-OPTCFLAGS=-Og -march=native
-endif # ?Darwin
-DBGFLAGS=-g -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
-DBGCFLAGS=-g -ftrapv
-FPUFLAGS=-ffp-contract=fast -ffpe-trap=invalid,zero,overflow
-FPUCFLAGS=-ffp-contract=fast
-endif # ?NDEBUG
-LIBFLAGS=-DUSE_MKL -I.
-ifdef ILP64
-LIBFLAGS += -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
-else # LP64
-LIBFLAGS += -I${MKLROOT}/include
-endif # ?ILP64
 ifeq ($(ARCH),Darwin)
-LDFLAGS=-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib
-ifdef ILP64
-LDFLAGS += -lmkl_intel_ilp64
-else # LP64
-LDFLAGS += -lmkl_intel_lp64
-endif # ?ILP64
-LDFLAGS += -lmkl_core -lmkl_intel_thread -liomp5 -lpthread -lm -ldl
+OPTFFLAGS=$(OPTFLAGS) -Wa,-q
+OPTCFLAGS=$(OPTFLAGS) -integrated-as
 else # Linux
-LIBFLAGS += -D_GNU_SOURCE
-LDFLAGS=-L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -L${MKLROOT}/../compiler/lib/intel64 -Wl,-rpath=${MKLROOT}/../compiler/lib/intel64 -Wl,--no-as-needed
-ifdef ILP64
-LDFLAGS += -lmkl_gf_ilp64
-else # LP64
-LDFLAGS += -lmkl_gf_lp64
-endif # ?ILP64
-LDFLAGS += -lmkl_core -lmkl_gnu_thread -lpthread -lm -ldl
+OPTFFLAGS=$(OPTFLAGS)
+OPTCFLAGS=$(OPTFLAGS)
 endif # ?Darwin
-FCFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
+DBGFLAGS=-g
+DBGFFLAGS=$(DBGFLAGS) -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGCFLAGS=$(DBGFLAGS) -ftrapv
+FPUFLAGS=-ffp-contract=fast
+FPUFFLAGS=$(FPUFLAGS) -ffpe-trap=invalid,zero,overflow
+FPUCFLAGS=$(FPUFLAGS)
+endif # ?NDEBUG
+LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
+ifeq ($(ARCH),Darwin)
+LDFLAGS=-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5
+else # Linux
+LIBFLAGS += -D_GNU_SOURCE -static
+LDFLAGS=-L${MKLROOT}/lib/intel64 -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_gf_ilp64.a ${MKLROOT}/lib/intel64/libmkl_gnu_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lgomp
+endif # ?Darwin
+LDFLAGS += -lpthread -lm -ldl
+FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)

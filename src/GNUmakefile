@@ -34,41 +34,41 @@ AVX2_FMA_DJACV.o: AVX2_FMA_DJACV.c AVX2_FMA_DJACV.h $(MKFS)
 endif # ?CPU
 
 xCSGEN.exe: xCSGEN.o FTNUTILS.o ftnutils.mod ../libqxblas.a $(MKFS)
-	$(FC) $(FCFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas $(LDFLAGS)
+	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas $(LDFLAGS)
 
 xCSGEN.o: xCSGEN.F90 ../qx_wp.fi ftnutils.mod $(MKFS)
-	$(FC) $(FCFLAGS) -I.. -c xCSGEN.F90
+	$(FC) $(FFLAGS) -I.. -c xCSGEN.F90
 
 xLACSD.exe: xLACSD.o BSCSD.o BLAS.o FTNUTILS.o $(MKFS)
-	$(FC) $(FCFLAGS) xLACSD.o BSCSD.o BLAS.o FTNUTILS.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) xLACSD.o BSCSD.o BLAS.o FTNUTILS.o -o$@ $(LDFLAGS)
 
 xLACSD.o: xLACSD.F90 bscsd.mod $(MKFS)
-	$(FC) $(FCFLAGS) -c xLACSD.F90
+	$(FC) $(FFLAGS) -c xLACSD.F90
 
 xL0.exe: xL0.o JACSVD.o BLAS.o FTNUTILS.o ../libl0c.a ../libjstrat.a $(MKFS)
-	$(FC) $(FCFLAGS) xL0.o JACSVD.o BLAS.o FTNUTILS.o -o$@ -L.. -ll0c -ljstrat $(LDFLAGS)
+	$(FC) $(FFLAGS) xL0.o JACSVD.o BLAS.o FTNUTILS.o -o$@ -L.. -ll0c -ljstrat $(LDFLAGS)
 
 xL0.o: xL0.F90 jacsvd.mod $(MKFS)
-	$(FC) $(FCFLAGS) -c xL0.F90
+	$(FC) $(FFLAGS) -c xL0.F90
 
 BSCSD.o bscsd.mod: BSCSD.F90 blas.mod ftnutils.mod $(MKFS)
-	$(FC) $(FCFLAGS) -c BSCSD.F90
+	$(FC) $(FFLAGS) -c BSCSD.F90
 
 JACSVD.o jacsvd.mod: JACSVD.F90 JSTRAT_IFACES.F90 Lx_IFACES.F90 L0_IFACES.F90 Lx_IFACES_IMPL.F90 L0_IFACES_IMPL.F90 blas.mod ftnutils.mod $(MKFS)
-	$(FC) $(FCFLAGS) -c JACSVD.F90
+	$(FC) $(FFLAGS) -c JACSVD.F90
 
 BLAS.o blas.mod: BLAS.F90 ftnutils.mod $(MKFS)
-	$(FC) $(FCFLAGS) -c BLAS.F90
+	$(FC) $(FFLAGS) -c BLAS.F90
 
 FTNUTILS.o ftnutils.mod: FTNUTILS.F90 BIN_IO.F90 BIN_IO_IFACES.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 $(MKFS)
-	$(FC) $(FCFLAGS) -c FTNUTILS.F90
+	$(FC) $(FFLAGS) -c FTNUTILS.F90
 
 ifeq ($(CPU),x200)
 svd_test: xLASVD.F90 BLAS.o blas.mod FTNUTILS.o ftnutils.mod $(MKFS)
-	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do for z in FN FW; do $(FC) $(FCFLAGS) -D$${z} -D$${x}LASVD -D$${y} xLASVD.F90 BLAS.o FTNUTILS.o -o$${x}$${y}$${z}.exe $(LDFLAGS); done; done; done
+	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do for z in FN FW; do $(FC) $(FFLAGS) -D$${z} -D$${x}LASVD -D$${y} xLASVD.F90 BLAS.o FTNUTILS.o -o$${x}$${y}$${z}.exe $(LDFLAGS); done; done; done
 else # non-KNL
 svd_test: xLASVD.F90 BLAS.o blas.mod FTNUTILS.o ftnutils.mod $(MKFS)
-	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do $(FC) $(FCFLAGS) -D$${x}LASVD -D$${y} xLASVD.F90 BLAS.o FTNUTILS.o -o$${x}$${y}.exe $(LDFLAGS); done; done
+	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do $(FC) $(FFLAGS) -D$${x}LASVD -D$${y} xLASVD.F90 BLAS.o FTNUTILS.o -o$${x}$${y}.exe $(LDFLAGS); done; done
 endif # ?CPU
 
 clean:

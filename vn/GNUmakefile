@@ -86,7 +86,7 @@ vn_binio.o: vn_binio.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_binio_f.o vn_binio_f.mod: vn_binio_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FCFLAGS) -c $<
+	$(FC) $(FFLAGS) -c $<
 
 vn_binio.exe: vn_binio.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
@@ -95,7 +95,7 @@ vn_blas.o: vn_blas.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_blas_f.o vn_blas_f.mod: vn_blas_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FCFLAGS) -c $<
+	$(FC) $(FFLAGS) -c $<
 
 vn_blas.exe: vn_blas.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
@@ -116,7 +116,7 @@ vn_cmplxvis.o: vn_cmplxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_cmplxvis_f.o vn_cmplxvis_f.mod: vn_cmplxvis_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FCFLAGS) -c $<
+	$(FC) $(FFLAGS) -c $<
 
 vn_cmplxvis.exe: vn_cmplxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
@@ -137,7 +137,7 @@ vn_mtxvis.o: vn_mtxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_mtxvis_f.o vn_mtxvis_f.mod: vn_mtxvis_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FCFLAGS) -c $<
+	$(FC) $(FFLAGS) -c $<
 
 vn_mtxvis.exe: vn_mtxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
@@ -158,7 +158,7 @@ vn_timer.o: vn_timer.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_timer_f.o vn_timer_f.mod: vn_timer_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FCFLAGS) -c $<
+	$(FC) $(FFLAGS) -c $<
 
 vn_timer.exe: vn_timer.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)

@@ -24,7 +24,7 @@ ifndef WP
 WP=16
 endif # !WP
 ifdef PAROPTS
-FCFLAGS+= $(PAROPTS)
+FFLAGS+= $(PAROPTS)
 endif
 
 SOURCES=     \
@@ -134,7 +134,7 @@ prepare:
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 %.o: %.F90 $(MKFS)
-	$(FC) -I.. $(FCFLAGS) -c $< -o $@
+	$(FC) -I.. $(FFLAGS) -c $< -o $@
 
 clean:
 	-$(RM) ../libqxblas.a
