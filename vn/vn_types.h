@@ -35,28 +35,12 @@
 #endif /* __cplusplus */
 
 #ifndef __CUDACC__
-#ifdef __GNUC__
-#ifdef __ICC
-#pragma warning(push)
-#pragma warning(disable:64)
-#else /* !__ICC */
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-declarations"
-#endif /* __ICC */
-#endif /* __GNUC__ */
 static_assert(8 == CHAR_BIT, "vn_char_bit_8");
 static_assert(1 == sizeof(char), "vn_char_sz_1");
 static_assert(4 == sizeof(wchar_t), "vn_wchar_t_sz_4");
 static_assert(4 == sizeof(float), "vn_float_sz_4");
 static_assert(8 == sizeof(double), "vn_double_sz_8");
 static_assert(16 == sizeof(long double), "vn_ldouble_sz_16");
-#ifdef __GNUC__
-#ifdef __ICC
-#pragma warning(pop)
-#else /* !__ICC */
-#pragma GCC diagnostic pop
-#endif /* __ICC */
-#endif /* __GNUC__ */
 #endif /* !__CUDACC__ */
 
 #ifndef VN_CHARACTER_KIND
@@ -82,9 +66,9 @@ typedef int16_t vn_integer_2;
 typedef int32_t vn_integer_4;
 typedef int64_t vn_integer_8;
 
-/* default integer is 32-bit signed */
+/* default integer is 64-bit signed */
 #ifndef VN_INTEGER_KIND
-#define VN_INTEGER_KIND 4
+#define VN_INTEGER_KIND 8
 #endif /* !VN_INTEGER_KIND */
 
 #ifdef MkInt

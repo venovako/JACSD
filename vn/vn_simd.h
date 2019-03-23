@@ -136,7 +136,7 @@
 #ifndef VN_TPC
 #define VN_TPC 1
 #else /* VN_TPC */
-#if (VN_TPC < 1) || (VN_TPC > VN_MAX_TPC)
+#if ((VN_TPC < 1) || (VN_TPC > VN_MAX_TPC))
 #error VN_TPC invalid
 #endif /* ?VN_TPC */
 #endif /* !VN_TPC */

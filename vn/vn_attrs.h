@@ -16,39 +16,27 @@
 #endif /* !VN_EXTERN_C */
 
 #ifndef VN_DEAD_CODE
-#ifdef __GNUC__
+#if (defined(__GNUC__) || defined(__clang__))
 #ifdef __ICC
 #define VN_DEAD_CODE __assume(0)
 #else /* !__ICC */
 #define VN_DEAD_CODE __builtin_unreachable()
 #endif /* __ICC */
-#else /* !__GNUC__ */
+#else /* !__GNUC__ && !__clang__ */
 #define VN_DEAD_CODE
-#endif /* __GNUC__ */
+#endif /* ?(__GNUC__ || __clang__) */
 #else /* VN_DEAD_CODE */
 #error VN_DEAD_CODE already defined
 #endif /* !VN_DEAD_CODE */
 
 #ifndef VN_VAR_UNUSED
-#ifdef __GNUC__
+#if (defined(__GNUC__) || defined(__clang__))
 #define VN_VAR_UNUSED __attribute__((unused))
-#else /* !__GNUC__ */
+#else /* !__GNUC__ && !__clang__ */
 #define VN_VAR_UNUSED
-#endif /* __GNUC__ */
+#endif /* ?(__GNUC__ || __clang__) */
 #else /* VN_VAR_UNUSED */
 #error VN_VAR_UNUSED already defined
 #endif /* !VN_VAR_UNUSED */
-
-#ifndef VN_SHARED
-#define VN_SHARED /* value shared across all threads */
-#else /* VN_SHARED */
-#error VN_SHARED already defined
-#endif /* !VN_SHARED */
-
-#ifndef VN_PRIVATE
-#define VN_PRIVATE /* value private for each thread */
-#else /* VN_PRIVATE */
-#error VN_PRIVATE already defined
-#endif /* !VN_PRIVATE */
 
 #endif /* !VN_ATTRS_H */
