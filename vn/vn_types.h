@@ -51,10 +51,10 @@ static_assert(16 == sizeof(long double), "vn_ldouble_sz_16");
 #error MkChar already defined
 #endif /* MkChar */
 
-#if (1 == VN_CHARACTER_KIND)
+#if (1 == (VN_CHARACTER_KIND))
 #define MkChar(x) x
 typedef char vn_character;
-#elif (4 == VN_CHARACTER_KIND)
+#elif (4 == (VN_CHARACTER_KIND))
 #define MkChar(x) L##x
 typedef wchar_t vn_character;
 #else /* unsupported */
@@ -83,12 +83,12 @@ typedef int64_t vn_integer_8;
 #error VN_INTEGER_MAX already defined
 #endif /* VN_INTEGER_MAX */
 
-#if (4 == VN_INTEGER_KIND)
+#if (4 == (VN_INTEGER_KIND))
 #define MkInt INT32_C
 typedef vn_integer_4 vn_integer;
 #define VN_INTEGER_MIN INT32_MIN
 #define VN_INTEGER_MAX INT32_MAX
-#elif (8 == VN_INTEGER_KIND)
+#elif (8 == (VN_INTEGER_KIND))
 #define MkInt INT64_C
 typedef vn_integer_8 vn_integer;
 #define VN_INTEGER_MIN INT64_MIN
@@ -110,19 +110,19 @@ typedef vn_integer_8 vn_logical_8;
 #error MkBool already defined
 #endif /* MkBool */
 
-#if (8 == VN_LOGICAL_KIND)
+#if (8 == (VN_LOGICAL_KIND))
 #define MkBool(x) INT64_C(x)
 #else /* VN_LOGICAL_KIND < 8 */
 #define MkBool(x) x
 #endif /* ?VN_LOGICAL_KIND */
 
-#if (1 == VN_LOGICAL_KIND)
+#if (1 == (VN_LOGICAL_KIND))
 typedef vn_logical_1 vn_logical;
-#elif (2 == VN_LOGICAL_KIND)
+#elif (2 == (VN_LOGICAL_KIND))
 typedef vn_logical_2 vn_logical;
-#elif (4 == VN_LOGICAL_KIND)
+#elif (4 == (VN_LOGICAL_KIND))
 typedef vn_logical_4 vn_logical;
-#elif (8 == VN_LOGICAL_KIND)
+#elif (8 == (VN_LOGICAL_KIND))
 typedef vn_logical_8 vn_logical;
 #else /* unsupported */
 #error VN_LOGICAL_KIND must be one of { 1, 2, 4, 8 }
@@ -207,7 +207,7 @@ typedef long double complex vn_complex_10;
 #error VN_REAL_FIN already defined
 #endif /* VN_REAL_FIN */
 
-#if (4 == VN_REAL_KIND)
+#if (4 == (VN_REAL_KIND))
 typedef vn_real_4 vn_real;
 typedef struct {
   uint32_t mnt : 23;
@@ -236,7 +236,7 @@ typedef vn_complex_4 vn_complex;
 #ifndef __cplusplus
 #define MkCmplx(r,i) CMPLXF((r),(i))
 #endif /* !__cplusplus */
-#elif (8 == VN_REAL_KIND)
+#elif (8 == (VN_REAL_KIND))
 typedef vn_real_8 vn_real;
 typedef struct {
   uint64_t mnt : 52;
@@ -265,7 +265,7 @@ typedef vn_complex_8 vn_complex;
 #ifndef __cplusplus
 #define MkCmplx(r,i) CMPLX((r),(i))
 #endif /* !__cplusplus */
-#elif (10 == VN_REAL_KIND)
+#elif (10 == (VN_REAL_KIND))
 typedef vn_real_10 vn_real;
 typedef struct {
   uint64_t mnt : 64;

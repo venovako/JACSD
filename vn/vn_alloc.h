@@ -30,13 +30,13 @@ VN_EXTERN_C void vn_free(const void *const ptr);
 VN_EXTERN_C void vn_freep(const void **const pptr);
 
 #ifndef VN_ALLOC1
-#define VN_ALLOC1(T, m, ldA, act) (T *)vn_alloc1(m, sizeof(T), ldA, act)
+#define VN_ALLOC1(T, m, ldA, act) (T *)vn_alloc1((m), sizeof(T), (ldA), (act))
 #else /* VN_ALLOC1 */
 #error VN_ALLOC1 already defined
 #endif /* !VN_ALLOC1 */
 
 #ifndef VN_ALLOC2
-#define VN_ALLOC2(T, m, n, ldA, act) (T *)vn_alloc2(m, n, sizeof(T), ldA, act)
+#define VN_ALLOC2(T, m, n, ldA, act) (T *)vn_alloc2((m), (n), sizeof(T), (ldA), (act))
 #else /* VN_ALLOC2 */
 #error VN_ALLOC2 already defined
 #endif /* !VN_ALLOC2 */

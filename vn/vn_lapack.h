@@ -21,10 +21,10 @@
 #error VN_LAPACK_C already defined
 #endif /* VN_LAPACK_C */
 
-#if (4 == VN_REAL_KIND)
+#if (4 == (VN_REAL_KIND))
 #define VN_LAPACK_R(name) s##name##_
 #define VN_LAPACK_C(name) c##name##_
-#elif (8 == VN_REAL_KIND)
+#elif (8 == (VN_REAL_KIND))
 #define VN_LAPACK_R(name) d##name##_
 #define VN_LAPACK_C(name) z##name##_
 #else /* unsupported */

@@ -22,16 +22,16 @@
 #ifndef MKL_Complex16
 #define MKL_Complex16 vn_complex_8
 #endif /* !MKL_Complex16 */
-#if (8 == VN_INTEGER_KIND)
+#if (8 == (VN_INTEGER_KIND))
 #ifndef MKL_ILP64
 #define MKL_ILP64
 #endif /* !MKL_ILP64 */
 #endif /* ?VN_INTEGER_KIND */
 #include <mkl.h>
-#if (4 == VN_REAL_KIND)
+#if (4 == (VN_REAL_KIND))
 #define VN_BLAS_R(name) s##name
 #define VN_BLAS_C(name) c##name
-#elif (8 == VN_REAL_KIND)
+#elif (8 == (VN_REAL_KIND))
 #define VN_BLAS_R(name) d##name
 #define VN_BLAS_C(name) z##name
 #else /* unsupported */
@@ -39,13 +39,13 @@
 #endif /* ?VN_REAL_KIND */
 #elif defined(USE_OPENBLAS)
 #include "f77blas.h"
-#if (4 == VN_REAL_KIND)
+#if (4 == (VN_REAL_KIND))
 #define VN_BLAS_R(name) s##name##_
 #define VN_BLAS_C(name) c##name##_
-#elif (8 == VN_REAL_KIND)
+#elif (8 == (VN_REAL_KIND))
 #define VN_BLAS_R(name) d##name##_
 #define VN_BLAS_C(name) z##name##_
-#elif (10 <= VN_REAL_KIND)
+#elif (10 <= (VN_REAL_KIND))
 #define VN_BLAS_R(name) q##name##_
 #define VN_BLAS_C(name) x##name##_
 #else /* unsupported */
