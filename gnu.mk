@@ -8,7 +8,7 @@ AR=ar
 ARFLAGS=rsv
 CPUFLAGS=-DUSE_GNU -DUSE_X64
 FORFLAGS=-cpp $(CPUFLAGS) -fdefault-integer-8 -ffree-line-length-none -fopenmp -fstack-arrays
-C11FLAGS=$(CPUFLAGS) -DVN_INTEGER_KIND=8 -std=gnu17
+C11FLAGS=$(CPUFLAGS) -std=gnu17
 ifeq ($(ARCH),Darwin)
 CC=clang
 FC=gfortran

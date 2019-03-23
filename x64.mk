@@ -8,7 +8,7 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CPUFLAGS=-DUSE_INTEL -DUSE_X64
 FORFLAGS=$(CPUFLAGS) -i8 -fexceptions -standard-semantics
-C11FLAGS=$(CPUFLAGS) -DVN_INTEGER_KIND=8 -std=c11 -fexceptions
+C11FLAGS=$(CPUFLAGS) -std=c11 -fexceptions
 CC=icc
 FC=ifort
 ifdef NDEBUG
