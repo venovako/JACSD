@@ -29,6 +29,7 @@ vn_timer.c	\
 vn_types.c
 
 SRCF=			\
+vn_alloc_f.F90		\
 vn_binio_f.F90		\
 vn_blas_f.F90		\
 vn_cmplxvis_f.F90	\
@@ -69,6 +70,9 @@ vn_alloc.exe: vn_alloc.c $(HDRS) $(MKFS)
 
 vn_assert.o: vn_assert.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
+
+vn_alloc_f.o vn_alloc_f.mod: vn_alloc_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
 
 vn_assert.exe: vn_assert.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
