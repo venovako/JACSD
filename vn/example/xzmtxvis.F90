@@ -52,9 +52,9 @@ PROGRAM XZMTXVIS
   ! The bitmap's upper-left corner will correspond to element A(1,1).
   DO I = 1, mA
      DO J = 1, nA
-        DRE = DBLE(MOD(I + J - 2, 254))
-        DIM = DBLE(MOD(I * J, 254))
-        A(I, J) = DCMPLX(DRE, DIM)
+        DRE = REAL(MOD(I + J - 2, 254), c_double)
+        DIM = REAL(MOD(I * J, 254), c_double)
+        A(I, J) = CMPLX(DRE, DIM, c_double)
      END DO
   END DO
 

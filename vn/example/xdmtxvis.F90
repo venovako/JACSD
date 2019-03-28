@@ -51,7 +51,7 @@ PROGRAM XDMTXVIS
   ! The bitmap's upper-left corner will correspond to element A(1,1).
   DO I = 1, mA
      DO J = 1, nA
-        A(I, J) = DBLE(MOD(I + J - 2, 254))
+        A(I, J) = REAL(MOD(I + J - 2, 254), c_double)
      END DO
   END DO
 

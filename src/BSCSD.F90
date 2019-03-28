@@ -15,8 +15,8 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT, LWORK
     INTEGER, INTENT(OUT) :: IWORK(*), INFO
 
-    REAL, INTENT(IN) :: X(LDX,*)
-    REAL, INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
+    REAL(RWP), INTENT(IN) :: X(LDX,*)
+    REAL(RWP), INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
 
     EXTERNAL :: SORCSD
 
@@ -33,14 +33,14 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT
     INTEGER, INTENT(OUT) :: INFO
 
-    REAL, INTENT(IN) :: X(LDX,*)
-    REAL, INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
+    REAL(RWP), INTENT(IN) :: X(LDX,*)
+    REAL(RWP), INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
 
-    REAL, ALLOCATABLE :: WORK(:)
+    REAL(RWP), ALLOCATABLE :: WORK(:)
     INTEGER, ALLOCATABLE :: IWORK(:)
 
     INTEGER :: R, LWORK, IWRK(1), I
-    REAL :: WRK(1)
+    REAL(RWP) :: WRK(1)
     EQUIVALENCE (IWRK(1),I)
 
     LWORK = -1
@@ -60,7 +60,7 @@ CONTAINS
 !           S(I) = SIN(THETA(I))
        END DO
     ELSE IF (INFO .GT. 0) THEN
-       C(1) = REAL(INFO)
+       C(1) = REAL(INFO,RWP)
        R = MIN(P, M-P, Q, M-Q)
        DO I = 2, R
           C(I) = WORK(I)
@@ -80,7 +80,7 @@ CONTAINS
 
     INTEGER :: LDX, LDU, LDVT, R, I, J, ONT, ISTATS(4), WALLTM(3)
 
-    REAL, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
+    REAL(RWP), ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
     EXTERNAL :: SLASET
 
@@ -249,8 +249,8 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT, LWORK
     INTEGER, INTENT(OUT) :: IWORK(*), INFO
 
-    DOUBLE PRECISION, INTENT(IN) :: X(LDX,*)
-    DOUBLE PRECISION, INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
+    REAL(DWP), INTENT(IN) :: X(LDX,*)
+    REAL(DWP), INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
 
     EXTERNAL :: DORCSD
 
@@ -267,14 +267,14 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT
     INTEGER, INTENT(OUT) :: INFO
 
-    DOUBLE PRECISION, INTENT(IN) :: X(LDX,*)
-    DOUBLE PRECISION, INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
+    REAL(DWP), INTENT(IN) :: X(LDX,*)
+    REAL(DWP), INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
 
-    DOUBLE PRECISION, ALLOCATABLE :: WORK(:)
+    REAL(DWP), ALLOCATABLE :: WORK(:)
     INTEGER, ALLOCATABLE :: IWORK(:)
 
     INTEGER :: R, LWORK, IWRK(1), I
-    DOUBLE PRECISION :: WRK(1)
+    REAL(DWP) :: WRK(1)
     EQUIVALENCE (IWRK(1),I)
 
     LWORK = -1
@@ -294,7 +294,7 @@ CONTAINS
 !           S(I) = SIN(THETA(I))
        END DO
     ELSE IF (INFO .GT. 0) THEN
-       C(1) = DBLE(INFO)
+       C(1) = REAL(INFO,DWP)
        R = MIN(P, M-P, Q, M-Q)
        DO I = 2, R
           C(I) = WORK(I)
@@ -314,7 +314,7 @@ CONTAINS
 
     INTEGER :: LDX, LDU, LDVT, R, I, J, ONT, ISTATS(4), WALLTM(3)
 
-    DOUBLE PRECISION, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
+    REAL(DWP), ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
     EXTERNAL :: DLASET
 
@@ -483,9 +483,9 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT, LWORK,LRWORK
     INTEGER, INTENT(OUT) :: IWORK(*), INFO
 
-    COMPLEX, INTENT(IN) :: X(LDX,*)
-    COMPLEX, INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
-    REAL, INTENT(OUT) :: RWORK(*)
+    COMPLEX(RWP), INTENT(IN) :: X(LDX,*)
+    COMPLEX(RWP), INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
+    REAL(RWP), INTENT(OUT) :: RWORK(*)
 
     EXTERNAL :: CUNCSD
 
@@ -503,16 +503,16 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT
     INTEGER, INTENT(OUT) :: INFO
 
-    COMPLEX, INTENT(IN) :: X(LDX,*)
-    COMPLEX, INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
+    COMPLEX(RWP), INTENT(IN) :: X(LDX,*)
+    COMPLEX(RWP), INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
 
-    COMPLEX, ALLOCATABLE :: WORK(:)
-    REAL, ALLOCATABLE :: RWORK(:)
+    COMPLEX(RWP), ALLOCATABLE :: WORK(:)
+    REAL(RWP), ALLOCATABLE :: RWORK(:)
     INTEGER, ALLOCATABLE :: IWORK(:)
 
     INTEGER :: R, LWORK, LRWORK, IWRK(1), I
-    COMPLEX :: WRK(1)
-    REAL :: RWRK(2)
+    COMPLEX(RWP) :: WRK(1)
+    REAL(RWP) :: RWRK(2)
     EQUIVALENCE (IWRK(1),I)
 
     LWORK = -1
@@ -531,7 +531,7 @@ CONTAINS
        R = MIN(P, M-P, Q, M-Q)
        DO I = 1, R
           IF (AIMAG(THETA(I)) .EQ. S_ZERO) THEN
-             CALL SSINCOS(REAL(THETA(I)), RWRK(1), RWRK(2))
+             CALL SSINCOS(REAL(THETA(I),RWP), RWRK(1), RWRK(2))
              C(I) = RWRK(2)
              S(I) = RWRK(1)
           ELSE
@@ -540,8 +540,8 @@ CONTAINS
           END IF
        END DO
     ELSE IF (INFO .GT. 0) THEN
-       C(1) = REAL(INFO)
-       S(1) = REAL(INFO)
+       C(1) = REAL(INFO,RWP)
+       S(1) = REAL(INFO,RWP)
        R = MIN(P, M-P, Q, M-Q)
        DO I = 2, R
           C(I) = WORK(I)
@@ -563,7 +563,7 @@ CONTAINS
 
     INTEGER :: LDX, LDU, LDVT, R, I, J, ONT, ISTATS(4), WALLTM(3)
 
-    COMPLEX, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
+    COMPLEX(RWP), ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
     EXTERNAL :: CLASET
 
@@ -732,9 +732,9 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT, LWORK,LRWORK
     INTEGER, INTENT(OUT) :: IWORK(*), INFO
 
-    DOUBLE COMPLEX, INTENT(IN) :: X(LDX,*)
-    DOUBLE COMPLEX, INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
-    DOUBLE PRECISION, INTENT(OUT) :: RWORK(*)
+    COMPLEX(DWP), INTENT(IN) :: X(LDX,*)
+    COMPLEX(DWP), INTENT(OUT) :: THETA(*), U(LDU,*), VT(LDVT,*), WORK(*)
+    REAL(DWP), INTENT(OUT) :: RWORK(*)
 
     EXTERNAL :: ZUNCSD
 
@@ -752,23 +752,23 @@ CONTAINS
     INTEGER, INTENT(IN) :: M,P,Q, LDX,LDU,LDVT
     INTEGER, INTENT(OUT) :: INFO
 
-    DOUBLE COMPLEX, INTENT(IN) :: X(LDX,*)
-    DOUBLE COMPLEX, INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
+    COMPLEX(DWP), INTENT(IN) :: X(LDX,*)
+    COMPLEX(DWP), INTENT(OUT) :: THETA(*), C(*), S(*), U(LDU,*), VT(LDVT,*)
 
-    DOUBLE COMPLEX, ALLOCATABLE :: WORK(:)
-    DOUBLE PRECISION, ALLOCATABLE :: RWORK(:)
+    COMPLEX(DWP), ALLOCATABLE :: WORK(:)
+    REAL(DWP), ALLOCATABLE :: RWORK(:)
     INTEGER, ALLOCATABLE :: IWORK(:)
 
     INTEGER :: R, LWORK, LRWORK, IWRK(1), I
-    DOUBLE COMPLEX :: WRK(1)
-    DOUBLE PRECISION :: RWRK(2)
+    COMPLEX(DWP) :: WRK(1)
+    REAL(DWP) :: RWRK(2)
     EQUIVALENCE (IWRK(1),I)
 
     LWORK = -1
     LRWORK = -1
     CALL ZBSCSD(M, P, Q, X, LDX, THETA, U, LDU, VT, LDVT, WRK, LWORK, RWRK, LRWORK, IWRK, INFO)
     IF (INFO .NE. 0) RETURN
-    LWORK = MAX(1,CEILING(DBLE(WRK(1))))
+    LWORK = MAX(1,CEILING(REAL(WRK(1),DWP)))
     LRWORK = MAX(1,CEILING(RWRK(1)))
 
     ALLOCATE(WORK(LWORK))
@@ -780,7 +780,7 @@ CONTAINS
        R = MIN(P, M-P, Q, M-Q)
        DO I = 1, R
           IF (AIMAG(THETA(I)) .EQ. D_ZERO) THEN
-             CALL DSINCOS(DBLE(THETA(I)), RWRK(1), RWRK(2))
+             CALL DSINCOS(REAL(THETA(I),DWP), RWRK(1), RWRK(2))
              C(I) = RWRK(2)
              S(I) = RWRK(1)
           ELSE
@@ -789,8 +789,8 @@ CONTAINS
           END IF
        END DO
     ELSE IF (INFO .GT. 0) THEN
-       C(1) = DBLE(INFO)
-       S(1) = DBLE(INFO)
+       C(1) = REAL(INFO,DWP)
+       S(1) = REAL(INFO,DWP)
        R = MIN(P, M-P, Q, M-Q)
        DO I = 2, R
           C(I) = WORK(I)
@@ -812,7 +812,7 @@ CONTAINS
 
     INTEGER :: LDX, LDU, LDVT, R, I, J, ONT, ISTATS(4), WALLTM(3)
 
-    DOUBLE COMPLEX, ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
+    COMPLEX(DWP), ALLOCATABLE :: X(:,:), U(:,:), VT(:,:), THETA(:), C(:), S(:)
 
     EXTERNAL :: ZLASET
 

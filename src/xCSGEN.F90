@@ -21,7 +21,7 @@ PROGRAM xCSGEN
   REAL(WP) :: QW
 
   REAL(WP), ALLOCATABLE :: QT(:), QC(:), QS(:), U(:,:), X(:,:), VT(:,:)
-  DOUBLE PRECISION, ALLOCATABLE :: T(:), DX(:,:)
+  REAL(DWP), ALLOCATABLE :: T(:), DX(:,:)
 
   REAL(WP), EXTERNAL :: QLARND
   EXTERNAL :: QGEMM, QLAROR, QLASET
@@ -95,20 +95,20 @@ PROGRAM xCSGEN
   ALLOCATE(T(P))
 
   DO I = 1, P
-     T(I) = DBLE(QT(I))
+     T(I) = REAL(QT(I),DWP)
   END DO
 
   CALL BIN_WRITE_1D(IOU, T, P, INFO)
   IF (INFO .NE. 0) STOP 'BIN_WRITE_1D(T)'
 
   DO I = 1, P
-     T(I) = DBLE(QC(I))
+     T(I) = REAL(QC(I),DWP)
   END DO
   CALL BIN_WRITE_1D(IOU, T, P, INFO)
   IF (INFO .NE. 0) STOP 'BIN_WRITE_1D(C)'
 
   DO I = 1, P
-     T(I) = DBLE(QS(I))
+     T(I) = REAL(QS(I),DWP)
   END DO
   CALL BIN_WRITE_1D(IOU, T, P, INFO)
   IF (INFO .NE. 0) STOP 'BIN_WRITE_1D(S)'
@@ -189,7 +189,7 @@ PROGRAM xCSGEN
   ALLOCATE(DX(LDX,M))
   DO J = 1, M
      DO I = 1, M
-        DX(I,J) = DBLE(X(I,J))
+        DX(I,J) = REAL(X(I,J),DWP)
      END DO
   END DO
 

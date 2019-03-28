@@ -59,7 +59,7 @@ contains
   subroutine move_data_pages_s(addr, sz, to_node, info)
     use, intrinsic :: iso_c_binding
     implicit none
-    real, intent(in), target :: addr
+    real(c_float), intent(in), target :: addr
     integer, intent(in) :: sz
     integer, intent(in) :: to_node
     integer, intent(out) :: info
@@ -79,7 +79,7 @@ contains
   subroutine move_data_pages_d(addr, sz, to_node, info)
     use, intrinsic :: iso_c_binding
     implicit none
-    double precision, intent(in), target :: addr
+    real(c_double), intent(in), target :: addr
     integer, intent(in) :: sz
     integer, intent(in) :: to_node
     integer, intent(out) :: info
@@ -119,7 +119,7 @@ contains
   subroutine move_data_pages_z(addr, sz, to_node, info)
     use, intrinsic :: iso_c_binding
     implicit none
-    double complex, intent(in), target :: addr
+    complex(c_double), intent(in), target :: addr
     integer, intent(in) :: sz
     integer, intent(in) :: to_node
     integer, intent(out) :: info
