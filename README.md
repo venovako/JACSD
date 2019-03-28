@@ -1,5 +1,5 @@
 # JACSD
-Cosine-Sine Decomposition based on the Jacobi SVD.
+Some utilities for the Jacobi-type SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
 
 Available here (for now):
 * the shared-memory vectorized Jacobi-type SVD,
