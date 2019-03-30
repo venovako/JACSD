@@ -34,6 +34,7 @@ vn_binio_f.F90		\
 vn_blas_f.F90		\
 vn_cmplxvis_f.F90	\
 vn_mtxvis_f.F90		\
+vn_sort_f.F90		\
 vn_timer_f.F90
 
 SRC=$(SRCC) $(SRCF)
@@ -148,6 +149,9 @@ vn_simd.o: vn_simd.c $(HDRS) $(MKFS)
 
 vn_simd.exe: vn_simd.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+vn_sort_f.o vn_sort_f.mod: vn_sort_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
 
 vn_stdc11.o: vn_stdc11.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
