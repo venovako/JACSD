@@ -13,7 +13,7 @@
 #error NOT A HOSTED IMPLEMENTATION
 #endif /* __STDC_HOSTED__ */
 
-#if (__STDC_NO_COMPLEX__ == 1)
+#if (defined(__STDC_NO_COMPLEX__) && (__STDC_NO_COMPLEX__ == 1))
 #error COMPLEX TYPES NOT SUPPORTED
 #endif /* __STDC_NO_COMPLEX__ */
 
@@ -27,7 +27,7 @@
 #endif /* __STDC_IEC_559_COMPLEX__ */
 #endif /* VN_CHECK_IEC_559 */
 
-#if (__STDC_NO_VLA__ == 1)
+#if (defined(__STDC_NO_VLA__) && (__STDC_NO_VLA__ == 1))
 #error VLA NOT SUPPORTED
 #endif /* __STDC_NO_VLA__ */
 
