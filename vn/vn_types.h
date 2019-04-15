@@ -34,14 +34,14 @@
 #include <wchar.h>
 #endif /* __cplusplus */
 
-#ifndef __CUDACC__
+#if (!defined(USE_LLVM) && !defined(__CUDACC__))
 static_assert(8 == CHAR_BIT, "vn_char_bit_8");
 static_assert(1 == sizeof(char), "vn_char_sz_1");
 static_assert(4 == sizeof(wchar_t), "vn_wchar_t_sz_4");
 static_assert(4 == sizeof(float), "vn_float_sz_4");
 static_assert(8 == sizeof(double), "vn_double_sz_8");
 static_assert(16 == sizeof(long double), "vn_ldouble_sz_16");
-#endif /* !__CUDACC__ */
+#endif /* !USE_LLVM && !__CUDACC__ */
 
 #ifndef VN_CHARACTER_KIND
 #define VN_CHARACTER_KIND 1
@@ -234,7 +234,11 @@ VN_EXTERN_C vn_real MqNaN(const vn_integer_4 payload);
 VN_EXTERN_C vn_real MsNaN(const vn_integer_4 payload);
 typedef vn_complex_4 vn_complex;
 #ifndef __cplusplus
+#ifdef USE_LLVM
+#define MkCmplx(r,i) ((r) + (i) * I)
+#else /* !USE_LLVM */
 #define MkCmplx(r,i) CMPLXF((r),(i))
+#endif /* ?USE_LLVM */
 #endif /* !__cplusplus */
 #elif (8 == (VN_REAL_KIND))
 typedef vn_real_8 vn_real;
@@ -263,7 +267,11 @@ VN_EXTERN_C vn_real MqNaN(const vn_integer_8 payload);
 VN_EXTERN_C vn_real MsNaN(const vn_integer_8 payload);
 typedef vn_complex_8 vn_complex;
 #ifndef __cplusplus
+#ifdef USE_LLVM
+#define MkCmplx(r,i) ((r) + (i) * I)
+#else /* !USE_LLVM */
 #define MkCmplx(r,i) CMPLX((r),(i))
+#endif /* ?USE_LLVM */
 #endif /* !__cplusplus */
 #elif (10 == (VN_REAL_KIND))
 typedef vn_real_10 vn_real;
@@ -293,7 +301,11 @@ VN_EXTERN_C vn_real MqNaN(const vn_integer_8 payload);
 VN_EXTERN_C vn_real MsNaN(const vn_integer_8 payload);
 typedef vn_complex_10 vn_complex;
 #ifndef __cplusplus
+#ifdef USE_LLVM
+#define MkCmplx(r,i) ((r) + (i) * I)
+#else /* !USE_LLVM */
 #define MkCmplx(r,i) CMPLXL((r),(i))
+#endif /* ?USE_LLVM */
 #endif /* !__cplusplus */
 #else /* unsupported */
 #error VN_REAL_KIND must be one of { 4, 8, 10 }

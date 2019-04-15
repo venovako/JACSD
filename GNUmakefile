@@ -4,17 +4,23 @@ MKFS=GNUmakefile x64.mk
 else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran
 include x200.mk
 MKFS=GNUmakefile x200.mk
-else # GNU Fortran
+else ifeq ($(CPU),llvm) # Flang + Clang
+include llvm.mk
+MKFS=GNUmakefile llvm.mk
+else # GNU Fortran + (GNU C or Clang)
+ifndef CPU
+CPU=gnu
+endif # !CPU
 include gnu.mk
 MKFS=GNUmakefile gnu.mk
 endif # ?CPU
 
 .PHONY: all help clean
 
-all: libjstrat.a libqxblas.a libvn.a libl0c.a
+all: libjstrat.a libqxblas.a libvn.a # libl0c.a
 
 help:
-	@echo "make [WP=4|8|10|16] [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "make [WP=4|8|10|16] [CPU=x64|x100|x200|llvm|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 libl0c.a: libjstrat.a libqxblas.a libvn.a $(MKFS)
 ifdef NDEBUG

@@ -37,8 +37,7 @@
 #else /* unsupported */
 #error BLAS(VN_REAL_KIND) not supported by Intel MKL
 #endif /* ?VN_REAL_KIND */
-#elif defined(USE_OPENBLAS)
-#include "f77blas.h"
+#else /* some other Fortran-compatible BLAS */
 #if (4 == (VN_REAL_KIND))
 #define VN_BLAS_R(name) s##name##_
 #define VN_BLAS_C(name) c##name##_
@@ -49,10 +48,10 @@
 #define VN_BLAS_R(name) q##name##_
 #define VN_BLAS_C(name) x##name##_
 #else /* unsupported */
-#error BLAS(VN_REAL_KIND) not supported by OpenBLAS
+#error BLAS(VN_REAL_KIND) not supported
 #endif /* ?VN_REAL_KIND */
-#else /* unsupported BLAS */
-#error BLAS library not supported
+VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const, const vn_character *const, const vn_integer *const, const vn_integer *const, const vn_real *const, const vn_real *const, const vn_integer *const, const vn_real *const, vn_real *const, const vn_integer *const);
+VN_EXTERN_C void VN_BLAS_C(herk)(const vn_character *const, const vn_character *const, const vn_integer *const, const vn_integer *const, const vn_real *const, const vn_complex *const, const vn_integer *const, const vn_real *const, vn_complex *const, const vn_integer *const);
 #endif /* ?BLAS */
 
 VN_EXTERN_C vn_integer vn_blas_prepare();

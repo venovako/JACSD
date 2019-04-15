@@ -8,11 +8,10 @@
 #ifdef __APPLE__
 #include <alloca.h>
 #else /* !__APPLE__ */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE
-#endif /* !_GNU_SOURCE */
+#ifdef _GNU_SOURCE
 #include <alloca.h>
 #include <malloc.h>
+#endif /* _GNU_SOURCE */
 #endif /* ?__APPLE__ */
 #include <stdlib.h>
 /*
