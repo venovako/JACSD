@@ -8,7 +8,7 @@ AR=ar
 ARFLAGS=rsv
 CPUFLAGS=-DUSE_LLVM -DUSE_X64
 FORFLAGS=-cpp $(CPUFLAGS) -fdefault-integer-8 -fopenmp
-C11FLAGS=$(CPUFLAGS) -std=gnu17
+C11FLAGS=$(CPUFLAGS) -std=gnu17 #-fopenmp
 CC=clang
 FC=flang
 ifdef NDEBUG
@@ -26,10 +26,10 @@ OPTFLAGS=-Og -march=native
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-g
-DBGFFLAGS=$(DBGFLAGS) -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra
+DBGFFLAGS=$(DBGFLAGS) -pedantic -Wall -Wextra
 DBGCFLAGS=$(DBGFLAGS) -ftrapv
 FPUFLAGS=-ffp-contract=fast
-FPUFFLAGS=$(FPUFLAGS) -ffpe-trap=invalid,zero,overflow
+FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-I. -I/usr/local/include
