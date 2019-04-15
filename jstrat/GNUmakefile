@@ -23,7 +23,7 @@ MODS=jstrat_f.mod
 all: ../libjstrat.a
 
 help:
-	@echo "make [CPU=x64|x100|x200|llvm|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [CPU=x64|x100|x200|llvm|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ../libjstrat.a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)

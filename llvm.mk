@@ -33,6 +33,6 @@ FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-I. -I/usr/local/include
-LDFLAGS=-L/usr/local/lib -llapack -lblas -lpthread -lm -ldl
+LDFLAGS=-L/usr/local/lib -llapack -lblas -lgfortran -lompstub -lpthread -lm
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)

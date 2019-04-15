@@ -1,12 +1,3 @@
-ifndef SHELL
-SHELL=/bin/bash
-endif # !SHELL
-ifndef ARCH
-ARCH=$(shell uname)
-endif # !ARCH
-ifndef RM
-RM=rm -fv
-endif # !RM
 ifeq ($(CPU),x64) # Xeon / Intel Fortran
 include ../x64.mk
 MKFS=GNUmakefile ../x64.mk
@@ -125,7 +116,7 @@ OBJS=$(SOURCES:.F90=.o)
 all: ../libqxblas.a
 
 help:
-	@echo "make [WP=4|8|10|16] [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [WP=4|8|10|16] [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 prepare:
 	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi
