@@ -1,19 +1,9 @@
-ifeq ($(CPU),x64) # Xeon / Intel Fortran and C
-include ../x64.mk
-MKFS=GNUmakefile ../x64.mk
-else ifeq ($(CPU),x200) # Knights Landing / Intel Fortran and C
-include ../x200.mk
-MKFS=GNUmakefile ../x200.mk
-else ifeq ($(CPU),llvm) # Flang + Clang
-include ../llvm.mk
-MKFS=GNUmakefile ../llvm.mk
-else # GNU Fortran + (GNU C or Clang)
 ifndef CPU
 CPU=gnu
 endif # !CPU
-include ../gnu.mk
-MKFS=GNUmakefile ../gnu.mk
-endif # ?CPU
+include $(CPU).mk
+MKFS=GNUmakefile $(CPU).mk
+
 LDFLAGS:=-L.. -lvn $(LDFLAGS)
 
 SRCC=		\
@@ -58,7 +48,7 @@ all: ../libvn.a
 test: ../libvn.a $(EXES)
 
 help:
-	@echo "gmake [CPU=x64|x100|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ../libvn.a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
