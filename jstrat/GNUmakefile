@@ -1,8 +1,8 @@
 ifndef CPU
 CPU=gnu
 endif # !CPU
-include $(CPU).mk
-MKFS=GNUmakefile $(CPU).mk
+include ../$(CPU).mk
+MKFS=GNUmakefile ../$(CPU).mk
 
 OBJS=jstrat.o jstrat_f.o
 MODS=jstrat_f.mod
