@@ -102,7 +102,7 @@ OBJS=$(SOURCES:.F90=.o)
 all: ../libqxblas.a
 
 help:
-	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|pgi|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 prepare:
 	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi

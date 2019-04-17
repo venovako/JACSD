@@ -26,7 +26,9 @@
 #include <cstdint>
 #include <cwchar>
 #else /* C99 */
+#ifndef USE_PGI
 #include <tgmath.h>
+#endif /* !USE_PGI */
 #include <float.h>
 #include <limits.h>
 #include <stdbool.h>

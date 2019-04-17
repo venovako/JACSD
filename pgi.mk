@@ -1,0 +1,38 @@
+ifndef WP
+WP=8
+endif # !WP
+SHELL=/bin/bash
+ARCH=$(shell uname)
+RM=rm -rfv
+AR=ar
+ARFLAGS=rsv
+CPUFLAGS=-DUSE_PGI -DUSE_X64 -m64 -mp
+FORFLAGS=$(CPUFLAGS) -i8 -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
+C11FLAGS=$(CPUFLAGS) -c11
+CC=pgcc
+FC=pgfortran
+ifdef NDEBUG
+OPTFLAGS=-O$(NDEBUG)
+DBGFLAGS=-DNDEBUG -Minfo
+OPTFFLAGS=$(OPTFLAGS)
+OPTCFLAGS=$(OPTFLAGS)
+DBGFFLAGS=$(DBGFLAGS)
+DBGCFLAGS=$(DBGFLAGS)
+FPUFLAGS=-Kieee -Mfma -Mnodaz -Mnoflushz -Mnofpapprox -Mnofprelaxed
+FPUFFLAGS=$(FPUFLAGS)
+FPUCFLAGS=$(FPUFLAGS)
+else # DEBUG
+OPTFLAGS=-O0
+OPTFFLAGS=$(OPTFLAGS)
+OPTCFLAGS=$(OPTFLAGS)
+DBGFLAGS=-g -Minfo -Mbounds -Mchkstk -traceback
+DBGFFLAGS=$(DBGFLAGS)
+DBGCFLAGS=$(DBGFLAGS)
+FPUFLAGS=-Kieee -Mfma -Mnodaz -Mnoflushz -Mnofpapprox -Mnofprelaxed
+FPUFFLAGS=$(FPUFLAGS)
+FPUCFLAGS=$(FPUFLAGS)
+endif # ?NDEBUG
+LIBFLAGS=-D_GNU_SOURCE -I.
+LDFLAGS=-L${HOME}/lapack -ltmglib -llapack -lrefblas -lpthread -lm -ldl
+FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
+CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
