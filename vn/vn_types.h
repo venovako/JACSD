@@ -25,10 +25,26 @@
 #include <climits>
 #include <cstdint>
 #include <cwchar>
-#else /* C99 */
-#ifndef USE_PGI
+#else /* C11 */
+#ifdef USE_PGI
+#if (4 == (VN_REAL_KIND))
+#define cabs cabsf
+#define carg cargf
+#define cimag cimagf
+#define conj conjf
+#define creal crealf
+#define log logf
+#define log2 log2f
+#define log10 log10f
+#define lround lroundf
+#define fabs fabsf
+#define fma fmaf
+#elif (8 != (VN_REAL_KIND))
+#error VN_REAL_KIND must be one of { 4, 8 }
+#endif /* ?VN_REAL_KIND */
+#else /* !USE_PGI */
 #include <tgmath.h>
-#endif /* !USE_PGI */
+#endif /* ?USE_PGI */
 #include <float.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -137,11 +153,11 @@ typedef vn_logical_8 vn_logical;
 #endif /* !VN_FALSE */
 
 #ifndef VN_TRUE
-#ifdef __ICC
+#if (defined(__ICC) || defined(USE_PGI))
 #define VN_TRUE MkBool(-1)
-#else /* !__ICC */
+#else /* !__ICC && !USE_PGI */
 #define VN_TRUE MkBool(1)
-#endif /* __ICC */
+#endif /* ?(__ICC || USE_PGI) */
 #endif /* !VN_TRUE */
 
 typedef float vn_real_4;
@@ -153,7 +169,7 @@ typedef long double vn_real_10;
 typedef std::complex<float> vn_complex_4;
 typedef std::complex<double> vn_complex_8;
 typedef std::complex<long double> vn_complex_10;
-#else /* C99 */
+#else /* C11 */
 typedef float complex vn_complex_4;
 typedef double complex vn_complex_8;
 typedef long double complex vn_complex_10;

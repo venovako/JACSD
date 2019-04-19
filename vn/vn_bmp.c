@@ -342,9 +342,9 @@ vn_integer vn_bmp_read_cmap(const vn_bmp_t bmp, const char *const fn)
 
   for (ix = 0u; ix < bmp->header.c_palette; ++ix) {
     VN_SYSI_CALL(fscanf(f, " %le %le %le", &dr, &dg, &db) < 3);
-    bmp->palette[ix].chan.r = (uint8_t)lround(dr * 255.0);
-    bmp->palette[ix].chan.g = (uint8_t)lround(dg * 255.0);
-    bmp->palette[ix].chan.b = (uint8_t)lround(db * 255.0);
+    bmp->palette[ix].chan.r = (uint8_t)lround((vn_real)dr * MkReal(255.0));
+    bmp->palette[ix].chan.g = (uint8_t)lround((vn_real)dg * MkReal(255.0));
+    bmp->palette[ix].chan.b = (uint8_t)lround((vn_real)db * MkReal(255.0));
     bmp->palette[ix].chan.a = 0u;
   }
 
