@@ -39,7 +39,7 @@
 #define lround lroundf
 #define fabs fabsf
 #define fma fmaf
-#elif (8 != (VN_REAL_KIND))
+#elif (10 == (VN_REAL_KIND))
 #error VN_REAL_KIND must be one of { 4, 8 }
 #endif /* ?VN_REAL_KIND */
 #else /* !USE_PGI */
