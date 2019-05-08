@@ -32,11 +32,9 @@ FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
-ifdef NDEBUG
-LIBFLAGS += -DMKL_DIRECT_CALL
-endif # NDEBUG
 ifeq ($(ARCH),Darwin)
-LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_pgi_thread.a ${MKLROOT}/lib/libmkl_core.a -pgf90libs -lpthread -lm -ldl
+LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_sequential.a ${MKLROOT}/lib/libmkl_core.a -pgf90libs -lpthread -lm -ldl
+# LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_pgi_thread.a ${MKLROOT}/lib/libmkl_core.a -pgf90libs -lpthread -lm -ldl
 else # Linux
 LIBFLAGS += -D_GNU_SOURCE
 LDFLAGS=-L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_pgi_thread -lmkl_core -pgf90libs -lpthread -lm -ldl
