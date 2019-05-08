@@ -24,6 +24,7 @@ make [CPU=x64|x200|pgi|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 ```
 where ``CPU`` should be set for the Intel C++ and Fortran compilers to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
 If ``CPU`` is not set, GNU C (Clang on macOS) and Fortran compilers will be used instead.
+GNU Fortran 9 is *not* supported!
 PGI compilers are supported only in their non-LLVM versions.
 
 Here, ``NDEBUG`` should be set to the desired optimization level (``3`` is a sensible choice).
