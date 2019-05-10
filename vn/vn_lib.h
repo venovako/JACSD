@@ -11,6 +11,7 @@
 #include "vn_alloc.h"
 #include "vn_timer.h"
 #include "vn_binio.h"
+#include "vn_lock.h"
 
 #include "vn_blas.h"
 #include "vn_lapack.h"
@@ -22,11 +23,8 @@
 #ifdef __cplusplus
 #include <cctype>
 #include <cfenv>
-#include <csignal>
-#else /* C99 */
+#else /* C11 */
 #include <ctype.h>
 #include <fenv.h>
-#include <signal.h>
 #endif /* __cplusplus */
-
 #endif /* !VN_LIB_H */

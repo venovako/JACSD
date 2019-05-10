@@ -15,6 +15,7 @@ vn_binio.c	\
 vn_blas.c	\
 vn_bmp.c	\
 vn_cmplxvis.c	\
+vn_lock.c	\
 vn_error.c	\
 vn_lapack.c	\
 vn_lib.c	\
@@ -129,6 +130,12 @@ vn_lib.o: vn_lib.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_lib.exe: vn_lib.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+vn_lock.o: vn_lock.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -c $<
+
+vn_lock.exe: vn_lock.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 vn_mtxvis.o: vn_mtxvis.c $(HDRS) $(MKFS)
