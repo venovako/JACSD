@@ -8,6 +8,7 @@
 #include "vn_simd.h"
 #include "vn_error.h"
 #include "vn_align.h"
+#include "vn_variant.h"
 #include "vn_alloc.h"
 #include "vn_timer.h"
 #include "vn_binio.h"

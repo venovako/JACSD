@@ -23,7 +23,8 @@ vn_mtxvis.c	\
 vn_simd.c	\
 vn_stdc11.c	\
 vn_timer.c	\
-vn_types.c
+vn_types.c	\
+vn_variant.c
 
 SRCF=			\
 vn_alloc_f.F90		\
@@ -175,6 +176,12 @@ vn_types.o: vn_types.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_types.exe: vn_types.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+vn_variant.o: vn_variant.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -c $<
+
+vn_variant.exe: vn_variant.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 clean:
