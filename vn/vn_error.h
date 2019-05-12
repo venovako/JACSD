@@ -5,27 +5,6 @@
 #error vn_error.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifdef __cplusplus
-#include <cerrno>
-#include <cstddef>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#else /* C99 */
-#include <errno.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#endif /* __cplusplus */
-
-#include <execinfo.h>
-#include <pthread.h>
-#include <unistd.h>
-#ifdef _OPENMP
-#include <omp.h>
-#endif /* _OPENMP */
-
 #ifndef VN_BTRACE_BUFSIZ
 #define VN_BTRACE_BUFSIZ 128
 #else /* VN_BTRACE_BUFSIZ */

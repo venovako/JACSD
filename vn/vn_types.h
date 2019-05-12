@@ -5,28 +5,9 @@
 #error vn_types.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifdef __ICC
-#include <mathimf.h>
-#else /* !__ICC */
-#ifdef __cplusplus
-#include <complex>
-#ifndef __CUDACC__
-#include <math>
-#endif /* !__CUDACC__ */
-#else /* !__cplusplus */
-#include <complex.h>
-#include <math.h>
-#endif /* __cplusplus */
-#endif /* __ICC */
-
-#ifdef __cplusplus
-/* C headers */
-#include <cfloat>
-#include <climits>
-#include <cstdint>
-#include <cwchar>
-#else /* C11 */
+#ifndef __cplusplus
 #ifdef USE_PGI
+#ifdef VN_REAL_KIND
 #if (4 == (VN_REAL_KIND))
 #define cabs cabsf
 #define carg cargf
@@ -42,15 +23,9 @@
 #elif (10 == (VN_REAL_KIND))
 #error VN_REAL_KIND must be one of { 4, 8 }
 #endif /* ?VN_REAL_KIND */
-#else /* !USE_PGI */
-#include <tgmath.h>
-#endif /* ?USE_PGI */
-#include <float.h>
-#include <limits.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <wchar.h>
-#endif /* __cplusplus */
+#endif /* VN_REAL_KIND */
+#endif /* USE_PGI */
+#endif /* !__cplusplus */
 
 #ifndef __CUDACC__
 static_assert(8 == CHAR_BIT, "vn_char_bit_8");

@@ -5,12 +5,6 @@
 #error vn_lock.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifdef __cplusplus
-#include <csignal>
-#else /* C11 */
-#include <signal.h>
-#endif /* __cplusplus */
-
 typedef struct {
   pthread_mutex_t mutex;
   int mutex_type;

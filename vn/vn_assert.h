@@ -5,12 +5,6 @@
 #error vn_assert.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifdef __cplusplus
-#include <cassert>
-#else /* !__cplusplus */
-#include <assert.h>
-#endif /* __cplusplus */
-
 #ifndef VN_ASSERT
 #ifdef __ICC
 #ifdef NDEBUG

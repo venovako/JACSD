@@ -5,8 +5,6 @@
 #error vn_align.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#include <stdalign.h>
-
 #ifndef VN_ALIGN_BYTES
 #define VN_ALIGN_BYTES VN_L1D_CLS_B
 #endif /* !VN_ALIGN_BYTES */

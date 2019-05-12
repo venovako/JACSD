@@ -8,9 +8,6 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 #else /* !VN_TEST */
 #ifndef VN_NO_BLAS
 static volatile bool vn_blas_prepared = false;
-#ifdef _OPENMP
-#include <omp.h>
-#endif /* _OPENMP */
 
 vn_integer vn_blas_prepare()
 {

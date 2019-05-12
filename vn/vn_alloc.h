@@ -5,15 +5,6 @@
 #error vn_alloc.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifdef __APPLE__
-#include <alloca.h>
-#else /* !__APPLE__ */
-#ifdef _GNU_SOURCE
-#include <alloca.h>
-#include <malloc.h>
-#endif /* _GNU_SOURCE */
-#endif /* ?__APPLE__ */
-#include <stdlib.h>
 /*
   act:
    0 - compute ldA

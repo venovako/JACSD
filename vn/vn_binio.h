@@ -5,11 +5,6 @@
 #error vn_binio.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/uio.h>
-
 VN_EXTERN_C int vn_bopen_ro(const char *const fn, off_t *const sz);
 VN_EXTERN_C int vn_bopen_rw(const char *const fn, off_t *const sz);
 VN_EXTERN_C int vn_bopen_wo(const char *const fn, off_t *const sz);
