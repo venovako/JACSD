@@ -299,11 +299,10 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
       info = (n >> 1) * (n - 1);
   }
   else if ((id & ~(integer)1) == 2) { /* Mantharam-Eberlein */
+    jstrat_maneb2 *const me2 = (jstrat_maneb2*)memset(js, 0, sizeof(jstrat_maneb2));
     const integer *const cur = me_p2(n);
     if (!cur)
       return -3;
-
-    jstrat_maneb2 *const me2 = (jstrat_maneb2*)memset(js, 0, sizeof(jstrat_maneb2));
     me2->nxt = me2->tbl = cur;
     info = n - 1;
   }
