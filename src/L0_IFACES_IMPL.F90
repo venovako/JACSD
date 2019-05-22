@@ -104,6 +104,7 @@ SUBROUTINE DJACV0_PREPARE_F(STEPS, LDA, M, N, JS, IWORK, LIWORK, INFO)
         R = R + 1
      END DO
   END DO
+  CALL JSTRAT_FREE(JS)
 
   ! Fill the rest with some errorneous values.
   J = -1
