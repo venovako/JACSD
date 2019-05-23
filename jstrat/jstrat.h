@@ -11,8 +11,18 @@
 
 #ifdef _WIN32
 typedef long long integer;
+#ifndef iabs
+#define iabs llabs
+#else /* iabs */
+#error iabs already defined
+#endif /* ?iabs */
 #else /* POSIX */
 typedef long integer;
+#ifndef iabs
+#define iabs labs
+#else /* iabs */
+#error iabs already defined
+#endif /* ?iabs */
 #endif /* ?_WIN32 */
 
 typedef struct {

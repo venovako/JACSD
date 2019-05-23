@@ -34,6 +34,24 @@
 #include <string.h>
 #endif /* ?__cplusplus */
 
+/* to avoid pulling in a compiler-dependent memset as a dependency */
+static void *mset(void *const p, const unsigned char b, const size_t s)
+{
+  if (p)
+    for (size_t i = 0u; i < s; ++i)
+      ((unsigned char*)p)[i] = b;
+  return p;
+}
+
+/* to avoid pulling in a compiler-dependent memcpy as a dependency */
+static void *mcpy(void *const dst, const void *const src, const size_t szb)
+{
+  if (dst)
+    for (size_t i = 0u; i < szb; ++i)
+      ((unsigned char*)dst)[i] = ((const unsigned char*)src)[i];
+  return dst;
+}
+
 #ifdef VN_TEST
 static integer test_rolcyc(const integer id, const integer n)
 {
@@ -46,7 +64,7 @@ static integer test_rolcyc(const integer id, const integer n)
   for (integer stp = 0; stp < ret; ++stp) {
     const integer r = jstrat_next(&js, arr);
     if (r != 1)
-      return -labs(r);
+      return -iabs(r);
     (void)fprintf(stdout, "{%3ld,%3ld},", arr[0], arr[1]);
   }
   (void)fprintf(stdout, "\b \n}\n");
@@ -66,7 +84,7 @@ static integer test_maneb2(const integer id, const integer n)
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = jstrat_next(&js, (integer*)arr);
       if (r != n_2)
-        return -labs(r);
+        return -iabs(r);
       (void)fprintf(stdout, "{\n\t\t");
       for (integer p = 0; p < r; ++p)
         (void)fprintf(stdout, "{%3ld,%3ld}:[%3ld,%3ld],", arr[p][0][0], arr[p][0][1], arr[p][1][0], arr[p][1][1]);
@@ -79,7 +97,7 @@ static integer test_maneb2(const integer id, const integer n)
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = jstrat_next(&js, (integer*)arr);
       if (r != n_2)
-        return -labs(r);
+        return -iabs(r);
       (void)fprintf(stdout, "{\n\t\t");
       for (integer p = 0; p < r; ++p)
         (void)fprintf(stdout, "{%3ld,%3ld},", arr[p][0], arr[p][1]);
@@ -103,7 +121,7 @@ static integer test_modmod(const integer id, const integer n)
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = -jstrat_next(&js, (integer*)arr);
       if (r != n_2)
-        return -labs(r);
+        return -iabs(r);
       (void)fprintf(stdout, "{\n\t\t");
       for (integer p = 0; p < r; ++p)
         (void)fprintf(stdout, "{%3d,%3d}:[%3d,%3d],", arr[p][0][0][0], arr[p][0][1][0], arr[p][1][0][0], arr[p][1][1][0]);
@@ -116,7 +134,7 @@ static integer test_modmod(const integer id, const integer n)
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = -jstrat_next(&js, (integer*)arr);
       if (r != n_2)
-        return -labs(r);
+        return -iabs(r);
       (void)fprintf(stdout, "{\n\t\t");
       for (integer p = 0; p < r; ++p)
         (void)fprintf(stdout, "{%3d,%3d},", arr[p][0][0], arr[p][1][0]);
@@ -267,7 +285,7 @@ static integer *me_p2(const integer n)
   integer *cur = (integer*)(bsz ? malloc(bsz) : NULL);
   if (!cur)
     return cur;
-  (void)memcpy(cur, bp, bsz);
+  (void)mcpy(cur, bp, bsz);
   integer *prev = (integer*)NULL;
 
   for (integer i = 0; i < p2; ++i) {
@@ -292,14 +310,14 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
   integer info = 0;
 
   if (!(id & ~(integer)1)) { /* row/col-cyclic */
-    (void)memset(js, 0, sizeof(jstrat_rolcyc));
+    (void)mset(js, 0u, sizeof(jstrat_rolcyc));
     if (n & (integer)1) /* n odd */
       info = n * ((n - 1) >> 1);
     else /* n even */
       info = (n >> 1) * (n - 1);
   }
   else if ((id & ~(integer)1) == 2) { /* Mantharam-Eberlein */
-    jstrat_maneb2 *const me2 = (jstrat_maneb2*)memset(js, 0, sizeof(jstrat_maneb2));
+    jstrat_maneb2 *const me2 = (jstrat_maneb2*)mset(js, 0u, sizeof(jstrat_maneb2));
     const integer *const cur = me_p2(n);
     if (!cur)
       return -3;
@@ -307,7 +325,7 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
     info = n - 1;
   }
   else if ((id & ~(integer)1) == 4) { /* modified modulus */
-    (void)memset(js, 0, sizeof(jstrat_modmod));
+    (void)mset(js, 0u, sizeof(jstrat_modmod));
     if (n & (integer)1) /* n odd */
       return -3;
     info = n;
@@ -549,7 +567,7 @@ void jstrat_free(jstrat_common *const js)
     return;
   if ((js->id & ~(integer)1) == 2)
     free((void*)(((jstrat_maneb2*)js)->tbl));
-  (void)memset(js, 0, sizeof(*js));
+  (void)mset(js, 0u, sizeof(*js));
 }
 
 void jstrat_init_f(jstrat_common *const js, const integer *const id_, const integer *const n_, integer *const info_)
