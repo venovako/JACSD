@@ -194,7 +194,7 @@ static integer *me_dup(const integer n1, const integer *const tbl)
   const integer s1 = (n1 - 1);
   const integer p1 = (n1 >> 1);
   const integer n2 = (n1 << 1);
-  const integer s2 = (n2 - 1);
+  /* const integer s2 = (n2 - 1); */
   const integer p2 = (n2 >> 1);
 
   integer (*const tbl2)[2] = (integer (*)[2])malloc(((size_t)n2 - 1u) * (size_t)n2 * sizeof(integer));
