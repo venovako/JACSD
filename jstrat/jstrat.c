@@ -34,6 +34,10 @@
 #include <string.h>
 #endif /* ?__cplusplus */
 
+#ifdef USE_INTEL
+#pragma optimize("", off)
+#endif /* USE_INTEL */
+
 /* to avoid pulling in a compiler-dependent memset as a dependency */
 static void *mset(void *const p, const unsigned char b, const size_t s)
 {
@@ -46,11 +50,15 @@ static void *mset(void *const p, const unsigned char b, const size_t s)
 /* to avoid pulling in a compiler-dependent memcpy as a dependency */
 static void *mcpy(void *const dst, const void *const src, const size_t szb)
 {
-  if (dst)
+  if (dst && src && (dst != src))
     for (size_t i = 0u; i < szb; ++i)
       ((unsigned char*)dst)[i] = ((const unsigned char*)src)[i];
   return dst;
 }
+
+#ifdef USE_INTEL
+#pragma optimize("", on)
+#endif /* USE_INTEL */
 
 #ifdef VN_TEST
 static integer test_rolcyc(const integer id, const integer n)
