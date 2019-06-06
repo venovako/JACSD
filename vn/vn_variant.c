@@ -5,11 +5,11 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 {
   vn_varentry_t *e = (vn_varentry_t*)NULL;
   e = vn_varstack_push_ptr(e, NULL, false);
-  e = vn_varstack_push_str(e, "stack", 0);
+  e = vn_varstack_push_str(e, "stack \"stack\"", 0);
   e = vn_varstack_push_int(e, 17);
   e = vn_varstack_push_nat(e, 19u);
   e = vn_varstack_push_flt(e, M_PI);
-  (void)printf("\nprint = %d\n", vn_varstack_print(e, '\n', stdout));
+  (void)printf("\nprint = %d\n", vn_varstack_print(e, ','/*'\n'*/, stdout));
   while ((e = vn_varstack_pop(e)));
   return EXIT_SUCCESS;
 }
@@ -188,7 +188,32 @@ int vn_varentry_print(const vn_varentry_t *const e, FILE *const f)
     break;
   case VN_VARIANT_TAG_S:
   case VN_VARIANT_TAG_s:
-    ret = fprintf(f, "%s", (e->v).s);
+    if ((e->v).s) {
+#ifdef VN_NO_STR_CSV_QUOTE
+      ret = fprintf(f, "%s", (e->v).s);
+#else /* !VN_NO_STR_CSV_QUOTE */
+      if (fprintf(f, "\"") != 1)
+        return -1;
+      ret = 1;
+      for (const char *s = (e->v).s; *s; ++s) {
+        int r = 0;
+        if (*s == '\"') {
+          r = fprintf(f, "\"\"");
+          if (r != 2)
+            return -1;
+        }
+        else {
+          r = fprintf(f, "%c", *s);
+          if (r < 1)
+            return -1;
+        }
+        ret += r;
+      }
+      if (fprintf(f, "\"") != 1)
+        return -1;
+      ++ret;
+#endif /* ?VN_NO_STR_CSV_QUOTE */
+    }
     break;
   case VN_VARIANT_TAG_ll:
     ret = fprintf(f, "%lld", (e->v).ll);
