@@ -8,7 +8,9 @@ RM=del /F
 
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
+FC=ifort
 
+!IFDEF NDEBUG
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /4I8 /Qopenmp /standard-semantics
 LIBS=qxblas.lib
 OPTFLAGS=/O$(NDEBUG) /QxHost
