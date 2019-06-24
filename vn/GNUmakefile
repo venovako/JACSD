@@ -33,7 +33,8 @@ vn_blas_f.F90		\
 vn_cmplxvis_f.F90	\
 vn_mtxvis_f.F90		\
 vn_sort_f.F90		\
-vn_timer_f.F90
+vn_timer_f.F90		\
+vn_types_f.F90
 
 SRC=$(SRCC) $(SRCF)
 OBJSC=$(SRCC:.c=.o)
@@ -174,6 +175,9 @@ vn_timer.exe: vn_timer.c $(HDRS) $(MKFS)
 
 vn_types.o: vn_types.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
+
+vn_types_f.o vn_types_f.mod: vn_types_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
 
 vn_types.exe: vn_types.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)

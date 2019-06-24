@@ -1,5 +1,5 @@
 # JACSD
-Some utilities for the Jacobi-type SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
+Some utilities for the Jacobi-type (G)SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
 
 Available here (for now):
 * the shared-memory vectorized Jacobi-type SVD,
@@ -12,7 +12,7 @@ Available here (for now):
 
 ### Prerequisites
 
-A recent 64-bit Linux (e.g., CentOS 7.5) or macOS (e.g., High Sierra) is needed.
+A recent 64-bit Linux (e.g., CentOS 7.6) or macOS (e.g., Mojave) is needed.
 
 Have the Intel MKL (Math Kernel Library) installed.
 
