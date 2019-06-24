@@ -37,9 +37,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#ifndef USE_PGI
 #include <ctgmath>
-#endif /* !USE_PGI */
 #include <ctime>
 #include <cwchar>
 #else /* C11 */
@@ -56,9 +54,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef USE_PGI
 #include <tgmath.h>
-#endif /* !USE_PGI */
 #include <time.h>
 #include <wchar.h>
 #endif /* __cplusplus */

@@ -5,28 +5,6 @@
 #error vn_types.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifndef __cplusplus
-#ifdef USE_PGI
-#ifdef VN_REAL_KIND
-#if (4 == (VN_REAL_KIND))
-#define cabs cabsf
-#define carg cargf
-#define cimag cimagf
-#define conj conjf
-#define creal crealf
-#define log logf
-#define log2 log2f
-#define log10 log10f
-#define lround lroundf
-#define fabs fabsf
-#define fma fmaf
-#elif (10 == (VN_REAL_KIND))
-#error VN_REAL_KIND must be one of { 4, 8 }
-#endif /* ?VN_REAL_KIND */
-#endif /* VN_REAL_KIND */
-#endif /* USE_PGI */
-#endif /* !__cplusplus */
-
 #ifndef __CUDACC__
 static_assert(8 == CHAR_BIT, "vn_char_bit_8");
 static_assert(1 == sizeof(char), "vn_char_sz_1");
@@ -128,11 +106,11 @@ typedef vn_logical_8 vn_logical;
 #endif /* !VN_FALSE */
 
 #ifndef VN_TRUE
-#if (defined(__ICC) || defined(USE_PGI))
+#ifdef __ICC
 #define VN_TRUE MkBool(-1)
-#else /* !__ICC && !USE_PGI */
+#else /* !__ICC */
 #define VN_TRUE MkBool(1)
-#endif /* ?(__ICC || USE_PGI) */
+#endif /* ?__ICC */
 #endif /* !VN_TRUE */
 
 typedef float vn_real_4;
