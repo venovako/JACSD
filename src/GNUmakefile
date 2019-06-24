@@ -9,7 +9,7 @@ MKFS=GNUmakefile ../$(CPU).mk
 all: ../libl0c.a xCSGEN.exe xLACSD.exe xL0.exe svd_test
 
 help:
-	@echo "gmake [CPU=x64|x200|pgi|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ifeq ($(CPU),x200)
 AVX512_DJACV.o: AVX512_DJACV.c AVX512_DJACV.h $(MKFS)

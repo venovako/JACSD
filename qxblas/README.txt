@@ -1,6 +1,6 @@
 How to build:
 
-make [WP=4|8|10|16] [CPU=x64|x200|pgi|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
+make [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 (GNU make on *nix, or)
 nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 (MS make on Windows)
@@ -22,9 +22,6 @@ The only option for Windows, for now.
 
 CPU=x200
 Intel Xeon Phi (KNL) with IFORT.
-
-CPU=pgi
-PGI Fortran compiler (experimental).
 
 CPU=gnu (default if not defined)
 GNU Fortran; the only option to have WP=10.

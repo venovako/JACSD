@@ -9,7 +9,7 @@ MKFS=GNUmakefile $(CPU).mk
 all: libjstrat.a libqxblas.a libvn.a # libl0c.a
 
 help:
-	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|pgi|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 libl0c.a: libjstrat.a libqxblas.a libvn.a $(MKFS)
 ifdef NDEBUG
