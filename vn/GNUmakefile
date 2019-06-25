@@ -32,6 +32,7 @@ vn_binio_f.F90		\
 vn_blas_f.F90		\
 vn_cmplxvis_f.F90	\
 vn_mtxvis_f.F90		\
+vn_lib_f.F90		\
 vn_sort_f.F90		\
 vn_timer_f.F90		\
 vn_types_f.F90
@@ -65,14 +66,14 @@ vn_align.exe: vn_align.c $(HDRS) $(MKFS)
 vn_alloc.o: vn_alloc.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
+vn_alloc_f.o vn_alloc_f.mod: vn_alloc_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
+
 vn_alloc.exe: vn_alloc.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 vn_assert.o: vn_assert.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
-
-vn_alloc_f.o vn_alloc_f.mod: vn_alloc_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FFLAGS) -c $<
 
 vn_assert.exe: vn_assert.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
@@ -130,6 +131,9 @@ vn_lapack.exe: vn_lapack.c $(HDRS) $(MKFS)
 
 vn_lib.o: vn_lib.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
+
+vn_lib_f.o vn_lib_f.mod: vn_lib_f.F90 vn_alloc_f.mod vn_binio_f.mod vn_blas_f.mod vn_cmplxvis_f.mod vn_mtxvis_f.mod vn_sort_f.mod vn_timer_f.mod vn_types_f.mod $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
 
 vn_lib.exe: vn_lib.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
