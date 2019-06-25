@@ -181,7 +181,7 @@ vn_types.o: vn_types.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
 vn_types_f.o vn_types_f.mod: vn_types_f.F90 $(HDRS) $(MKFS)
-	$(FC) $(FFLAGS) -c $<
+	$(FC) $(FFLAGS) $(KIND_FLAGS) -c $<
 
 vn_types.exe: vn_types.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)

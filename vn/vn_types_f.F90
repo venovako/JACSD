@@ -176,4 +176,24 @@ CONTAINS
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+  PURE INTEGER FUNCTION LDALIGN(M, TALIGN)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: M, TALIGN
+
+    INTEGER :: R
+
+    IF (M .LE. TALIGN) THEN
+       LDALIGN = TALIGN
+    ELSE
+       R = MOD(M, TALIGN)
+       IF (R .EQ. 0) THEN
+          LDALIGN = M
+       ELSE
+          LDALIGN = M + (TALIGN - R)
+       END IF
+    END IF
+  END FUNCTION LDALIGN
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 END MODULE VN_TYPES_F
