@@ -1,5 +1,5 @@
-program omp_nest
-  use omp_lib
-  implicit none
-  print *, omp_get_max_active_levels()
-end program omp_nest
+PROGRAM OMP_NEST
+  USE OMP_LIB
+  IMPLICIT NONE
+  WRITE (*,*) OMP_GET_MAX_ACTIVE_LEVELS()
+END PROGRAM OMP_NEST

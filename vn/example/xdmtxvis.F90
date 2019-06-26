@@ -41,10 +41,10 @@ PROGRAM XDMTXVIS
   ! Call (only!) once per a recording session, at the beginning.
   info = VN_MTXVIS_START(ctx, fname, act, mA, nA, sx, sy, LEN_TRIM(fname))
   IF (info .NE. 0) THEN
-     PRINT *, info
+     WRITE (*,*) info
      STOP 'VN_MTXVIS_START'
   ELSE
-     PRINT *, 'Recording started.'
+     WRITE (*,*) 'Recording started.'
   END IF
 
   ! Let's fill in some values into A.
@@ -61,10 +61,10 @@ PROGRAM XDMTXVIS
   ! be of the same size!  Different-sized frames require different contexts.
   info = VN_MTXVIS_FRAME(ctx, A, ldA)
   IF (info .NE. 0) THEN
-     PRINT *, info
+     WRITE (*,*) info
      STOP 'VN_MTXVIS_FRAME'
   ELSE
-     PRINT *, 'Recorded 1 frame.'
+     WRITE (*,*) 'Recorded 1 frame.'
   END IF
 
   ! ...dump another frames...
@@ -72,10 +72,10 @@ PROGRAM XDMTXVIS
   ! Call (only!) once per a recording session, at the end.
   info = VN_MTXVIS_STOP(ctx)
   IF (info .NE. 0) THEN
-     PRINT *, info
+     WRITE (*,*) info
      STOP 'VN_MTXVIS_STOP'
   ELSE
-     PRINT *, 'Recording stopped.'
+     WRITE (*,*) 'Recording stopped.'
   END IF
 
 END PROGRAM XDMTXVIS
