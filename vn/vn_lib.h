@@ -87,10 +87,9 @@
 #include "vn_binio.h"
 #include "vn_lock.h"
 #include "vn_timer.h"
-
+#include "vn_profile.h"
 #include "vn_blas.h"
 #include "vn_lapack.h"
-
 #include "vn_bmp.h"
 #include "vn_mtxvis.h"
 #include "vn_cmplxvis.h"

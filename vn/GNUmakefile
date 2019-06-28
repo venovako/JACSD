@@ -15,11 +15,12 @@ vn_binio.c	\
 vn_blas.c	\
 vn_bmp.c	\
 vn_cmplxvis.c	\
-vn_lock.c	\
 vn_error.c	\
 vn_lapack.c	\
 vn_lib.c	\
+vn_lock.c	\
 vn_mtxvis.c	\
+vn_profile.c	\
 vn_simd.c	\
 vn_stdc11.c	\
 vn_timer.c	\
@@ -151,6 +152,12 @@ vn_mtxvis_f.o vn_mtxvis_f.mod: vn_mtxvis_f.F90 $(HDRS) $(MKFS)
 	$(FC) $(FFLAGS) -c $<
 
 vn_mtxvis.exe: vn_mtxvis.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+vn_profile.o: vn_profile.c $(HDRS) $(MKFS)
+	$(CC) $(CFLAGS) -c $<
+
+vn_profile.exe: vn_profile.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 vn_simd.o: vn_simd.c $(HDRS) $(MKFS)

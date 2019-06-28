@@ -13,7 +13,7 @@
 #endif /* __cplusplus */
 #else /* VN_EXTERN_C */
 #error VN_EXTERN_C already defined
-#endif /* !VN_EXTERN_C */
+#endif /* ?VN_EXTERN_C */
 
 #ifndef VN_DEAD_CODE
 #if (defined(__GNUC__) || defined(__clang__))
@@ -27,7 +27,7 @@
 #endif /* ?(__GNUC__ || __clang__) */
 #else /* VN_DEAD_CODE */
 #error VN_DEAD_CODE already defined
-#endif /* !VN_DEAD_CODE */
+#endif /* ?VN_DEAD_CODE */
 
 #ifndef VN_VAR_UNUSED
 #if (defined(__GNUC__) || defined(__clang__))
@@ -37,6 +37,12 @@
 #endif /* ?(__GNUC__ || __clang__) */
 #else /* VN_VAR_UNUSED */
 #error VN_VAR_UNUSED already defined
-#endif /* !VN_VAR_UNUSED */
+#endif /* ?VN_VAR_UNUSED */
+
+#ifndef VN_NO_PROF
+#define VN_NO_PROF __attribute__((no_instrument_function))
+#else /* VN_NO_PROF */
+#error VN_NO_PROF already defined
+#endif /* ?VN_NO_PROF */
 
 #endif /* !VN_ATTRS_H */
