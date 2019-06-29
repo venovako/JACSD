@@ -91,4 +91,4 @@ void vn_freep(const void **const pptr)
     *pptr = (const void*)NULL;
   }
 }
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

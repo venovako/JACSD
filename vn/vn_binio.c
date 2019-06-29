@@ -150,4 +150,4 @@ ssize_t vn_bread(const int fd, void *buf, size_t nB, off_t off)
     return -(int)ret1;
   return ret;
 }
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

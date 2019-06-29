@@ -23,5 +23,4 @@ vn_integer_8 vn_get_sys_us()
     return (vn_integer_8)-1;
   return (tv.tv_sec * (vn_integer_8)1000000 + tv.tv_usec);
 }
-
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

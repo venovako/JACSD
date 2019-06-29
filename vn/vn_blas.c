@@ -80,4 +80,4 @@ vn_integer vn_blas_set_num_threads(const vn_integer nt)
 #endif /* ?USE_MKL */
 }
 #endif /* !VN_NO_BLAS */
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

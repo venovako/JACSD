@@ -304,4 +304,4 @@ int vn_varstack_print(const vn_varentry_t *const e, const char d, FILE *const f)
   }
   return tot;
 }
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

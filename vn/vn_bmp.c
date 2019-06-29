@@ -352,4 +352,4 @@ vn_integer vn_bmp_read_cmap(const vn_bmp_t bmp, const char *const fn)
 
   return MkInt(0);
 }
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

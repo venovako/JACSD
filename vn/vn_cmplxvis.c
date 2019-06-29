@@ -366,4 +366,4 @@ vn_integer vn_cmplxvis_stop(vn_cmplxvis_ctx *const ctx)
 
   return MkInt(0);
 }
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

@@ -207,4 +207,4 @@ vn_real MsNaN(const vn_integer_8 payload)
 #else /* unsupported */
 #error VN_REAL_KIND must be one of { 4, 8, 10 }
 #endif /* ?VN_REAL_KIND */
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */

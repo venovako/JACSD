@@ -97,4 +97,4 @@ sig_atomic_t vn_unlock(vn_lock_t *const lock)
   }
   return (lock->count);
 }
-#endif /* VN_TEST */
+#endif /* ?VN_TEST */
