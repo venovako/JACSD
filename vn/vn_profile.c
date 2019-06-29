@@ -8,7 +8,7 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 #else /* !VN_TEST */
 #ifdef VN_PROFILE
 static pthread_mutex_t prof_lock = PTHREAD_MUTEX_INITIALIZER;
-static void (*on_exit)(void) = (void (*)(void))NULL;
+static void (*on_exit_ptr)(void) = (void (*)(void))NULL;
 static void *bt_root = NULL;
 static FILE *bt_file = (FILE*)NULL;
 static __thread char file_name[20];
@@ -126,11 +126,11 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_enter(void *const this_fn, void *
     }
     if (pthread_mutex_lock(&prof_lock))
       perror("pthread_mutex_lock");
-    if (!on_exit) {
+    if (!on_exit_ptr) {
       if (atexit(on_prog_exit))
         perror("atexit");
       else
-        on_exit = on_prog_exit;
+        on_exit_ptr = on_prog_exit;
     }
     if (pthread_mutex_unlock(&prof_lock))
       perror("pthread_mutex_unlock");
