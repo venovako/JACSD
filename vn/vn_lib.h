@@ -60,8 +60,10 @@
 #endif /* __cplusplus */
 #include <stdalign.h>
 #include <execinfo.h>
+#include <dlfcn.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <search.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>

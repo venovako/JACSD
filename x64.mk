@@ -9,6 +9,9 @@ ARFLAGS=-qnoipo -lib rsv
 CC=icc
 FC=ifort
 CPUFLAGS=-DUSE_INTEL -DUSE_X64 -fexceptions
+ifdef PROFILE
+CPUFLAGS += -DVN_PROFILE=$(PROFILE) -finstrument-functions
+endif # PROFILE
 FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
 C11FLAGS=$(CPUFLAGS) -std=c11
 ifdef NDEBUG
