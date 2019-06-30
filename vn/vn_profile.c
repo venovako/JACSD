@@ -18,27 +18,22 @@ static int VN_NO_PROF bt_comp(const void *a, const void *b)
 {
   if (a == b)
     return 0;
-  const ptrdiff_t d = ((const vn_addr_info_t*)a)->addr - ((const vn_addr_info_t*)b)->addr;
-  if (d < 0)
+  const uintptr_t A = (uintptr_t)(((const vn_addr_record_t*)a)->addr);
+  const uintptr_t B = (uintptr_t)(((const vn_addr_record_t*)b)->addr);
+  if (A < B)
     return -1;
-  if (d > 0)
+  if (B < A)
     return 1;
   return 0;
 }
 
 static void VN_NO_PROF bt_action(const void *node, VISIT order, int level)
 {
-  const vn_addr_info_t *const p = *(const vn_addr_info_t**)node;
-  vn_addr_record_t ar;
-  switch (order) {
+  const vn_addr_record_t *const ar = *(const vn_addr_record_t**)node;
+   switch (order) {
   case postorder:
   case leaf:
-    ar.addr = p->addr;
-    ar.off = p->addr - p->info.dli_saddr;
-    (void)memset(ar.sym, 0, sizeof(ar.sym));
-    if (p->info.dli_sname)
-      strncpy(ar.sym, p->info.dli_sname, sizeof(ar.sym))[sizeof(ar.sym)-1] = '\0';
-    if (fwrite(&ar, sizeof(ar), 1, bt_file) != 1)
+    if (fwrite(ar, sizeof(*ar), 1, bt_file) != 1)
       perror("fwrite");
     break;
   default: /* do nothing */;
@@ -48,7 +43,7 @@ static void VN_NO_PROF bt_action(const void *node, VISIT order, int level)
 static void VN_NO_PROF bt_destroy()
 {
   while (bt_root) {
-    vn_addr_info_t *const p = *(vn_addr_info_t**)bt_root;
+    vn_addr_record_t *const p = *(vn_addr_record_t**)bt_root;
     if (!tdelete(p, &bt_root, bt_comp))
       perror("tdelete");
     free(p);
@@ -76,45 +71,50 @@ static void VN_NO_PROF on_prog_exit()
 
 static int VN_NO_PROF bt_insert(void *const addr)
 {
-  if (!addr)
-    return 0;
-  vn_addr_info_t ai;
-  ai.addr = addr;
+  assert(addr);
   if (pthread_mutex_lock(&prof_lock))
     perror("pthread_mutex_lock");
-  vn_addr_info_t **const node = (vn_addr_info_t**)tsearch(&ai, &bt_root, bt_comp);
+  vn_addr_record_t **const node = (vn_addr_record_t**)tsearch((const void*)&addr, &bt_root, bt_comp);
   if (pthread_mutex_unlock(&prof_lock))
     perror("pthread_mutex_unlock");
   if (!node) {
     perror("tsearch");
     return 1;
   }
-  if (*node == &ai) {
-    if (!dladdr(ai.addr, &(ai.info))) {
+  if ((const void*)*node == (const void*)&addr) {
+    Dl_info info;
+    if (!dladdr(addr, &info)) {
       perror("dladdr");
       goto bt_err;
     }
-    /* replace the node's value with a pointer to a dynamically allocated copy of ai */
-    vn_addr_info_t *const nai = (vn_addr_info_t*)malloc(sizeof(vn_addr_info_t));
-    if (!nai) {
+    if (!(info.dli_sname))
+      goto bt_err;
+    /* replace the node's value with a pointer to a dynamically allocated struct */
+    vn_addr_record_t *const ar = (vn_addr_record_t*)malloc(sizeof(vn_addr_record_t));
+    if (!ar) {
       perror("malloc");
       goto bt_err;
     }
-    *nai = ai;
+    ar->addr = addr;
+    ar->off = (uintptr_t)addr - (uintptr_t)(info.dli_saddr);
+    (void)memset(ar->sym, 0, (sizeof(ar->sym)-1));
+    strncpy(ar->sym, info.dli_sname, sizeof(ar->sym))[sizeof(ar->sym)-1] = '\0';
     if (pthread_mutex_lock(&prof_lock))
       perror("pthread_mutex_lock");
-    *node = nai;
+    *node = ar;
     if (pthread_mutex_unlock(&prof_lock))
       perror("pthread_mutex_unlock");
   }
   return 0;
  bt_err:
-  (void)tdelete(&ai, &bt_root, bt_comp);
-  return 3;
+  (void)tdelete(&addr, &bt_root, bt_comp);
+  return 2;
 }
 
 VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_enter(void *const this_fn, void *const call_site)
 {
+  assert(this_fn);
+  assert(call_site);
   if (!prof_file) {
     if (snprintf(file_name, sizeof(file_name), "%016tx.pt", pthread_self()) <= 0) {
       perror("snprintf");
@@ -156,6 +156,7 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_enter(void *const this_fn, void *
 
 VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_exit(void *const this_fn, void *const call_site)
 {
+  assert(this_fn);
   assert(prof_file);
   vn_profile_record_t pr;
   pr.this_fn = this_fn;
