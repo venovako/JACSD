@@ -49,3 +49,7 @@ qx_wp.fi
 # Directories
 .svn
 old
+
+# Output
+*.pt
+*.bt
