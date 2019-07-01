@@ -10,7 +10,7 @@ CC=icc
 FC=ifort
 CPUFLAGS=-DUSE_INTEL -DUSE_X200 -fexceptions -qopenmp
 ifdef PROFILE
-CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fPIC -fno-inline -fno-omit-frame-pointer -finstrument-functions
+CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fPIC -fno-inline -fno-omit-frame-pointer -finstrument-functions -rdynamic
 endif # PROFILE
 FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
 C11FLAGS=$(CPUFLAGS) -std=c11
