@@ -8,7 +8,7 @@ AR=ar
 ARFLAGS=rsv
 CPUFLAGS=-DUSE_GNU -DUSE_X64 -fexceptions
 ifdef PROFILE
-CPUFLAGS += -DVN_PROFILE=$(PROFILE) -finstrument-functions
+CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fPIC -fno-inline -fno-omit-frame-pointer -finstrument-functions
 endif # PROFILE
 FORFLAGS=-cpp $(CPUFLAGS) -fdefault-integer-8 -ffree-line-length-none -fopenmp -fstack-arrays
 C11FLAGS=$(CPUFLAGS) #-std=gnu17
