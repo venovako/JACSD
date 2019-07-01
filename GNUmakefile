@@ -6,55 +6,100 @@ MKFS=GNUmakefile $(CPU).mk
 
 .PHONY: all help clean
 
-all: libjstrat.a libqxblas.a libvn.a # libl0c.a
+all: libjstrat$(PROFILE).a libqxblas$(PROFILE).a libvn$(PROFILE).a # libl0c$(PROFILE).a
 
 help:
 	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-libl0c.a: libjstrat.a libqxblas.a libvn.a $(MKFS)
+libl0c$(PROFILE).a: libjstrat$(PROFILE).a libqxblas$(PROFILE).a libvn$(PROFILE).a $(MKFS)
 ifdef NDEBUG
+ifdef PROFILE
+	pushd src && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd src && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) && popd
+endif # ?PROFILE
 else # DEBUG
+ifdef PROFILE
+	pushd src && $(MAKE) CPU=$(CPU) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd src && $(MAKE) CPU=$(CPU) && popd
+endif # ?PROFILE
 endif # ?NDEBUG
 
-libjstrat.a: $(MKFS)
+libjstrat$(PROFILE).a: $(MKFS)
 ifdef NDEBUG
+ifdef PROFILE
+	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) && popd
+endif # ?PROFILE
 else # DEBUG
+ifdef PROFILE
+	pushd jstrat && $(MAKE) CPU=$(CPU) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd jstrat && $(MAKE) CPU=$(CPU) && popd
+endif # ?PROFILE
 endif # ?NDEBUG
 
-qx_wp.fi libqxblas.a: $(MKFS)
+qx_wp.fi libqxblas$(PROFILE).a: $(MKFS)
 ifdef NDEBUG
+ifdef PROFILE
+	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) && popd
+endif # ?PROFILE
 else # DEBUG
+ifdef PROFILE
+	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) && popd
+endif # ?PROFILE
 endif # ?NDEBUG
 
-libvn.a: $(MKFS)
+libvn$(PROFILE).a: $(MKFS)
 ifdef NDEBUG
+ifdef PROFILE
+	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) && popd
+endif # ?PROFILE
 else # DEBUG
+ifdef PROFILE
+	pushd vn && $(MAKE) CPU=$(CPU) PROFILE=$(PROFILE) && popd
+else # !PROFILE
 	pushd vn && $(MAKE) CPU=$(CPU) && popd
+endif # ?PROFILE
 endif # ?NDEBUG
 
 clean:
 ifdef NDEBUG
+ifdef PROFILE
+	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) clean && popd
+	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) clean && popd
+	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) clean && popd
+	pushd src && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) clean && popd
+else # !PROFILE
 	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) clean && popd
 	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) clean && popd
 	pushd src && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) clean && popd
+endif # ?PROFILE
 else # DEBUG
+ifdef PROFILE
+	pushd vn && $(MAKE) CPU=$(CPU) PROFILE=$(PROFILE) clean && popd
+	pushd jstrat && $(MAKE) CPU=$(CPU) PROFILE=$(PROFILE) clean && popd
+	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) PROFILE=$(PROFILE) clean && popd
+	pushd src && $(MAKE) CPU=$(CPU) PROFILE=$(PROFILE) clean && popd
+else # !PROFILE
 	pushd vn && $(MAKE) CPU=$(CPU) clean && popd
 	pushd jstrat && $(MAKE) CPU=$(CPU) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) clean && popd
 	pushd src && $(MAKE) CPU=$(CPU) clean && popd
+endif # ?PROFILE
 endif # ?NDEBUG
 	-$(RM) *.exe
 	-$(RM) *.mod
 	-$(RM) *.o
-	-$(RM) *.a
 	-$(RM) *.optrpt
 	-$(RM) *__genmod.f90
 	-$(RM) *__genmod.mod

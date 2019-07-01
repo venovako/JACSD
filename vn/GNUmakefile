@@ -48,14 +48,14 @@ EXES=$(SRCC:.c=.exe)
 
 .PHONY: all test help clean
 
-all: ../libvn.a
+all: ../libvn$(PROFILE).a
 
-test: ../libvn.a $(EXES)
+test: ../libvn$(PROFILE).a $(EXES)
 
 help:
 	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-../libvn.a: $(OBJS) $(MKFS)
+../libvn$(PROFILE).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 vn_align.o: vn_align.c $(HDRS) $(MKFS)
@@ -200,7 +200,7 @@ vn_variant.exe: vn_variant.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 clean:
-	-$(RM) ../libvn.a
+	-$(RM) ../libvn$(PROFILE).a
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
 	-$(RM) $(EXES)

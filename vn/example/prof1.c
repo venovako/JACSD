@@ -1,3 +1,4 @@
+// icc -std=gnu11 -D_GNU_SOURCE -O3 -xHost -I.. prof1.c -o prof1.exe -L../.. -lvn -lpthread -lm -ldl
 // clang -O3 -march=native -integrated-as -I.. prof1.c -o prof1.exe -L../.. -lvn -lpthread -lm -ldl
 #include "vn_lib.h"
 

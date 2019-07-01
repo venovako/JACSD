@@ -8,7 +8,7 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
 FC=ifort
-CPUFLAGS=-DUSE_INTEL -DUSE_X64 -fexceptions
+CPUFLAGS=-DUSE_INTEL -DUSE_X64 -fexceptions -qopenmp
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -finstrument-functions
 endif # PROFILE
@@ -38,12 +38,13 @@ FPUFLAGS=-fp-model strict -fp-stack-check -fma -no-ftz -no-complex-limited-range
 FPUFFLAGS=$(FPUFLAGS) -assume ieee_fpe_flags
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include -qopenmp
+LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I../vn -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
+LDFLAGS=-L.. -lvn$(PROFILE)
 ifeq ($(ARCH),Darwin)
-LDFLAGS=-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
+LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
 else # Linux
 LIBFLAGS += -D_GNU_SOURCE
-LDFLAGS=-L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
+LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
 endif # ?Darwin
 LDFLAGS += -lpthread -lm -ldl
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)

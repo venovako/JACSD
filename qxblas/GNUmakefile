@@ -99,7 +99,7 @@ OBJS=$(SOURCES:.F90=.o)
 
 .PHONY: all help prepare clean
 
-all: ../libqxblas.a
+all: ../libqxblas$(PROFILE).a
 
 help:
 	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -107,14 +107,14 @@ help:
 prepare:
 	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi
 
-../libqxblas.a: prepare $(OBJS) $(MKFS)
+../libqxblas$(PROFILE).a: prepare $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 %.o: %.F90 $(MKFS)
 	$(FC) -I.. $(FFLAGS) -c $< -o $@
 
 clean:
-	-$(RM) ../libqxblas.a
+	-$(RM) ../libqxblas$(PROFILE).a
 	-$(RM) ../qx_wp.fi
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
