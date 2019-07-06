@@ -25,8 +25,8 @@ AVX2_FMA_DJACV.o: AVX2_FMA_DJACV.c AVX2_FMA_DJACV.h $(MKFS)
 	$(AR) $(ARFLAGS) $@ AVX2_FMA_DJACV.o
 endif # ?CPU
 
-xCSGEN.exe: xCSGEN.o FTNUTILS.o ftnutils.mod ../libqxblas$(PROFILE).a $(MKFS)
-	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas$(PROFILE) $(LDFLAGS)
+xCSGEN.exe: xCSGEN.o FTNUTILS.o ftnutils.mod ../libqxblas$(WP)$(PROFILE).a $(MKFS)
+	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas$(WP)$(PROFILE) $(LDFLAGS)
 
 xCSGEN.o: xCSGEN.F90 ../qx_wp.fi ftnutils.mod $(MKFS)
 	$(FC) $(FFLAGS) -I.. -c xCSGEN.F90

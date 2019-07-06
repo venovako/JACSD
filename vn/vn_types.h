@@ -36,6 +36,7 @@ typedef int8_t vn_integer_1;
 typedef int16_t vn_integer_2;
 typedef int32_t vn_integer_4;
 typedef int64_t vn_integer_8;
+typedef intmax_t vn_integer_max;
 
 /* default integer is 64-bit signed */
 #ifndef VN_INTEGER_KIND
@@ -54,7 +55,17 @@ typedef int64_t vn_integer_8;
 #error VN_INTEGER_MAX already defined
 #endif /* VN_INTEGER_MAX */
 
-#if (4 == (VN_INTEGER_KIND))
+#if (1 == (VN_INTEGER_KIND))
+#define MkInt INT8_C
+typedef vn_integer_1 vn_integer;
+#define VN_INTEGER_MIN INT8_MIN
+#define VN_INTEGER_MAX INT8_MAX
+#elif (2 == (VN_INTEGER_KIND))
+#define MkInt INT16_C
+typedef vn_integer_2 vn_integer;
+#define VN_INTEGER_MIN INT16_MIN
+#define VN_INTEGER_MAX INT16_MAX
+#elif (4 == (VN_INTEGER_KIND))
 #define MkInt INT32_C
 typedef vn_integer_4 vn_integer;
 #define VN_INTEGER_MIN INT32_MIN
@@ -65,13 +76,60 @@ typedef vn_integer_8 vn_integer;
 #define VN_INTEGER_MIN INT64_MIN
 #define VN_INTEGER_MAX INT64_MAX
 #else /* unsupported */
-#error VN_INTEGER_KIND must be one of { 4, 8 }
+#error VN_INTEGER_KIND must be one of { 1, 2, 4, 8 }
 #endif /* ?VN_INTEGER_KIND */
+
+typedef uint8_t vn_natural_1;
+typedef uint16_t vn_natural_2;
+typedef uint32_t vn_natural_4;
+typedef uint64_t vn_natural_8;
+typedef uintmax_t vn_natural_max;
+
+#ifndef VN_NATURAL_KIND
+#define VN_NATURAL_KIND VN_INTEGER_KIND
+#endif /* !VN_NATURAL_KIND */
+
+#ifdef MkNat
+#error MkNat already defined
+#endif /* MkNat */
+
+#ifdef VN_NATURAL_MIN
+#error VN_NATURAL_MIN already defined
+#endif /* VN_NATURAL_MIN */
+
+#ifdef VN_NATURAL_MAX
+#error VN_NATURAL_MAX already defined
+#endif /* VN_NATURAL_MAX */
+
+#if (1 == (VN_NATURAL_KIND))
+#define MkNat UINT8_C
+typedef vn_natural_1 vn_natural;
+#define VN_NATURAL_MIN INT8_MIN
+#define VN_NATURAL_MAX INT8_MAX
+#elif (2 == (VN_NATURAL_KIND))
+#define MkNat UINT16_C
+typedef vn_natural_2 vn_natural;
+#define VN_NATURAL_MIN INT16_MIN
+#define VN_NATURAL_MAX INT16_MAX
+#elif (4 == (VN_NATURAL_KIND))
+#define MkNat UINT32_C
+typedef vn_natural_4 vn_natural;
+#define VN_NATURAL_MIN INT32_MIN
+#define VN_NATURAL_MAX INT32_MAX
+#elif (8 == (VN_NATURAL_KIND))
+#define MkNat UINT64_C
+typedef vn_natural_8 vn_natural;
+#define VN_NATURAL_MIN INT64_MIN
+#define VN_NATURAL_MAX INT64_MAX
+#else /* unsupported */
+#error VN_NATURAL_KIND must be one of { 1, 2, 4, 8 }
+#endif /* ?VN_NATURAL_KIND */
 
 typedef vn_integer_1 vn_logical_1;
 typedef vn_integer_2 vn_logical_2;
 typedef vn_integer_4 vn_logical_4;
 typedef vn_integer_8 vn_logical_8;
+typedef vn_integer_max vn_logical_max;
 
 #ifndef VN_LOGICAL_KIND
 #define VN_LOGICAL_KIND VN_INTEGER_KIND
@@ -81,20 +139,18 @@ typedef vn_integer_8 vn_logical_8;
 #error MkBool already defined
 #endif /* MkBool */
 
-#if (8 == (VN_LOGICAL_KIND))
-#define MkBool(x) INT64_C(x)
-#else /* VN_LOGICAL_KIND < 8 */
-#define MkBool(x) x
-#endif /* ?VN_LOGICAL_KIND */
-
 #if (1 == (VN_LOGICAL_KIND))
 typedef vn_logical_1 vn_logical;
+#define MkBool(x) INT8_C(x)
 #elif (2 == (VN_LOGICAL_KIND))
 typedef vn_logical_2 vn_logical;
+#define MkBool(x) INT16_C(x)
 #elif (4 == (VN_LOGICAL_KIND))
 typedef vn_logical_4 vn_logical;
+#define MkBool(x) INT32_C(x)
 #elif (8 == (VN_LOGICAL_KIND))
 typedef vn_logical_8 vn_logical;
+#define MkBool(x) INT64_C(x)
 #else /* unsupported */
 #error VN_LOGICAL_KIND must be one of { 1, 2, 4, 8 }
 #endif /* ?VN_LOGICAL_KIND */
@@ -103,7 +159,7 @@ typedef vn_logical_8 vn_logical;
 #define VN_FALSE MkBool(0)
 #else /* VN_FALSE */
 #error VN_FALSE already defined
-#endif /* !VN_FALSE */
+#endif /* ?VN_FALSE */
 
 #ifndef VN_TRUE
 #ifdef __ICC
@@ -111,7 +167,7 @@ typedef vn_logical_8 vn_logical;
 #else /* !__ICC */
 #define VN_TRUE MkBool(1)
 #endif /* ?__ICC */
-#endif /* !VN_TRUE */
+#endif /* ?VN_TRUE */
 
 typedef float vn_real_4;
 typedef double vn_real_8;
@@ -126,7 +182,7 @@ typedef std::complex<long double> vn_complex_10;
 typedef float complex vn_complex_4;
 typedef double complex vn_complex_8;
 typedef long double complex vn_complex_10;
-#endif /* __cplusplus */
+#endif /* ?__cplusplus */
 
 /* default real is double precision */
 #ifndef VN_REAL_KIND
@@ -322,4 +378,4 @@ typedef vn_complex_10 vn_complex;
 #define MkIx2 VN_A2F
 #endif /* !MkIx2 */
 
-#endif /* VN_TYPES_H */
+#endif /* !VN_TYPES_H */
