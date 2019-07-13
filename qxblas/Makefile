@@ -6,20 +6,26 @@ WP=16
 RM=del /F
 !ENDIF # !RM
 
+!IFDEF NDEBUG
+DEBUG=
+!ELSE # DEBUG
+DEBUG=d
+!ENDIF # ?NDEBUG
+
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FC=ifort
 
 !IFDEF NDEBUG
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /4I8 /Qopenmp /standard-semantics
-LIBS=qxblas$(WP).lib
+LIBS=qxblas$(WP)$(DEBUG).lib
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
 FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/I.. /libs:dll /threads
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
-OPTFLAGS=/Od /QxHost
+OPTFLAGS=/O$(DEBUG) /QxHost
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
 FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
 LIBFLAGS=/I.. /libs:dll /threads /dbglibs

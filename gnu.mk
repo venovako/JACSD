@@ -1,7 +1,12 @@
+SHELL=/bin/bash
 ifndef WP
 WP=10
 endif # !WP
-SHELL=/bin/bash
+ifdef NDEBUG
+DEBUG=
+else # DEBUG
+DEBUG=g
+endif # ?NDEBUG
 ARCH=$(shell uname)
 RM=rm -rfv
 AR=ar
@@ -42,7 +47,7 @@ FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS) -fno-math-errno
 OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
-OPTFLAGS=-Og -march=native
+OPTFLAGS=-O$(DEBUG) -march=native
 ifeq ($(ARCH),Darwin)
 OPTFFLAGS=$(OPTFLAGS) -Wa,-q
 OPTCFLAGS=$(OPTFLAGS) -integrated-as
@@ -50,7 +55,7 @@ else # Linux
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 endif # ?Darwin
-DBGFLAGS=-g
+DBGFLAGS=-$(DEBUG)
 DBGFFLAGS=$(DBGFLAGS) -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=$(DBGFLAGS) -ftrapv
 FPUFLAGS=-ffp-contract=fast

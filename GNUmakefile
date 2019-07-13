@@ -6,12 +6,12 @@ MKFS=GNUmakefile $(CPU).mk
 
 .PHONY: all help clean
 
-all: libjstrat$(PROFILE).a libqxblas$(WP)$(PROFILE).a libvn$(PROFILE).a # libl0c$(PROFILE).a
+all: libjstrat$(PROFILE)$(DEBUG).a libqxblas$(WP)$(PROFILE)$(DEBUG).a libvn$(PROFILE)$(DEBUG).a # libl0c$(PROFILE)$(DEBUG).a
 
 help:
 	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-libl0c$(PROFILE).a: libjstrat$(PROFILE).a libqxblas$(WP)$(PROFILE).a libvn$(PROFILE).a $(MKFS)
+libl0c$(PROFILE)$(DEBUG).a: libjstrat$(PROFILE)$(DEBUG).a libqxblas$(WP)$(PROFILE)$(DEBUG).a libvn$(PROFILE)$(DEBUG).a $(MKFS)
 ifdef NDEBUG
 ifdef PROFILE
 	pushd src && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
@@ -26,7 +26,7 @@ else # !PROFILE
 endif # ?PROFILE
 endif # ?NDEBUG
 
-libjstrat$(PROFILE).a: $(MKFS)
+libjstrat$(PROFILE)$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
 ifdef PROFILE
 	pushd jstrat && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
@@ -41,7 +41,7 @@ else # !PROFILE
 endif # ?PROFILE
 endif # ?NDEBUG
 
-qx_wp.fi libqxblas$(WP)$(PROFILE).a: $(MKFS)
+qx_wp.fi libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
 ifdef PROFILE
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd
@@ -56,7 +56,7 @@ else # !PROFILE
 endif # ?PROFILE
 endif # ?NDEBUG
 
-libvn$(PROFILE).a: $(MKFS)
+libvn$(PROFILE)$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
 ifdef PROFILE
 	pushd vn && $(MAKE) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd

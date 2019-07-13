@@ -1,7 +1,12 @@
+SHELL=/bin/bash
 ifndef WP
 WP=16
 endif # !WP
-SHELL=/bin/bash
+ifdef NDEBUG
+DEBUG=
+else # DEBUG
+DEBUG=g
+endif # ?NDEBUG
 ARCH=$(shell uname)
 RM=rm -rfv
 AR=xiar
@@ -28,7 +33,7 @@ else # DEBUG
 OPTFLAGS=-O0 -xHost
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-g -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -traceback -diag-disable=10397
+DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -traceback -diag-disable=10397
 ifneq ($(ARCH),Darwin) # Linux
 DBGFLAGS += -debug parallel
 endif # ?Linux
