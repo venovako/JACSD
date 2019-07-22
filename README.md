@@ -4,9 +4,11 @@ Some utilities for the Jacobi-type (G)SVD algorithms and beyond, plus a Cosine-S
 Available here (for now):
 * the shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas),
-* a Jacobi strategies library (jstrat),
-* a utility library (vn),
+* a Jacobi strategies library (jstrat) \[1\],
+* a utility library (vn) \[1\],
 * and some testing code for LAPACK CS.
+
+\[1\] These libraries are also a supplementary material for the paper [arXiv:1907.08560](https://arxiv.org/abs/1907.08560).
 
 ## Building
 
