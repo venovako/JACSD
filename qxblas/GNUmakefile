@@ -28,8 +28,10 @@ qlapy2.F90   \
 qlaran.F90   \
 qlarfg.F90   \
 qlarnd.F90   \
+qlarnv.F90   \
 qlaror.F90   \
 qlartg.F90   \
+qlaruv.F90   \
 qlaset.F90   \
 qlassq.F90   \
 qnrm2.F90    \
@@ -79,6 +81,7 @@ xherk.F90    \
 xhpmv.F90    \
 xhpr.F90     \
 xhpr2.F90    \
+xlarnv.F90   \
 xqrot.F90    \
 xqscal.F90   \
 xrotg.F90    \
