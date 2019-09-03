@@ -155,8 +155,8 @@
   REAL(WP), PARAMETER :: ZERO = 0.0E+0_WP
 !     ..
 !     .. Local Scalars ..
-  REAL(WP) TEMP
-  INTEGER I,INFO,IX,J,JX,KX
+  REAL(WP) :: TEMP
+  INTEGER :: I,INFO,IX,J,JX,KX
 !     ..
 !     .. External Functions ..
   LOGICAL, EXTERNAL :: LSAME
