@@ -17,6 +17,7 @@ qgemv.F90    \
 qger.F90     \
 qisnan.F90   \
 qlacpy.F90   \
+qlagsy.F90   \
 qlaisnan.F90 \
 qlamch.F90   \
 qlangb.F90   \
@@ -81,6 +82,7 @@ xherk.F90    \
 xhpmv.F90    \
 xhpr.F90     \
 xhpr2.F90    \
+xlaghe.F90   \
 xlarnv.F90   \
 xqrot.F90    \
 xqscal.F90   \
