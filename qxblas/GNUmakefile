@@ -83,6 +83,7 @@ xhpmv.F90    \
 xhpr.F90     \
 xhpr2.F90    \
 xlacgv.F90   \
+xlacpy.F90   \
 xlaghe.F90   \
 xlarnd.F90   \
 xlarnv.F90   \
