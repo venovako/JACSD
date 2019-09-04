@@ -53,3 +53,13 @@ old
 # Output
 *.pt
 *.bt
+*.plt
+*.LX
+*.QQ
+*.QU
+*.QV
+*.SS
+*.SW
+*.SY
+*.W
+*.Y
