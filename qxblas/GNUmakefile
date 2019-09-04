@@ -82,8 +82,12 @@ xherk.F90    \
 xhpmv.F90    \
 xhpr.F90     \
 xhpr2.F90    \
+xlacgv.F90   \
 xlaghe.F90   \
+xlarnd.F90   \
 xlarnv.F90   \
+xlaror.F90   \
+xlaset.F90   \
 xqrot.F90    \
 xqscal.F90   \
 xrotg.F90    \
