@@ -33,60 +33,60 @@ PROGRAM ZGENGSVD
   CALL READCL(SIGMA_F, SIGMA_G, LAMBDA_X, SEED, N, FIL, &
        IDIST_F, EPS_F, SCAL_F, IDIST_G, EPS_G, SCAL_G, IDIST_X, EPS_X, SCAL_X, INFO)
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'READCL'
+     WRITE (*,*) INFO
+     STOP 'READCL'
   END IF
 
   CALL SEEDIX(SEED, ISEED, INFO)
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'SEEDIX'
+     WRITE (*,*) INFO
+     STOP 'SEEDIX'
   END IF
 
   ALLOCATE(DS_F(N))
   IF (IDIST_F .NE. 0) THEN
-    CALL DGENLAM(N, ISEED, IDIST_F, EPS_F, SCAL_F, DS_F, P, INFO)
+     CALL DGENLAM(N, ISEED, IDIST_F, EPS_F, SCAL_F, DS_F, P, INFO)
   ELSE
-    CALL DTXTLAM(SIGMA_F, N, DS_F, P, INFO)
+     CALL DTXTLAM(SIGMA_F, N, DS_F, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'SIGMA_F'
+     WRITE (*,*) INFO
+     STOP 'SIGMA_F'
   END IF
   IF (P .NE. N) THEN
-    WRITE (*,*) P, '<', N
-    STOP 'SIGMA_F'
+     WRITE (*,*) P, '<', N
+     STOP 'SIGMA_F'
   END IF
 
   ALLOCATE(DS_G(N))
   IF (IDIST_G .NE. 0) THEN
-    CALL DGENLAM(N, ISEED, IDIST_G, EPS_G, SCAL_G, DS_G, P, INFO)
+     CALL DGENLAM(N, ISEED, IDIST_G, EPS_G, SCAL_G, DS_G, P, INFO)
   ELSE
-    CALL DTXTLAM(SIGMA_G, N, DS_G, P, INFO)
+     CALL DTXTLAM(SIGMA_G, N, DS_G, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'SIGMA_G'
+     WRITE (*,*) INFO
+     STOP 'SIGMA_G'
   END IF
   IF (P .NE. N) THEN
-    WRITE (*,*) P, '<', N
-    STOP 'SIGMA_G'
+     WRITE (*,*) P, '<', N
+     STOP 'SIGMA_G'
   END IF
 
   ALLOCATE(DS(N))
   DO P = 1, N
-    DS(P) = DS_F(P) / DS_G(P)
+     DS(P) = DS_F(P) / DS_G(P)
   END DO
 
   ALLOCATE(DL_X(N))
   IF (IDIST_X .NE. 0) THEN
-    CALL DGENLAM(N, ISEED, IDIST_X, EPS_X, SCAL_X, DL_X, P, INFO)
+     CALL DGENLAM(N, ISEED, IDIST_X, EPS_X, SCAL_X, DL_X, P, INFO)
   ELSE
-    CALL DTXTLAM(LAMBDA_X, N, DL_X, P, INFO)
+     CALL DTXTLAM(LAMBDA_X, N, DL_X, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'LAMBDA_X'
+     WRITE (*,*) INFO
+     STOP 'LAMBDA_X'
   END IF
 
   ALLOCATE(ZF(N,N))
@@ -102,24 +102,24 @@ PROGRAM ZGENGSVD
   ALLOCATE(XL_X(N))
 
   DO P = 1, N
-    XS_F(P) = REAL(DS_F(P),WP)
-    XS_G(P) = REAL(DS_G(P),WP)
-    XL_X(P) = REAL(DL_X(P),WP)
+     XS_F(P) = REAL(DS_F(P),WP)
+     XS_G(P) = REAL(DS_G(P),WP)
+     XL_X(P) = REAL(DL_X(P),WP)
 
-    H = HYPOT(XS_F(P), XS_G(P))
-    XS_F(P) = XS_F(P) / H
-    XS_G(P) = XS_G(P) / H
+     H = HYPOT(XS_F(P), XS_G(P))
+     XS_F(P) = XS_F(P) / H
+     XS_G(P) = XS_G(P) / H
 
-    DS_F(P) = DBLE(XS_F(P))
-    DS_G(P) = DBLE(XS_G(P))
+     DS_F(P) = DBLE(XS_F(P))
+     DS_G(P) = DBLE(XS_G(P))
   END DO
 
   P = 3 * N
   ALLOCATE(XWORK(P))
   CALL ZGENDAT(N, ISEED, XS_F, XS_G, XL_X, XF, ZF, XG, ZG, XX, ZU, XWORK, INFO)
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'ZGENDAT'
+     WRITE (*,*) INFO
+     STOP 'ZGENDAT'
   END IF
   DEALLOCATE(XWORK)
 
@@ -156,8 +156,8 @@ PROGRAM ZGENGSVD
 
   CALL ZGGSVP3('U', 'V', 'Q', N, N, N, ZF,N, ZG,N, TOLA,TOLB, K, L, ZU,N, ZV,N, ZQ,N, IWORK, DWORK, TAU, ZWORK, LWORK, INFO)
   IF (INFO .NE. 0) THEN
-    WRITE (*,*) INFO
-    STOP 'ZGGSVP3'
+     WRITE (*,*) INFO
+     STOP 'ZGGSVP3'
   END IF
 
   DEALLOCATE(ZWORK)
@@ -355,173 +355,173 @@ CONTAINS
     CAS = ''
 
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
-      WRITE (*,*) 'zgengsvd.exe SIGMA_F SIGMA_G LAMBDA_X SEEDIX N FILE [ SIG|LAM_PARAMS ]'
-      WRITE (*,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-      WRITE (*,*) 'SIGMA_F : \Sigma(F); 1, 3, or FILENAME'
-      WRITE (*,*) 'SIGMA_G : \Sigma(G); 1, 3, or FILENAME'
-      WRITE (*,*) 'LAMBDA_X: \Lambda(X); 1, 2, 3, or FILENAME'
-      WRITE (*,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
-      WRITE (*,*) 'FILENAME: SIG|LAM.txt: max 256 chars, >= N lines [each line = one real value]'
-      WRITE (*,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
-      WRITE (*,*) 'N       : order of the output matrix: > 0'
-      WRITE (*,*) 'FILE    : output file name prefix: max 256 chars'
-      WRITE (*,*) 'SIG|LAM ; SIG|LAM_PARAMS if SIG|LAM is IDIST123'
-      WRITE (*,*) ' EPS_F  : \sigma''_i survives iff |\sigma''_i| > EPS_F'
-      WRITE (*,*) ' SCALE_F: final \sigma_i = \sigma''_i * SCALE_F'
-      WRITE (*,*) ' EPS_G  : \sigma''_i survives iff |\sigma''_i| > EPS_G'
-      WRITE (*,*) ' SCALE_G: final \sigma_i = \sigma''_i * SCALE_G'
-      WRITE (*,*) ' EPS_X  : \lambda''_i survives iff |\lambda''_i| > EPS_X'
-      WRITE (*,*) ' SCALE_X: final \lambda_i = \lambda''_i * SCALE_X'
-      WRITE (*,*) '<< OUTPUT DATASETS >>'
-      WRITE (*,*) 'FILE.SY : double precision(N); \Sigma(F) normalized: \sigma_F^2 + \sigma_G^2 = 1'
-      WRITE (*,*) 'FILE.SW : double precision(N); \Sigma(G) normalized: \sigma_F^2 + \sigma_G^2 = 1'
-      WRITE (*,*) 'FILE.SS : double precision(N); \Sigma: \sigma_F / \sigma_G'
-      WRITE (*,*) 'FILE.LX : double precision(N); \Lambda(X) as read/generated'
-      WRITE (*,*) 'FILE.Y  : double complex(N,N); F = U_F \Sigma(F) X'
-      WRITE (*,*) 'FILE.W  : double complex(N,N); G = U_G \Sigma(G) X'
-      WRITE (*,*) 'FILE.QU : double complex(N,N); U: see LaPACK zggsvp3.f'
-      WRITE (*,*) 'FILE.QV : double complex(N,N); V: see LaPACK zggsvp3.f'
-      WRITE (*,*) 'FILE.QQ : double complex(N,N); Q: see LaPACK zggsvp3.f'
-      INFO = 1
-      RETURN
+       WRITE (*,*) 'zgengsvd.exe SIGMA_F SIGMA_G LAMBDA_X SEEDIX N FILE [ SIG|LAM_PARAMS ]'
+       WRITE (*,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
+       WRITE (*,*) 'SIGMA_F : \Sigma(F); 1, 3, or FILENAME'
+       WRITE (*,*) 'SIGMA_G : \Sigma(G); 1, 3, or FILENAME'
+       WRITE (*,*) 'LAMBDA_X: \Lambda(X); 1, 2, 3, or FILENAME'
+       WRITE (*,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
+       WRITE (*,*) 'FILENAME: SIG|LAM.txt: max 256 chars, >= N lines [each line = one real value]'
+       WRITE (*,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
+       WRITE (*,*) 'N       : order of the output matrix: > 0'
+       WRITE (*,*) 'FILE    : output file name prefix: max 256 chars'
+       WRITE (*,*) 'SIG|LAM ; SIG|LAM_PARAMS if SIG|LAM is IDIST123'
+       WRITE (*,*) ' EPS_F  : \sigma''_i survives iff |\sigma''_i| > EPS_F'
+       WRITE (*,*) ' SCALE_F: final \sigma_i = \sigma''_i * SCALE_F'
+       WRITE (*,*) ' EPS_G  : \sigma''_i survives iff |\sigma''_i| > EPS_G'
+       WRITE (*,*) ' SCALE_G: final \sigma_i = \sigma''_i * SCALE_G'
+       WRITE (*,*) ' EPS_X  : \lambda''_i survives iff |\lambda''_i| > EPS_X'
+       WRITE (*,*) ' SCALE_X: final \lambda_i = \lambda''_i * SCALE_X'
+       WRITE (*,*) '<< OUTPUT DATASETS >>'
+       WRITE (*,*) 'FILE.SY : double precision(N); \Sigma(F) normalized: \sigma_F^2 + \sigma_G^2 = 1'
+       WRITE (*,*) 'FILE.SW : double precision(N); \Sigma(G) normalized: \sigma_F^2 + \sigma_G^2 = 1'
+       WRITE (*,*) 'FILE.SS : double precision(N); \Sigma: \sigma_F / \sigma_G'
+       WRITE (*,*) 'FILE.LX : double precision(N); \Lambda(X) as read/generated'
+       WRITE (*,*) 'FILE.Y  : double complex(N,N); F = U_F \Sigma(F) X'
+       WRITE (*,*) 'FILE.W  : double complex(N,N); G = U_G \Sigma(G) X'
+       WRITE (*,*) 'FILE.QU : double complex(N,N); U: see LaPACK zggsvp3.f'
+       WRITE (*,*) 'FILE.QV : double complex(N,N); V: see LaPACK zggsvp3.f'
+       WRITE (*,*) 'FILE.QQ : double complex(N,N); Q: see LaPACK zggsvp3.f'
+       INFO = 1
+       RETURN
     END IF
 
     CALL GET_COMMAND_ARGUMENT(1, SIGMA_F, STATUS=INFO)
     IF (INFO .NE. 0) THEN
-      INFO = -1
-      RETURN
+       INFO = -1
+       RETURN
     END IF
     IF (TRIM(SIGMA_F) .EQ. '1') THEN
-      IDIST_F = 1
+       IDIST_F = 1
     ELSE IF (TRIM(SIGMA_F) .EQ. '3') THEN
-      IDIST_F = 3
+       IDIST_F = 3
     END IF
 
     CALL GET_COMMAND_ARGUMENT(2, SIGMA_G, STATUS=INFO)
     IF (INFO .NE. 0) THEN
-      INFO = -2
-      RETURN
+       INFO = -2
+       RETURN
     END IF
     IF (TRIM(SIGMA_G) .EQ. '1') THEN
-      IDIST_G = 1
+       IDIST_G = 1
     ELSE IF (TRIM(SIGMA_G) .EQ. '3') THEN
-      IDIST_G = 3
+       IDIST_G = 3
     END IF
 
     CALL GET_COMMAND_ARGUMENT(3, LAMBDA_X, STATUS=INFO)
     IF (INFO .NE. 0) THEN
-      INFO = -3
-      RETURN
+       INFO = -3
+       RETURN
     END IF
     IF (TRIM(LAMBDA_X) .EQ. '1') THEN
-      IDIST_X = 1
+       IDIST_X = 1
     ELSE IF (TRIM(LAMBDA_X) .EQ. '2') THEN
-      IDIST_X = 2
+       IDIST_X = 2
     ELSE IF (TRIM(LAMBDA_X) .EQ. '3') THEN
-      IDIST_X = 3
+       IDIST_X = 3
     END IF
 
     CALL GET_COMMAND_ARGUMENT(4, CAS, STATUS=INFO)
     IF (INFO .NE. 0) THEN
-      INFO = -4
-      RETURN
+       INFO = -4
+       RETURN
     END IF
     READ (CAS,*) SEED
     IF (SEED .LE. 0) THEN
-      INFO = -4
-      RETURN
+       INFO = -4
+       RETURN
     END IF
 
     CALL GET_COMMAND_ARGUMENT(5, CAS, STATUS=INFO)
     IF (INFO .NE. 0) THEN
-      INFO = -5
-      RETURN
+       INFO = -5
+       RETURN
     END IF
     READ (CAS,*) N
     IF (N .LE. 0) THEN
-      INFO = -5
-      RETURN
+       INFO = -5
+       RETURN
     END IF
 
     CALL GET_COMMAND_ARGUMENT(6, FIL, STATUS=INFO)
     IF (INFO .NE. 0) THEN
-      INFO = -6
-      RETURN
+       INFO = -6
+       RETURN
     END IF
 
     IF (IDIST_F .NE. 0) THEN
-      NXTA = NXTA + 1
-      CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
-      IF (INFO .NE. 0) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      READ (CAS,*) EPS_F
-      IF (EPS_F .LT. ZERO) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      NXTA = NXTA + 1
-      CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
-      IF (INFO .NE. 0) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      READ (CAS,*) SCAL_F
-      IF (SCAL_F .EQ. ZERO) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) EPS_F
+       IF (EPS_F .LT. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) SCAL_F
+       IF (SCAL_F .EQ. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
     END IF
 
     IF (IDIST_G .NE. 0) THEN
-      NXTA = NXTA + 1
-      CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
-      IF (INFO .NE. 0) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      READ (CAS,*) EPS_G
-      IF (EPS_G .LT. ZERO) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      NXTA = NXTA + 1
-      CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
-      IF (INFO .NE. 0) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      READ (CAS,*) SCAL_G
-      IF (SCAL_G .EQ. ZERO) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) EPS_G
+       IF (EPS_G .LT. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) SCAL_G
+       IF (SCAL_G .EQ. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
     END IF
 
     IF (IDIST_X .NE. 0) THEN
-      NXTA = NXTA + 1
-      CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
-      IF (INFO .NE. 0) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      READ (CAS,*) EPS_X
-      IF (EPS_X .LT. ZERO) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      NXTA = NXTA + 1
-      CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
-      IF (INFO .NE. 0) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
-      READ (CAS,*) SCAL_X
-      IF (SCAL_X .EQ. ZERO) THEN
-        INFO = -NXTA
-        RETURN
-      END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) EPS_X
+       IF (EPS_X .LT. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) SCAL_X
+       IF (SCAL_X .EQ. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
     END IF
   END SUBROUTINE READCL
 
