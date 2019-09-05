@@ -5,6 +5,7 @@ Available here (for now):
 * the shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas),
 * a GSVD test data generator (tgengsvd) \[2\],
+* a HSVD test data generator (tgenhsvd),
 * a Jacobi strategies library (jstrat) \[1,2\],
 * a utility library (vn) \[1,2\],
 * and some testing code for LAPACK CS.
