@@ -46,6 +46,7 @@ qgemv.F90    \
 qger.F90     \
 qisnan.F90   \
 qlacpy.F90   \
+qlaev2.F90   \
 qlagsy.F90   \
 qlaisnan.F90 \
 qlamch.F90   \
@@ -113,6 +114,7 @@ xhpr.F90     \
 xhpr2.F90    \
 xlacgv.F90   \
 xlacpy.F90   \
+xlaev2.F90   \
 xlaghe.F90   \
 xlarnd.F90   \
 xlarnv.F90   \
