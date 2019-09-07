@@ -117,7 +117,7 @@ help:
 	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 prepare:
-	echo INTEGER, PARAMETER :: WP = $(WP) > ../qx_wp.fi
+	echo '      INTEGER, PARAMETER :: WP =' $(WP) > ../qx_wp.fi
 
 ../libqxblas$(WP)$(PROFILE)$(DEBUG).a: prepare $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)

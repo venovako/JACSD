@@ -235,7 +235,7 @@ help:
 	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 prepare:
-	echo INTEGER, PARAMETER :: WP = $(WP) > ..\qx_wp.fi
+	echo       INTEGER, PARAMETER :: WP = $(WP) > ..\qx_wp.fi
 
 ..\$(LIBS): prepare $(OBJS) Makefile
 	$(AR) $(ARFLAGS) /OUT:$@ $(OBJS)
