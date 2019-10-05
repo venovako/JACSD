@@ -4,9 +4,6 @@ endif # !CPU
 include ../$(CPU).mk
 MKFS=GNUmakefile ../$(CPU).mk
 
-SRCS=genlam.F90 seedix.F90 seedok.F90 txtlam.F90
-OBJS=$(SRCS:.F90=.o)
-
 .PHONY: all help clean
 
 all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe
@@ -14,17 +11,23 @@ all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe
 help:
 	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-dgengsvd.exe: bio.o $(OBJS) dgengsvd.F90 dgendat.F90 $(MKFS)
-	$(FC) -I.. $(FFLAGS) dgengsvd.F90 dgendat.F90 bio.o $(OBJS) -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+dgengsvd.exe: dgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) dgengsvd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
-zgengsvd.exe: bio.o $(OBJS) zgengsvd.F90 zgendat.F90 $(MKFS)
-	$(FC) -I.. $(FFLAGS) zgengsvd.F90 zgendat.F90 bio.o $(OBJS) -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
-
-$(OBJS): %.o: %.F90 $(MKFS)
-	$(FC) -I.. $(FFLAGS) -c $<
+zgengsvd.exe: zgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) zgengsvd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
+
+seed.o seed.mod: seed.F90 $(MKFS)
+	$(FC) $(FFLAGS) -c seed.F90
+
+lamgen.o lamgen.mod: lamgen.F90 seed.mod $(MKFS)
+	$(FC) $(FFLAGS) -c lamgen.F90
+
+datgen.o datgen.mod: datgen.F90 seed.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) -c datgen.F90
 
 binio.o binio.mod: binio.F90 ../vn/vn_binio_f.mod $(MKFS)
 	$(FC) $(FFLAGS) -c binio.F90
