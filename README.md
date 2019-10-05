@@ -1,18 +1,18 @@
 # JACSD
-Some utilities for the Jacobi-type (G)SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
+Some utilities for the Jacobi-type (G/H)SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
 
 Available here (for now):
-* the shared-memory vectorized Jacobi-type SVD,
+* a shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas),
 * a GSVD test data generator (tgengsvd) \[2\],
 * a HSVD test data generator (tgenhsvd),
 * a Jacobi strategies library (jstrat) \[1,2\],
 * a utility library (vn) \[1,2\],
-* and some testing code for LAPACK CS.
+* and some testing code for the LAPACK CS.
 
-\[1\] These libraries are also a part of the supplementary material for or otherwise related to the paper arXiv:[1907.08560](https://arxiv.org/abs/1907.08560) \[math.NA\].
+\[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1907.08560](https://arxiv.org/abs/1907.08560) \[math.NA\].
 
-\[2\] These libraries are also a part of the supplementary material for or otherwise related to the paper arXiv:[1909.00101](https://arxiv.org/abs/1909.00101) \[math.NA\].
+\[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1909.00101](https://arxiv.org/abs/1909.00101) \[math.NA\].
 
 ## Building
 

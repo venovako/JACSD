@@ -1,10 +1,10 @@
 PROGRAM ZGENGSVD
-  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY : ERROR_UNIT
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
+  USE BIO
   IMPLICIT NONE
 #include "qx_wp.fi"
 
-  INTEGER, PARAMETER :: FNL = 256
-  INTEGER, PARAMETER :: IOMSGLEN = 66
+  INTEGER, PARAMETER :: FNL = 252
   DOUBLE PRECISION, PARAMETER :: ZERO = 0.0D0
 
   ! command-line parameters
@@ -15,17 +15,17 @@ PROGRAM ZGENGSVD
   INTEGER :: ISEED(4), K, L, P, LWORK
   DOUBLE PRECISION :: TOLA, TOLB, ULP, UNFL
   DOUBLE COMPLEX :: WORK1(1)
-  REAL(WP) :: H
+  REAL(KIND=WP) :: H
 
   INTEGER, ALLOCATABLE :: IWORK(:)
 
   DOUBLE PRECISION, ALLOCATABLE :: DS_F(:), DS_G(:), DS(:), DL_X(:), DWORK(:)
   DOUBLE COMPLEX, ALLOCATABLE :: TAU(:), ZWORK(:)
-  REAL(WP), ALLOCATABLE :: QS_F(:), QS_G(:), QL_X(:)
-  COMPLEX(WP), ALLOCATABLE :: XWORK(:)
+  REAL(KIND=WP), ALLOCATABLE :: QS_F(:), QS_G(:), QL_X(:)
+  COMPLEX(KIND=WP), ALLOCATABLE :: XWORK(:)
 
   DOUBLE COMPLEX, ALLOCATABLE :: ZF(:,:), ZG(:,:), ZU(:,:), ZV(:,:), ZQ(:,:)
-  COMPLEX(WP), ALLOCATABLE :: XF(:,:), XG(:,:), XX(:,:)
+  COMPLEX(KIND=WP), ALLOCATABLE :: XF(:,:), XG(:,:), XX(:,:)
 
   DOUBLE PRECISION, EXTERNAL :: DLAMCH, ZLANGE
   EXTERNAL :: ZGGSVP3, SEEDIX, DGENLAM, DTXTLAM, ZGENDAT
@@ -33,14 +33,14 @@ PROGRAM ZGENGSVD
   CALL READCL(SIGMA_F, SIGMA_G, LAMBDA_X, SEED, N, FIL, &
        IDIST_F, EPS_F, SCAL_F, IDIST_G, EPS_G, SCAL_G, IDIST_X, EPS_X, SCAL_X, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'READCL'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'READCL'
   END IF
 
   CALL SEEDIX(SEED, ISEED, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'SEEDIX'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SEEDIX'
   END IF
 
   ALLOCATE(DS_F(N))
@@ -50,12 +50,12 @@ PROGRAM ZGENGSVD
      CALL DTXTLAM(SIGMA_F, N, DS_F, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'SIGMA_F'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SIGMA_F'
   END IF
   IF (P .NE. N) THEN
-     WRITE (*,*) P, '<', N
-     STOP 'SIGMA_F'
+     WRITE (ERROR_UNIT,*) P, '<', N
+     ERROR STOP 'SIGMA_F'
   END IF
 
   ALLOCATE(DS_G(N))
@@ -65,12 +65,12 @@ PROGRAM ZGENGSVD
      CALL DTXTLAM(SIGMA_G, N, DS_G, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'SIGMA_G'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SIGMA_G'
   END IF
   IF (P .NE. N) THEN
-     WRITE (*,*) P, '<', N
-     STOP 'SIGMA_G'
+     WRITE (ERROR_UNIT,*) P, '<', N
+     ERROR STOP 'SIGMA_G'
   END IF
 
   ALLOCATE(DS(N))
@@ -85,8 +85,8 @@ PROGRAM ZGENGSVD
      CALL DTXTLAM(LAMBDA_X, N, DL_X, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'LAMBDA_X'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'LAMBDA_X'
   END IF
 
   ALLOCATE(ZF(N,N))
@@ -118,8 +118,8 @@ PROGRAM ZGENGSVD
   ALLOCATE(XWORK(P))
   CALL ZGENDAT(N, ISEED, QS_F, QS_G, QL_X, XF, ZF, XG, ZG, XX, ZU, XWORK, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'ZGENDAT'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'ZGENDAT'
   END IF
   DEALLOCATE(XWORK)
 
@@ -156,8 +156,8 @@ PROGRAM ZGENGSVD
 
   CALL ZGGSVP3('U', 'V', 'Q', N, N, N, ZF,N, ZG,N, TOLA,TOLB, K, L, ZU,N, ZV,N, ZQ,N, IWORK, DWORK, TAU, ZWORK, LWORK, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'ZGGSVP3'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'ZGGSVP3'
   END IF
 
   DEALLOCATE(ZWORK)
@@ -167,154 +167,154 @@ PROGRAM ZGENGSVD
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.QQ', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(QQ)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(QQ)'
   END IF
   CALL BIO_WRITE_Z2(P, N, N, ZQ, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_Z2(QQ)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_Z2(QQ)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(QQ)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(QQ)'
   END IF
   DEALLOCATE(ZQ)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.QV', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(QV)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(QV)'
   END IF
   CALL BIO_WRITE_Z2(P, N, N, ZV, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_Z2(QV)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_Z2(QV)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(QV)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(QV)'
   END IF
   DEALLOCATE(ZV)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.QU', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(QU)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(QU)'
   END IF
   CALL BIO_WRITE_Z2(P, N, N, ZU, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_Z2(QU)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_Z2(QU)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(QU)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(QU)'
   END IF
   DEALLOCATE(ZU)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.W', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(W)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(W)'
   END IF
   CALL BIO_WRITE_Z2(P, N, N, ZG, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_Z2(W)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_Z2(W)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(W)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(W)'
   END IF
   DEALLOCATE(ZG)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.Y', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(Y)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(Y)'
   END IF
   CALL BIO_WRITE_Z2(P, N, N, ZF, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_Z2(Y)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_Z2(Y)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(Y)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(Y)'
   END IF
   DEALLOCATE(ZF)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.LX', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(LX)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(LX)'
   END IF
   CALL BIO_WRITE_D1(P, N, DL_X, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_D1(LX)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D1(LX)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(LX)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(LX)'
   END IF
   DEALLOCATE(DL_X)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.SS', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(SS)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(SS)'
   END IF
   CALL BIO_WRITE_D1(P, N, DS, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_D1(SS)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D1(SS)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(SS)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(SS)'
   END IF
   DEALLOCATE(DS)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.SW', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(SW)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(SW)'
   END IF
   CALL BIO_WRITE_D1(P, N, DS_G, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_D1(SW)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D1(SW)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(SW)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(SW)'
   END IF
   DEALLOCATE(DS_G)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.SY', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(SY)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(SY)'
   END IF
   CALL BIO_WRITE_D1(P, N, DS_F, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_D1(SY)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D1(SY)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(SY)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(SY)'
   END IF
   DEALLOCATE(DS_F)
 
@@ -355,33 +355,33 @@ CONTAINS
     CAS = ''
 
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
-       WRITE (*,*) 'zgengsvd.exe SIGMA_F SIGMA_G LAMBDA_X SEEDIX N FILE [ SIG|LAM_PARAMS ]'
-       WRITE (*,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-       WRITE (*,*) 'SIGMA_F : \Sigma(F); 1, 3, or FILENAME'
-       WRITE (*,*) 'SIGMA_G : \Sigma(G); 1, 3, or FILENAME'
-       WRITE (*,*) 'LAMBDA_X: \Lambda(X); 1, 2, 3, or FILENAME'
-       WRITE (*,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
-       WRITE (*,*) 'FILENAME: SIG|LAM.txt: max 256 chars, >= N lines [each line = one real value]'
-       WRITE (*,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
-       WRITE (*,*) 'N       : order of the output matrix: > 0'
-       WRITE (*,*) 'FILE    : output file name prefix: max 256 chars'
-       WRITE (*,*) 'SIG|LAM ; SIG|LAM_PARAMS if SIG|LAM is IDIST123'
-       WRITE (*,*) ' EPS_F  : \sigma''_i survives iff |\sigma''_i| > EPS_F'
-       WRITE (*,*) ' SCALE_F: final \sigma_i = \sigma''_i * SCALE_F'
-       WRITE (*,*) ' EPS_G  : \sigma''_i survives iff |\sigma''_i| > EPS_G'
-       WRITE (*,*) ' SCALE_G: final \sigma_i = \sigma''_i * SCALE_G'
-       WRITE (*,*) ' EPS_X  : \lambda''_i survives iff |\lambda''_i| > EPS_X'
-       WRITE (*,*) ' SCALE_X: final \lambda_i = \lambda''_i * SCALE_X'
-       WRITE (*,*) '<< OUTPUT DATASETS >>'
-       WRITE (*,*) 'FILE.SY : double precision(N); \Sigma(F) normalized: \sigma_F^2 + \sigma_G^2 = 1'
-       WRITE (*,*) 'FILE.SW : double precision(N); \Sigma(G) normalized: \sigma_F^2 + \sigma_G^2 = 1'
-       WRITE (*,*) 'FILE.SS : double precision(N); \Sigma: \sigma_F / \sigma_G'
-       WRITE (*,*) 'FILE.LX : double precision(N); \Lambda(X) as read/generated'
-       WRITE (*,*) 'FILE.Y  : double complex(N,N); F = U_F \Sigma(F) X'
-       WRITE (*,*) 'FILE.W  : double complex(N,N); G = U_G \Sigma(G) X'
-       WRITE (*,*) 'FILE.QU : double complex(N,N); U: see LaPACK zggsvp3.f'
-       WRITE (*,*) 'FILE.QV : double complex(N,N); V: see LaPACK zggsvp3.f'
-       WRITE (*,*) 'FILE.QQ : double complex(N,N); Q: see LaPACK zggsvp3.f'
+       WRITE (OUTPUT_UNIT,*) 'zgengsvd.exe SIGMA_F SIGMA_G LAMBDA_X SEEDIX N FILE [ SIG|LAM_PARAMS ]'
+       WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
+       WRITE (OUTPUT_UNIT,*) 'SIGMA_F : \Sigma(F); 1, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'SIGMA_G : \Sigma(G); 1, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA_X: \Lambda(X); 1, 2, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
+       WRITE (OUTPUT_UNIT,*) 'FILENAME: SIG|LAM.txt: max 256 chars, >= N lines [each line = one real value]'
+       WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
+       WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
+       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 256 chars'
+       WRITE (OUTPUT_UNIT,*) 'SIG|LAM ; SIG|LAM_PARAMS if SIG|LAM is IDIST123'
+       WRITE (OUTPUT_UNIT,*) ' EPS_F  : \sigma''_i survives iff |\sigma''_i| > EPS_F'
+       WRITE (OUTPUT_UNIT,*) ' SCALE_F: final \sigma_i = \sigma''_i * SCALE_F'
+       WRITE (OUTPUT_UNIT,*) ' EPS_G  : \sigma''_i survives iff |\sigma''_i| > EPS_G'
+       WRITE (OUTPUT_UNIT,*) ' SCALE_G: final \sigma_i = \sigma''_i * SCALE_G'
+       WRITE (OUTPUT_UNIT,*) ' EPS_X  : \lambda''_i survives iff |\lambda''_i| > EPS_X'
+       WRITE (OUTPUT_UNIT,*) ' SCALE_X: final \lambda_i = \lambda''_i * SCALE_X'
+       WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
+       WRITE (OUTPUT_UNIT,*) 'FILE.SY : double precision(N); \Sigma(F) normalized: \sigma_F^2 + \sigma_G^2 = 1'
+       WRITE (OUTPUT_UNIT,*) 'FILE.SW : double precision(N); \Sigma(G) normalized: \sigma_F^2 + \sigma_G^2 = 1'
+       WRITE (OUTPUT_UNIT,*) 'FILE.SS : double precision(N); \Sigma: \sigma_F / \sigma_G'
+       WRITE (OUTPUT_UNIT,*) 'FILE.LX : double precision(N); \Lambda(X) as read/generated'
+       WRITE (OUTPUT_UNIT,*) 'FILE.Y  : double complex(N,N); F = U_F \Sigma(F) X'
+       WRITE (OUTPUT_UNIT,*) 'FILE.W  : double complex(N,N); G = U_G \Sigma(G) X'
+       WRITE (OUTPUT_UNIT,*) 'FILE.QU : double complex(N,N); U: see LaPACK zggsvp3.f'
+       WRITE (OUTPUT_UNIT,*) 'FILE.QV : double complex(N,N); V: see LaPACK zggsvp3.f'
+       WRITE (OUTPUT_UNIT,*) 'FILE.QQ : double complex(N,N); Q: see LaPACK zggsvp3.f'
        INFO = 1
        RETURN
     END IF
@@ -525,5 +525,4 @@ CONTAINS
     END IF
   END SUBROUTINE READCL
 
-#include "bio.F90"
 END PROGRAM ZGENGSVD
