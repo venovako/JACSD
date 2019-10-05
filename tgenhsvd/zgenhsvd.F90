@@ -1,10 +1,10 @@
 PROGRAM ZGENHSVD
-  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY : ERROR_UNIT
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
+  USE BIO
   IMPLICIT NONE
 #include "qx_wp.fi"
 
-  INTEGER, PARAMETER :: FNL = 256
-  INTEGER, PARAMETER :: IOMSGLEN = 66
+  INTEGER, PARAMETER :: FNL = 252
   DOUBLE PRECISION, PARAMETER :: ZERO = 0.0D0
 
   ! command-line parameters
@@ -16,24 +16,24 @@ PROGRAM ZGENHSVD
 
   INTEGER, ALLOCATABLE :: J(:), IWORK(:)
   DOUBLE PRECISION, ALLOCATABLE :: DLAMBDA(:)
-  REAL(WP), ALLOCATABLE :: QLAMBDA(:)
-  COMPLEX(WP), ALLOCATABLE :: XWORK(:)
+  REAL(KIND=WP), ALLOCATABLE :: QLAMBDA(:)
+  COMPLEX(KIND=WP), ALLOCATABLE :: XWORK(:)
 
   DOUBLE COMPLEX, ALLOCATABLE :: ZA(:,:)
-  COMPLEX(WP), ALLOCATABLE :: XA(:,:)
+  COMPLEX(KIND=WP), ALLOCATABLE :: XA(:,:)
 
   EXTERNAL :: SEEDIX, DGENLAM, DTXTLAM, ZGENDAT
 
   CALL READCL(LAMBDA, SEED, N, FIL, IDIST, EPS, SCAL, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'READCL'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'READCL'
   END IF
 
   CALL SEEDIX(SEED, ISEED, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'SEEDIX'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SEEDIX'
   END IF
 
   ALLOCATE(DLAMBDA(N))
@@ -43,8 +43,8 @@ PROGRAM ZGENHSVD
      CALL DTXTLAM(LAMBDA, N, DLAMBDA, P, INFO)
   END IF
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'LAMBDA'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'LAMBDA'
   END IF
 
   ALLOCATE(ZA(N,N))
@@ -62,8 +62,8 @@ PROGRAM ZGENHSVD
 
   CALL ZGENDAT(N, ISEED, QLAMBDA, XA, ZA, J, IWORK, XWORK, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'ZGENDAT'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'ZGENDAT'
   END IF
 
   DEALLOCATE(XWORK)
@@ -73,52 +73,52 @@ PROGRAM ZGENHSVD
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.J', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(J)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(J)'
   END IF
   CALL BIO_WRITE_I1(P, N, J, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_I1(J)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_I1(J)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(J)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(J)'
   END IF
   DEALLOCATE(J)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.Y', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(Y)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(Y)'
   END IF
   CALL BIO_WRITE_Z2(P, N, N, ZA, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_Z2(Y)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_Z2(Y)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(Y)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(Y)'
   END IF
   DEALLOCATE(ZA)
 
   CALL BIO_OPEN(P, TRIM(FIL)//'.LY', 'WO', INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_OPEN(LY)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(LY)'
   END IF
   CALL BIO_WRITE_D1(P, N, DLAMBDA, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_WRITE_D1(LY)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D1(LY)'
   END IF
   CALL BIO_CLOSE(P, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (*,*) INFO
-     STOP 'BIO_CLOSE(LY)'
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(LY)'
   END IF
   DEALLOCATE(DLAMBDA)
 
@@ -150,21 +150,21 @@ CONTAINS
     CAS = ''
 
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
-       WRITE (*,*) 'zgenhsvd.exe LAMBDA SEEDIX N FILE [ LAMBDA_PARAMS ]'
-       WRITE (*,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-       WRITE (*,*) 'LAMBDA  : \Lambda(A); 1, 2, 3, or FILENAME'
-       WRITE (*,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
-       WRITE (*,*) 'FILENAME: LAMBDA.txt: max 256 chars, >= N lines [each line = one real value]'
-       WRITE (*,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
-       WRITE (*,*) 'N       : order of the output matrix: > 0'
-       WRITE (*,*) 'FILE    : output file name prefix: max 256 chars'
-       WRITE (*,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
-       WRITE (*,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
-       WRITE (*,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
-       WRITE (*,*) '<< OUTPUT DATASETS >>'
-       WRITE (*,*) 'FILE.Y  : double complex(N,N); a factor F (A = F^H J F)'
-       WRITE (*,*) 'FILE.J  : integer*8(N); diagonal of the sign matrix J'
-       WRITE (*,*) 'FILE.LY : double precision(N); \Lambda(A) as read/generated'
+       WRITE (OUTPUT_UNIT,*) 'zgenhsvd.exe LAMBDA SEEDIX N FILE [ LAMBDA_PARAMS ]'
+       WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda(A); 1, 2, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
+       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 256 chars, >= N lines [each line = one real value]'
+       WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
+       WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
+       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 256 chars'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
+       WRITE (OUTPUT_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
+       WRITE (OUTPUT_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
+       WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
+       WRITE (OUTPUT_UNIT,*) 'FILE.Y  : double complex(N,N); a factor F (A = F^H J F)'
+       WRITE (OUTPUT_UNIT,*) 'FILE.J  : integer*8(N); diagonal of the sign matrix J'
+       WRITE (OUTPUT_UNIT,*) 'FILE.LY : double precision(N); \Lambda(A) as read/generated'
        INFO = 1
        RETURN
     END IF
@@ -236,5 +236,4 @@ CONTAINS
     END IF
   END SUBROUTINE READCL
 
-#include "bio.F90"
 END PROGRAM ZGENHSVD

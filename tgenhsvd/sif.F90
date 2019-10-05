@@ -31,7 +31,7 @@ SUBROUTINE QSYJF2(N, A, LDA, JVEC, IPIV, INFO)
   !     N       (input) INTEGER
   !     The order of the matrix A.  N >= 0.
   !
-  !     A       (input/output) REAL(WP) array, dimension (LDA,N)
+  !     A       (input/output) REAL(KIND=WP) array, dimension (LDA,N)
   !     On entry, the symmetric matrix A.  The leading N-by-N lower
   !     triangular part of A contains the lower triangular part of the
   !     matrix A.  The strict upper triangular part will be destroyed!
@@ -80,10 +80,10 @@ SUBROUTINE QSYJF2(N, A, LDA, JVEC, IPIV, INFO)
 #include "qx_wp.fi"
 
   CHARACTER, PARAMETER :: UPLO = 'L'
-  REAL(WP), PARAMETER :: Q_ZERO = 0.0_WP, Q_ONE = 1.0_WP, Q_ALPHA = (Q_ONE + SQRT(17.0_WP)) / 8.0_WP
+  REAL(KIND=WP), PARAMETER :: Q_ZERO = 0.0_WP, Q_ONE = 1.0_WP, Q_ALPHA = (Q_ONE + SQRT(17.0_WP)) / 8.0_WP
 
   INTEGER, INTENT(IN) :: N, LDA
-  REAL(WP), INTENT(INOUT) :: A(LDA,N)
+  REAL(KIND=WP), INTENT(INOUT) :: A(LDA,N)
   INTEGER, INTENT(OUT) :: JVEC(N), IPIV(N), INFO
 
   INTEGER :: I, J, IMAX, JMAX, K, KDIAG, KP, KSTEP
@@ -293,7 +293,7 @@ SUBROUTINE QSYBPC(N, A, LDA, NRANK, NPLUS, N2PIV, IPIV, JVEC, INFO)
   !     N       (input) INTEGER
   !     Order of the input matrix A, N >= 0.
   !
-  !     A       (input/output) REAL(WP) array, dimension (LDA,N)
+  !     A       (input/output) REAL(KIND=WP) array, dimension (LDA,N)
   !     On entry, the symmetric matrix A.  The leading N-by-N lower triangular
   !     part of A contains the lower triangular part of the matrix A.
   !
@@ -321,7 +321,7 @@ SUBROUTINE QSYBPC(N, A, LDA, NRANK, NPLUS, N2PIV, IPIV, JVEC, INFO)
 #include "qx_wp.fi"
 
   INTEGER, INTENT(IN) :: N, LDA
-  REAL(WP), INTENT(INOUT) :: A(LDA,N)
+  REAL(KIND=WP), INTENT(INOUT) :: A(LDA,N)
   INTEGER, INTENT(OUT) :: NRANK, NPLUS, N2PIV, IPIV(N), JVEC(N), INFO
 
   INTEGER :: I, INFOD, K, KP
@@ -359,7 +359,7 @@ SUBROUTINE QSYBPC(N, A, LDA, NRANK, NPLUS, N2PIV, IPIV, JVEC, INFO)
      IF (JVEC(I) .EQ. 1) NPLUS = NPLUS + 1
      IF (IPIV(I) .LT. 0) N2PIV = N2PIV + 1
   END DO
-  IF (MOD(N2PIV,2) .NE. 0) STOP 'QSYBPC: IPIV with an odd number of -1s'
+  IF (MOD(N2PIV,2) .NE. 0) ERROR STOP 'QSYBPC: IPIV with an odd number of -1s'
   N2PIV = N2PIV / 2
 
   K = NRANK
@@ -405,7 +405,7 @@ SUBROUTINE QJPART(NROW, NCOLR, G, LDG, JVEC, NPLUS, IPL, INVP)
 #include "qx_wp.fi"
 
   INTEGER, INTENT(IN) :: NROW, NCOLR, LDG, NPLUS
-  REAL(WP), INTENT(INOUT) :: G(LDG,NCOLR)
+  REAL(KIND=WP), INTENT(INOUT) :: G(LDG,NCOLR)
   INTEGER, INTENT(INOUT) :: JVEC(NROW)
   INTEGER, INTENT(OUT) :: IPL(NROW), INVP(NROW)
 
@@ -468,7 +468,7 @@ SUBROUTINE QSIF(N, A, LDA, NRANK, NPLUS, N2PIV, IPIV, JVEC, IPL, INVP, INFO)
 
   INTEGER, INTENT(IN) :: N, LDA
   INTEGER, INTENT(OUT) :: NRANK, NPLUS, N2PIV, IPIV(N), JVEC(N), IPL(N), INVP(N), INFO
-  REAL(WP), INTENT(INOUT) :: A(LDA,N)
+  REAL(KIND=WP), INTENT(INOUT) :: A(LDA,N)
 
   EXTERNAL :: QSYBPC, QJPART
 
