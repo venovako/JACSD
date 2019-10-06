@@ -169,6 +169,7 @@ PROGRAM ZGENGSVD
   DEALLOCATE(DWORK)
   DEALLOCATE(IWORK)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.QQ', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -186,6 +187,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(ZQ)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.QV', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -203,6 +205,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(ZV)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.QU', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -221,6 +224,7 @@ PROGRAM ZGENGSVD
   DEALLOCATE(ZU)
 #endif
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.W', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -238,6 +242,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(ZG)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.Y', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -255,6 +260,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(ZF)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.LX', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -272,6 +278,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(DL_X)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.SS', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -289,6 +296,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(DS)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.SW', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -306,6 +314,7 @@ PROGRAM ZGENGSVD
   END IF
   DEALLOCATE(DS_G)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.SY', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -384,9 +393,11 @@ CONTAINS
        WRITE (OUTPUT_UNIT,*) 'FILE.LX : double precision(N); \Lambda(X) as read/generated'
        WRITE (OUTPUT_UNIT,*) 'FILE.Y  : double complex(N,N); F = U_F \Sigma(F) X'
        WRITE (OUTPUT_UNIT,*) 'FILE.W  : double complex(N,N); G = U_G \Sigma(G) X'
+#ifdef USE_GGSVP3
        WRITE (OUTPUT_UNIT,*) 'FILE.QU : double complex(N,N); U: see LaPACK zggsvp3.f'
        WRITE (OUTPUT_UNIT,*) 'FILE.QV : double complex(N,N); V: see LaPACK zggsvp3.f'
        WRITE (OUTPUT_UNIT,*) 'FILE.QQ : double complex(N,N); Q: see LaPACK zggsvp3.f'
+#endif
        INFO = 1
        RETURN
     END IF

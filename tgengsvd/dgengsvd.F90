@@ -163,6 +163,7 @@ PROGRAM DGENGSVD
   DEALLOCATE(TAU)
   DEALLOCATE(IWORK)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.QQ', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -180,6 +181,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DQ)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.QV', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -197,6 +199,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DV)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.QU', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -215,6 +218,7 @@ PROGRAM DGENGSVD
   DEALLOCATE(DU)
 #endif
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.W', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -232,6 +236,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DG)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.Y', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -249,6 +254,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DF)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.LX', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -266,6 +272,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DL_X)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.SS', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -283,6 +290,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DS)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.SW', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -300,6 +308,7 @@ PROGRAM DGENGSVD
   END IF
   DEALLOCATE(DS_G)
 
+  P = -1
   CALL BIO_OPEN(P, TRIM(FIL)//'.SY', 'WO', INFO)
   IF (INFO .NE. 0) THEN
      WRITE (ERROR_UNIT,*) INFO
@@ -378,9 +387,11 @@ CONTAINS
        WRITE (OUTPUT_UNIT,*) 'FILE.LX : double precision(N); \Lambda(X) as read/generated'
        WRITE (OUTPUT_UNIT,*) 'FILE.Y  : double precision(N,N); F = U_F \Sigma(F) X'
        WRITE (OUTPUT_UNIT,*) 'FILE.W  : double precision(N,N); G = U_G \Sigma(G) X'
+#ifdef USE_GGSVP3
        WRITE (OUTPUT_UNIT,*) 'FILE.QU : double precision(N,N); U: see LaPACK dggsvp3.f'
        WRITE (OUTPUT_UNIT,*) 'FILE.QV : double precision(N,N); V: see LaPACK dggsvp3.f'
        WRITE (OUTPUT_UNIT,*) 'FILE.QQ : double precision(N,N); Q: see LaPACK dggsvp3.f'
+#endif
        INFO = 1
        RETURN
     END IF
