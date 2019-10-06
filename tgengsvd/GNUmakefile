@@ -17,6 +17,12 @@ dgengsvd.exe: dgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 zgengsvd.exe: zgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) zgengsvd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
+derrgsvd.exe: derrgsvd.F90 binio.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) derrgsvd.F90 binio.o -o$@ $(LDFLAGS)
+
+zerrgsvd.exe: zerrgsvd.F90 binio.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) zerrgsvd.F90 binio.o -o$@ $(LDFLAGS)
+
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
 
@@ -34,12 +40,6 @@ datgen.o datgen.mod: datgen.F90 seed.mod $(MKFS)
 
 binio.o binio.mod: binio.F90 ../vn/vn_binio_f.mod $(MKFS)
 	$(FC) $(FFLAGS) -c binio.F90
-
-derrgsvd.exe: derrgsvd.F90 binio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) derrgsvd.F90 binio.o -o$@ $(LDFLAGS)
-
-zerrgsvd.exe: zerrgsvd.F90 binio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) zerrgsvd.F90 binio.o -o$@ $(LDFLAGS)
 
 clean:
 	-$(RM) *.exe
