@@ -6,7 +6,7 @@ MKFS=GNUmakefile ../$(CPU).mk
 
 .PHONY: all help clean
 
-all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe
+all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe svalserr.exe
 
 help:
 	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -16,6 +16,9 @@ dgengsvd.exe: dgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 
 zgengsvd.exe: zgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) zgengsvd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+
+svalserr.exe: svalserr.F90 bio.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
