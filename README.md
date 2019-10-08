@@ -18,7 +18,7 @@ Available here (for now):
 
 ### Prerequisites
 
-A recent 64-bit Linux (e.g., CentOS 7.6) or macOS (e.g., Mojave) is needed.
+A recent 64-bit Linux (e.g., CentOS 7.7) or macOS (e.g., Catalina) is needed.
 
 Have the Intel MKL (Math Kernel Library) installed.
 
