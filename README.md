@@ -18,7 +18,7 @@ Available here (for now):
 
 ### Prerequisites
 
-A recent 64-bit Linux (e.g., CentOS 7.7) or macOS (e.g., Catalina) is needed.
+A recent 64-bit Linux (e.g., CentOS 7.7 with devtoolset-8) or macOS (e.g., Catalina) is needed.
 
 Have the Intel MKL (Math Kernel Library) installed.
 
@@ -28,11 +28,13 @@ Run ``make`` as follows:
 ```bash
 make [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 ```
-where ``CPU`` should be set for the Intel C++ and Fortran compilers to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
-If ``CPU`` is not set, GNU C (Clang on macOS) and Fortran compilers will be used instead.
+where ``CPU`` should be set for the Intel C/C++ and Fortran compilers to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
+If ``CPU`` is not set, GNU C/C++ (Clang on macOS) and Fortran compilers will be used instead.
 
 GNU Fortran 9 is *not* supported!
+Please take a look [here](https://gcc.gnu.org/gcc-9/changes.html) for the explanation regarding the MAX and MIN intrinsics.
 Currently, only GPU Fortran *8* is fully supported.
+On RHEL/CentOS it is provided by, e.g., devtoolset-8.
 
 Here, ``NDEBUG`` should be set to the desired optimization level (``3`` is a sensible choice).
 If unset, the predefined debug-mode build options will be used.
