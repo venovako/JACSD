@@ -326,6 +326,8 @@ typedef vn_complex_10 vn_complex;
 #error VN_REAL_KIND must be one of { 4, 8, 10 }
 #endif /* ?VN_REAL_KIND */
 
+VN_EXTERN_C char *vn_realtostr(const vn_real x);
+
 #ifdef __cplusplus
 #define MkCmplx(r,i) vn_complex((r),(i))
 #endif /* !MkCmplx */
