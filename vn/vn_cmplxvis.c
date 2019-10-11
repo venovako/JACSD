@@ -56,47 +56,47 @@ static void op_AhA(const vn_integer mA, const vn_integer nA, const vn_complex *c
 
 static vn_complex fn_0(const vn_complex x)
 {
-  return MkCmplx(cabs(x), carg(x));
+  return MkCmplx(fabs(x), carg(x));
 }
 
 static vn_complex fn_1(const vn_complex x)
 {
-  const vn_real X = cabs(x);
+  const vn_real X = fabs(x);
   return MkCmplx(((X < VN_REAL_MIN) ? -VN_REAL_INF : log2(X)), carg(x));
 }
 
 static vn_complex fn_2(const vn_complex x)
 {
-  const vn_real X = cabs(x);
+  const vn_real X = fabs(x);
   return MkCmplx(((X < VN_REAL_MIN) ? -VN_REAL_INF : log(X)), carg(x));
 }
 
 static vn_complex fn_3(const vn_complex x)
 {
-  const vn_real X = cabs(x);
+  const vn_real X = fabs(x);
   return MkCmplx(((X < VN_REAL_MIN) ? -VN_REAL_INF : log10(X)), carg(x));
 }
 
 static vn_complex fn_4(const vn_complex x)
 {
-  return MkCmplx(cabs(x), carg(x) + M_PI);
+  return MkCmplx(fabs(x), carg(x) + M_PI);
 }
 
 static vn_complex fn_5(const vn_complex x)
 {
-  const vn_real X = cabs(x);
+  const vn_real X = fabs(x);
   return MkCmplx(((X < VN_REAL_MIN) ? -VN_REAL_INF : log2(X)), carg(x) + M_PI);
 }
 
 static vn_complex fn_6(const vn_complex x)
 {
-  const vn_real X = cabs(x);
+  const vn_real X = fabs(x);
   return MkCmplx(((X < VN_REAL_MIN) ? -VN_REAL_INF : log(X)), carg(x) + M_PI);
 }
 
 static vn_complex fn_7(const vn_complex x)
 {
-  const vn_real X = cabs(x);
+  const vn_real X = fabs(x);
   return MkCmplx(((X < VN_REAL_MIN) ? -VN_REAL_INF : log10(X)), carg(x) + M_PI);
 }
 
