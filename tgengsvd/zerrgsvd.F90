@@ -61,7 +61,7 @@ PROGRAM ZERRGSVD
   !$OMP END PARALLEL
 
   YNF = SQRT(SUM(xA))
-  WRITE (OUTPUT_UNIT,*) '|| Y ||_F =', YNF
+  WRITE (OUTPUT_UNIT,1) '|| Y ||_F =', YNF
   FLUSH(OUTPUT_UNIT)
 
   CALL BOPEN_RO((TRIM(FN)//c_char_'.W'), SZ, FD)
@@ -88,7 +88,7 @@ PROGRAM ZERRGSVD
   !$OMP END PARALLEL
 
   WNF = SQRT(SUM(xA))
-  WRITE (OUTPUT_UNIT,*) '|| W ||_F =', WNF
+  WRITE (OUTPUT_UNIT,1) '|| W ||_F =', WNF
   FLUSH(OUTPUT_UNIT)
 
   ALLOCATE(S(N))
@@ -162,15 +162,15 @@ PROGRAM ZERRGSVD
   ! || W - (WV * SW) * ZZ ||_F / || W ||_F
 
   CALL PXGEMM(M, N, N, xU, M, xZ, N, xY, M, xA, T, ANF)
-  WRITE (OUTPUT_UNIT,*) '|| Y - (YU * SY) * ZZ ||_F             =', ANF
+  WRITE (OUTPUT_UNIT,1) '|| Y - (YU * SY) * ZZ ||_F             =', ANF
   FLUSH(OUTPUT_UNIT)
-  WRITE (OUTPUT_UNIT,*) '|| Y - (YU * SY) * ZZ ||_F / || Y ||_F =', (ANF / YNF)
+  WRITE (OUTPUT_UNIT,1) '|| Y - (YU * SY) * ZZ ||_F / || Y ||_F =', (ANF / YNF)
   FLUSH(OUTPUT_UNIT)
 
   CALL PXGEMM(M, N, N, xV, M, xZ, N, xW, M, xA, T, BNF)
-  WRITE (OUTPUT_UNIT,*) '|| W - (WV * SW) * ZZ ||_F             =', BNF
+  WRITE (OUTPUT_UNIT,1) '|| W - (WV * SW) * ZZ ||_F             =', BNF
   FLUSH(OUTPUT_UNIT)
-  WRITE (OUTPUT_UNIT,*) '|| W - (WV * SW) * ZZ ||_F / || W ||_F =', (BNF / WNF)
+  WRITE (OUTPUT_UNIT,1) '|| W - (WV * SW) * ZZ ||_F / || W ||_F =', (BNF / WNF)
   FLUSH(OUTPUT_UNIT)
 
   DEALLOCATE(xZ)
@@ -179,6 +179,8 @@ PROGRAM ZERRGSVD
   DEALLOCATE(xW)
   DEALLOCATE(xY)
   DEALLOCATE(xA)
+
+1 FORMAT(A,ES25.17E3)
 
 CONTAINS
 

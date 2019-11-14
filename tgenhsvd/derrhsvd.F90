@@ -57,7 +57,7 @@ PROGRAM DERRHSVD
   !$OMP END PARALLEL
 
   YNF = SQRT(SUM(xA))
-  WRITE (OUTPUT_UNIT,*) '|| Y ||_F =', YNF
+  WRITE (OUTPUT_UNIT,1) '|| Y ||_F =', YNF
   FLUSH(OUTPUT_UNIT)
 
   ALLOCATE(S(N))
@@ -109,15 +109,17 @@ PROGRAM DERRHSVD
   ! || Y - (YU * SY) * ZZ ||_F / || Y ||_F
 
   CALL PXGEMM(M, N, N, xU, M, xZ, N, xY, M, xA, T, ANF)
-  WRITE (OUTPUT_UNIT,*) '|| Y - (YU * SY) * ZZ ||_F             =', ANF
+  WRITE (OUTPUT_UNIT,1) '|| Y - (YU * SY) * ZZ ||_F             =', ANF
   FLUSH(OUTPUT_UNIT)
-  WRITE (OUTPUT_UNIT,*) '|| Y - (YU * SY) * ZZ ||_F / || Y ||_F =', (ANF / YNF)
+  WRITE (OUTPUT_UNIT,1) '|| Y - (YU * SY) * ZZ ||_F / || Y ||_F =', (ANF / YNF)
   FLUSH(OUTPUT_UNIT)
 
   DEALLOCATE(xZ)
   DEALLOCATE(xU)
   DEALLOCATE(xY)
   DEALLOCATE(xA)
+
+1 FORMAT(A,ES25.17E3)
 
 CONTAINS
 
