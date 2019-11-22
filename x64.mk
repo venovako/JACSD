@@ -1,4 +1,5 @@
 SHELL=/bin/bash
+ARCH=$(shell uname)
 ifndef WP
 WP=16
 endif # !WP
@@ -7,7 +8,6 @@ DEBUG=
 else # DEBUG
 DEBUG=g
 endif # ?NDEBUG
-ARCH=$(shell uname)
 RM=rm -rfv
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
@@ -44,7 +44,7 @@ FPUFFLAGS=$(FPUFLAGS) -assume ieee_fpe_flags
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I../vn -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
-LDFLAGS=-L.. -lvn$(PROFILE)
+LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG)
 ifeq ($(ARCH),Darwin)
 LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
 else # Linux

@@ -4,8 +4,6 @@ endif # !CPU
 include ../$(CPU).mk
 MKFS=GNUmakefile ../$(CPU).mk
 
-LDFLAGS:=-L.. -lvn $(LDFLAGS)
-
 SRCC=		\
 vn_align.c	\
 vn_alloc.c	\
