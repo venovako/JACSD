@@ -14,11 +14,12 @@ endif # ?NDEBUG
 RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
-CPUFLAGS=-DUSE_PGI -DUSE_X64 -m64 -mp
+CPUFLAGS=-DUSE_PGI -DUSE_X64 -m64 -mp -Mnollvm
 FORFLAGS=$(CPUFLAGS) -i8 -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
 C11FLAGS=$(CPUFLAGS) -c11
 CC=pgcc
 FC=pgfortran
+CXX=pgc++
 FPUFLAGS=-Kieee -Mfma -Mnodaz -Mnoflushz -Mnofpapprox -Mnofprelaxed
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
@@ -41,20 +42,16 @@ FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I../vn -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
 LDFLAGS=-L.. -lvn$(DEBUG)
+# define MKL=pgi_thread for a threaded MKL
+ifndef MKL
+MKL=sequential
+endif # !MKL
 ifeq ($(ARCH),Darwin)
-ifeq ($(MKL),par)
-LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_pgi_thread.a ${MKLROOT}/lib/libmkl_core.a -pgf90libs -lpthread -lm -ldl
-else # seq
-LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_sequential.a ${MKLROOT}/lib/libmkl_core.a -pgf90libs -lpthread -lm -ldl
-endif # ?MKL
+LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_$(MKL).a ${MKLROOT}/lib/libmkl_core.a
 else # Linux
 LIBFLAGS += -D_GNU_SOURCE
-ifeq ($(MKL),par)
-LDFLAGS += -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_pgi_thread -lmkl_core -pgf90libs -lpthread -lm -ldl
-else # seq
-LDFLAGS += -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -pgf90libs -lpthread -lm -ldl
-endif # ?MKL
+LDFLAGS += -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_$(MKL) -lmkl_core
 endif # ?Darwin
-LDFLAGS += $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
+LDFLAGS += -pgf90libs -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
