@@ -47,7 +47,7 @@ ifndef MKL
 MKL=sequential
 endif # !MKL
 ifeq ($(ARCH),Darwin)
-LDFLAGS=${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_$(MKL).a ${MKLROOT}/lib/libmkl_core.a
+LDFLAGS += ${MKLROOT}/lib/libmkl_intel_ilp64.a ${MKLROOT}/lib/libmkl_$(MKL).a ${MKLROOT}/lib/libmkl_core.a
 else # Linux
 LIBFLAGS += -D_GNU_SOURCE
 LDFLAGS += -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_$(MKL) -lmkl_core
