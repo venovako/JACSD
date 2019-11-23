@@ -1,3 +1,4 @@
+! intended for inclusion with #include preprocessing directive
   INTEGER, PARAMETER :: LWP = KIND(.FALSE.)
   INTEGER, PARAMETER :: LCSIZB = C_SIZEOF(.FALSE.)
 

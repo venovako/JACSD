@@ -5,8 +5,7 @@
 #error vn_alloc.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-/*
-  act:
+/* act:
    0 - compute ldA
    1 - allocate in RAM
    2 - allocate in HBM (Only on the KNLs!)

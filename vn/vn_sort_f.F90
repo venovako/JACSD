@@ -7,7 +7,7 @@ MODULE VN_SORT_F
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: X, A
-       INTEGER(c_size_t), INTENT(IN), VALUE :: N, SZ
+       INTEGER(KIND=c_size_t), INTENT(IN), VALUE :: N, SZ
        TYPE(c_funptr), INTENT(IN), VALUE :: CMP
        TYPE(c_ptr) :: VN_BSEARCH
      END FUNCTION VN_BSEARCH
@@ -19,7 +19,7 @@ MODULE VN_SORT_F
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: A, CTX
-       INTEGER(c_size_t), INTENT(IN), VALUE :: N, SZ
+       INTEGER(KIND=c_size_t), INTENT(IN), VALUE :: N, SZ
        TYPE(c_funptr), INTENT(IN), VALUE :: CMP
      END SUBROUTINE VN_QSORT
   END INTERFACE
@@ -29,7 +29,7 @@ MODULE VN_SORT_F
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: PA, PB, CTX
-       INTEGER(c_int) :: VN_QSORT_CMP
+       INTEGER(KIND=c_int) :: VN_QSORT_CMP
      END FUNCTION VN_QSORT_CMP
   END INTERFACE
 #else
@@ -38,7 +38,7 @@ MODULE VN_SORT_F
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: A, CTX
-       INTEGER(c_size_t), INTENT(IN), VALUE :: N, SZ
+       INTEGER(KIND=c_size_t), INTENT(IN), VALUE :: N, SZ
        TYPE(c_funptr), INTENT(IN), VALUE :: CMP
      END SUBROUTINE VN_QSORT
   END INTERFACE
@@ -48,7 +48,7 @@ MODULE VN_SORT_F
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: CTX, PA, PB
-       INTEGER(c_int) :: VN_QSORT_CMP
+       INTEGER(KIND=c_int) :: VN_QSORT_CMP
      END FUNCTION VN_QSORT_CMP
   END INTERFACE
 #endif

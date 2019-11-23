@@ -10,7 +10,7 @@ MODULE VN_CMPLXVIS_F
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(OUT) :: ctx
        INTEGER, INTENT(IN), VALUE :: act, mA, nA, sx, sy, fname_len
-       CHARACTER(c_char), INTENT(IN) :: fname(*)
+       CHARACTER(KIND=c_char), INTENT(IN) :: fname(*)
        INTEGER :: VN_CMPLXVIS_START
      END FUNCTION VN_CMPLXVIS_START
   END INTERFACE
@@ -21,7 +21,7 @@ MODULE VN_CMPLXVIS_F
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER, INTENT(IN), VALUE :: ldA
-       COMPLEX(c_double), INTENT(IN) :: A(ldA,*)
+       COMPLEX(KIND=c_double), INTENT(IN) :: A(ldA,*)
        INTEGER :: VN_CMPLXVIS_FRAME
      END FUNCTION VN_CMPLXVIS_FRAME
   END INTERFACE

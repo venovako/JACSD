@@ -10,7 +10,7 @@ MODULE VN_MTXVIS_F
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(OUT) :: ctx
        INTEGER, INTENT(IN), VALUE :: act, mA, nA, sx, sy, fname_len
-       CHARACTER(c_char), INTENT(IN) :: fname(*)
+       CHARACTER(KIND=c_char), INTENT(IN) :: fname(*)
        INTEGER :: VN_MTXVIS_START
      END FUNCTION VN_MTXVIS_START
   END INTERFACE
@@ -21,7 +21,7 @@ MODULE VN_MTXVIS_F
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER, INTENT(IN), VALUE :: ldA
-       REAL(c_double), INTENT(IN) :: A(ldA,*)
+       REAL(KIND=c_double), INTENT(IN) :: A(ldA,*)
        INTEGER :: VN_MTXVIS_FRAME
      END FUNCTION VN_MTXVIS_FRAME
   END INTERFACE
