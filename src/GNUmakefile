@@ -26,7 +26,7 @@ AVX2_FMA_DJACV.o: AVX2_FMA_DJACV.c AVX2_FMA_DJACV.h $(MKFS)
 endif # ?CPU
 
 xCSGEN.exe: xCSGEN.o FTNUTILS.o ftnutils.mod ../libqxblas$(WP)$(PROFILE)$(DEBUG).a $(MKFS)
-	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas$(WP)$(PROFILE) $(LDFLAGS)
+	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
 xCSGEN.o: xCSGEN.F90 ../qx_wp.fi ftnutils.mod $(MKFS)
 	$(FC) $(FFLAGS) -I.. -c xCSGEN.F90
@@ -38,7 +38,7 @@ xLACSD.o: xLACSD.F90 bscsd.mod $(MKFS)
 	$(FC) $(FFLAGS) -c xLACSD.F90
 
 xL0.exe: xL0.o JACSVD.o BLAS.o FTNUTILS.o ../libl0c$(PROFILE)$(DEBUG).a ../libjstrat$(PROFILE)$(DEBUG).a $(MKFS)
-	$(FC) $(FFLAGS) xL0.o JACSVD.o BLAS.o FTNUTILS.o -o$@ -L.. -ll0c$(PROFILE) -ljstrat$(PROFILE) $(LDFLAGS)
+	$(FC) $(FFLAGS) xL0.o JACSVD.o BLAS.o FTNUTILS.o -o$@ -L.. -ll0c$(PROFILE)$(DEBUG) -ljstrat$(PROFILE)$(DEBUG) $(LDFLAGS)
 
 xL0.o: xL0.F90 jacsvd.mod $(MKFS)
 	$(FC) $(FFLAGS) -c xL0.F90
