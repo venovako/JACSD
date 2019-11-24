@@ -29,7 +29,7 @@ Run ``make`` as follows:
 make [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 ```
 where ``CPU`` should be set for the Intel C/C++ and Fortran compilers to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
-If ``CPU`` is not set, GNU C/C++ (Clang on macOS) and Fortran compilers will be used instead.
+If ``CPU`` is not set, GNU C/C++/Fortran compilers will be used instead.
 
 GNU Fortran 9 is *not* supported!
 Please take a look [here](https://gcc.gnu.org/gcc-9/changes.html) for the explanation regarding the MAX and MIN intrinsics.
