@@ -31,7 +31,7 @@ make [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 where ``CPU`` should be set for the Intel C/C++ and Fortran compilers to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
 If ``CPU`` is not set, GNU C/C++/Fortran compilers will be used instead.
 
-GNU Fortran 9 is *not* supported!
+GNU Fortran 9 is *not* supported (though it might work)!
 Please take a look [here](https://gcc.gnu.org/gcc-9/changes.html) for the explanation regarding the MAX and MIN intrinsics.
 Currently, only GPU Fortran *8* is fully supported.
 On RHEL/CentOS it is provided by, e.g., devtoolset-8.
