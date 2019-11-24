@@ -11,9 +11,9 @@ endif # ?NDEBUG
 RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
-CPUFLAGS=-DUSE_GNU -DUSE_X64 -fexceptions
+CPUFLAGS=-DUSE_GNU -DUSE_X64 -fPIC -fexceptions -fno-omit-frame-pointer -rdynamic
 ifdef PROFILE
-CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fPIC -fno-inline -fno-omit-frame-pointer -finstrument-functions -rdynamic
+CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE
 FORFLAGS=-cpp $(CPUFLAGS) -fdefault-integer-8 -ffree-line-length-none -fopenmp -fstack-arrays
 C11FLAGS=$(CPUFLAGS) -std=gnu17
@@ -48,18 +48,19 @@ FPUCFLAGS=$(FPUFLAGS) -fno-math-errno
 OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
 OPTFLAGS=-O$(DEBUG) -march=native
+DBGFLAGS=-$(DEBUG) -fsanitize=address
 ifeq ($(ARCH),Darwin)
 OPTFFLAGS=$(OPTFLAGS) -Wa,-q
 OPTCFLAGS=$(OPTFLAGS) -integrated-as
 else # Linux
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
+DBGFLAGS += -fsanitize=leak
 endif # ?Darwin
-DBGFLAGS=-$(DEBUG)
 DBGFFLAGS=$(DBGFLAGS) -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -pedantic -Wall -Wextra -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
-DBGCFLAGS=$(DBGFLAGS) -ftrapv
+DBGCFLAGS=$(DBGFLAGS) -fsanitize=undefined #-ftrapv
 FPUFLAGS=-ffp-contract=fast
-FPUFFLAGS=$(FPUFLAGS) -ffpe-trap=invalid,zero,overflow
+FPUFFLAGS=$(FPUFLAGS) #-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I../vn -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
