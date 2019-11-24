@@ -63,11 +63,7 @@ LIBFLAGS += -D_GNU_SOURCE
 LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_gf_ilp64 -lmkl_gnu_thread -lmkl_core -lgomp
 endif # ?Darwin
 ifndef NDEBUG
-ifeq ($(ARCH),Darwin)
 LDFLAGS += -lubsan
-else # Linux
-$(error debug build currently not possible with RH devtoolset)
-endif # ?Darwin
 endif # DEBUG
 LDFLAGS += -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
