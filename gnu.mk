@@ -27,18 +27,16 @@ endif # ?Darwin
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra
-DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
-DBGCFLAGS=$(DBGFLAGS)
 ifeq ($(ARCH),Darwin)
-OPTFFLAGS=$(OPTFLAGS) -Wa,-q
-OPTCFLAGS=$(OPTFLAGS) -Wa,-q
-else # Linux
+OPTFLAGS += -Wa,-q
+endif # Darwin
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-endif # ?Darwin
+DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGCFLAGS=$(DBGFLAGS)
 FPUFLAGS=-ffp-contract=fast
 FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS) -fno-math-errno
+FPUCFLAGS=$(FPUFLAGS) #-fno-math-errno
 OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
 OPTFLAGS=-O$(DEBUG) -march=native
