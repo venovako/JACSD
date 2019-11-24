@@ -234,6 +234,18 @@ typedef long double complex vn_complex_10;
 #error VN_REAL_FIN already defined
 #endif /* VN_REAL_FIN */
 
+#ifndef __cplusplus
+#ifndef CMPLXF
+#define CMPLXF(r,i) ((r) + I * (i))
+#endif /* !CMPLXF */
+#ifndef CMPLX
+#define CMPLX(r,i) ((r) + I * (i))
+#endif /* !CMPLX */
+#ifndef CMPLXL
+#define CMPLXL(r,i) ((r) + I * (i))
+#endif /* !CMPLXL */
+#endif /* !__cplusplus */
+
 #if (4 == (VN_REAL_KIND))
 typedef vn_real_4 vn_real;
 typedef struct {
