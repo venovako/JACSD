@@ -236,13 +236,13 @@ typedef long double complex vn_complex_10;
 
 #ifndef __cplusplus
 #ifndef CMPLXF
-#define CMPLXF(r,i) ((r) + I * (i))
+#define CMPLXF(r,i) ((float)(r) + I * (float)(i))
 #endif /* !CMPLXF */
 #ifndef CMPLX
-#define CMPLX(r,i) ((r) + I * (i))
+#define CMPLX(r,i) ((double)(r) + I * (double)(i))
 #endif /* !CMPLX */
 #ifndef CMPLXL
-#define CMPLXL(r,i) ((r) + I * (i))
+#define CMPLXL(r,i) ((long double)(r) + I * (long double)(i))
 #endif /* !CMPLXL */
 #endif /* !__cplusplus */
 
