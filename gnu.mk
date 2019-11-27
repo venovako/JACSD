@@ -48,7 +48,7 @@ DBGFLAGS += -fsanitize=leak
 endif # ?Darwin
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all #-fcheck=all
 DBGCFLAGS=$(DBGFLAGS) -fsanitize=undefined #-ftrapv
 FPUFLAGS=-ffp-contract=fast
 FPUFFLAGS=$(FPUFLAGS) #-ffpe-trap=invalid,zero,overflow
