@@ -4,36 +4,37 @@ endif # !CPU
 include ../$(CPU).mk
 MKFS=GNUmakefile ../$(CPU).mk
 
-SRCC=		\
-vn_align.c	\
-vn_alloc.c	\
-vn_assert.c	\
-vn_attrs.c	\
-vn_binio.c	\
-vn_blas.c	\
-vn_bmp.c	\
-vn_cmplxvis.c	\
-vn_error.c	\
-vn_lapack.c	\
-vn_lib.c	\
-vn_lock.c	\
-vn_mtxvis.c	\
-vn_profile.c	\
-vn_simd.c	\
-vn_stdc11.c	\
-vn_timer.c	\
-vn_types.c	\
+SRCC=         \
+vn_align.c    \
+vn_alloc.c    \
+vn_assert.c   \
+vn_attrs.c    \
+vn_binio.c    \
+vn_blas.c     \
+vn_bmp.c      \
+vn_cmplxvis.c \
+vn_error.c    \
+vn_lapack.c   \
+vn_lib.c      \
+vn_lock.c     \
+vn_mtxvis.c   \
+vn_profile.c  \
+vn_simd.c     \
+vn_stdc11.c   \
+vn_timer.c    \
+vn_types.c    \
 vn_variant.c
 
-SRCF=			\
-vn_alloc_f.F90		\
-vn_binio_f.F90		\
-vn_blas_f.F90		\
-vn_cmplxvis_f.F90	\
-vn_mtxvis_f.F90		\
-vn_lib_f.F90		\
-vn_sort_f.F90		\
-vn_timer_f.F90		\
+SRCF=              \
+vn_alloc_f.F90     \
+vn_binio_f.F90     \
+vn_blas_f.F90      \
+vn_cmplxvis_f.F90  \
+vn_imaginary_f.F90 \
+vn_mtxvis_f.F90    \
+vn_lib_f.F90       \
+vn_sort_f.F90      \
+vn_timer_f.F90     \
 vn_types_f.F90
 
 SRC=$(SRCC) $(SRCF)
@@ -122,6 +123,9 @@ vn_cmplxvis_f.o vn_cmplxvis_f.mod: vn_cmplxvis_f.F90 $(HDRS) $(MKFS)
 vn_cmplxvis.exe: vn_cmplxvis.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
+vn_imaginary_f.o vn_imaginary_f.mod: vn_imaginary_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
+
 vn_lapack.o: vn_lapack.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
@@ -131,7 +135,7 @@ vn_lapack.exe: vn_lapack.c $(HDRS) $(MKFS)
 vn_lib.o: vn_lib.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
 
-vn_lib_f.o vn_lib_f.mod: vn_lib_f.F90 vn_alloc_f.mod vn_binio_f.mod vn_blas_f.mod vn_cmplxvis_f.mod vn_mtxvis_f.mod vn_sort_f.mod vn_timer_f.mod vn_types_f.mod $(HDRS) $(MKFS)
+vn_lib_f.o vn_lib_f.mod: vn_lib_f.F90 vn_alloc_f.mod vn_binio_f.mod vn_blas_f.mod vn_cmplxvis_f.mod vn_imaginary_f.mod vn_mtxvis_f.mod vn_sort_f.mod vn_timer_f.mod vn_types_f.mod $(HDRS) $(MKFS)
 	$(FC) $(FFLAGS) -c $<
 
 vn_lib.exe: vn_lib.c $(HDRS) $(MKFS)
