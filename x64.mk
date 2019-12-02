@@ -17,9 +17,9 @@ CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DKIND_QUAD=$(WP) -fPIC -fexceptions -fno-omit-fr
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE
-# ifneq ($(ARCH),Darwin)
-# CPUFLAGS += -DTSC_FREQ_HZ=$(shell dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g')000ull
-# endif # Linux
+ifneq ($(ARCH),Darwin)
+CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
+endif # Linux
 FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
 C11FLAGS=$(CPUFLAGS) -std=c11
 ifdef NDEBUG

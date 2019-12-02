@@ -11,6 +11,11 @@ VN_EXTERN_C vn_integer_8 vn_get_sys_us();
 /* see Intel(R) 64 and IA-32 Architectures Software Developer's Manual */
 
 #include <x86intrin.h>
+#ifdef TSC_FREQ_HZ
+#if (TSC_FREQ_HZ == 0ull)
+#include <cpuid.h>
+#endif /* ?TSC_FREQ_HZ */
+#endif /* TSC_FREQ_HZ */
 
 static inline uint64_t rdtsc_beg(unsigned *const aux)
 {
@@ -28,7 +33,13 @@ static inline uint64_t rdtsc_end(unsigned *const aux)
 static inline uint64_t tsc_get_freq_hz()
 {
 #ifdef TSC_FREQ_HZ
-  return (TSC_FREQ_HZ);
+#if (TSC_FREQ_HZ == 0ull)
+  unsigned eax = 0x15u, ebx = 0u, ecx = 0u, edx = 0u;
+  __cpuid(0x15, eax, ebx, ecx, edx);
+  return (((uint64_t)ebx * ecx) / eax);
+#else /* TSC_FREQ_HZ > 0 */
+  return TSC_FREQ_HZ;
+#endif /* ?TSC_FREQ_HZ */
 #else /* !TSC_FREQ_HZ */
   uint64_t hz = UINT64_C(0);
 #ifdef __APPLE__
