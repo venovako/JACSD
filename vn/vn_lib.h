@@ -73,6 +73,9 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/uio.h>
+#ifdef __APPLE__
+#include <sys/sysctl.h>
+#endif /* __APPLE__ */
 #include <unistd.h>
 #ifdef _OPENMP
 #include <omp.h>

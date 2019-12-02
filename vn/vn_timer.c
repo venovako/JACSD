@@ -23,4 +23,24 @@ vn_integer_8 vn_get_sys_us()
     return (vn_integer_8)-1;
   return (tv.tv_sec * (vn_integer_8)1000000 + tv.tv_usec);
 }
+
+uint64_t rdtsc_beg_(unsigned *const aux)
+{
+  return (aux ? rdtsc_beg(aux) : UINT64_C(0));
+}
+
+uint64_t rdtsc_end_(unsigned *const aux)
+{
+  return (aux ? rdtsc_end(aux) : UINT64_C(0));
+}
+
+uint64_t tsc_get_freq_hz_()
+{
+  return tsc_get_freq_hz();
+}
+
+int64_t tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const rem)
+{
+  return tsc_lap(freq_hz, beg, end, rem);
+}
 #endif /* ?VN_TEST */
