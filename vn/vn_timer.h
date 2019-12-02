@@ -35,8 +35,8 @@ static inline uint64_t tsc_get_freq_hz()
 #ifdef TSC_FREQ_HZ
 #if (TSC_FREQ_HZ == 0ull)
   unsigned eax = 0x15u, ebx = 0u, ecx = 0u, edx = 0u;
-  __cpuid(0x15, eax, ebx, ecx, edx);
-  return (((uint64_t)ebx * ecx) / eax);
+  __cpuid(0x15u, eax, ebx, ecx, edx);
+  return (eax ? (((uint64_t)ebx * ecx) / eax) : UINT64_C(0));
 #else /* TSC_FREQ_HZ > 0 */
   return TSC_FREQ_HZ;
 #endif /* ?TSC_FREQ_HZ */
