@@ -65,7 +65,7 @@ static inline uint64_t tsc_get_freq_hz()
 #endif /* ?TSC_FREQ_HZ */
 }
 
-static inline int64_t tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const rem)
+static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const sec, int64_t *const rem)
 {
   const long long freq_hz_ = (long long)freq_hz;
   if (freq_hz <= 0ll)
@@ -80,14 +80,16 @@ static inline int64_t tsc_lap(const uint64_t freq_hz, const uint64_t beg, const 
   if (end_beg < 0ll)
     return -4;
   const lldiv_t qr = lldiv(end_beg, freq_hz_);
+  if (sec)
+    *sec = (int64_t)(qr.quot);
   if (rem)
     *rem = (int64_t)(qr.rem);
-  return (int64_t)(qr.quot);
+  return ((double)end_beg / (double)freq_hz_);
 }
 
 VN_EXTERN_C uint64_t rdtsc_beg_(unsigned *const aux);
 VN_EXTERN_C uint64_t rdtsc_end_(unsigned *const aux);
 VN_EXTERN_C uint64_t tsc_get_freq_hz_();
-VN_EXTERN_C int64_t tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const rem);
+VN_EXTERN_C double tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const sec, int64_t *const rem);
 
 #endif /* !VN_TIMER_H */

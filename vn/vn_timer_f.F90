@@ -51,12 +51,12 @@ MODULE VN_TIMER_F
   END INTERFACE
 
   INTERFACE
-     FUNCTION TSC_LAP(F, B, E, R) BIND(C,NAME='tsc_lap_')
-       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_int64_t
+     FUNCTION TSC_LAP(F, B, E, S, R) BIND(C,NAME='tsc_lap_')
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_int64_t, c_double
        IMPLICIT NONE
        INTEGER(KIND=c_int64_t), INTENT(IN), VALUE :: F, B, E
-       INTEGER(KIND=c_int64_t), INTENT(OUT) :: R
-       INTEGER(KIND=c_int64_t) :: TSC_LAP
+       INTEGER(KIND=c_int64_t), INTENT(OUT) :: S, R
+       REAL(KIND=c_double) :: TSC_LAP
      END FUNCTION TSC_LAP
   END INTERFACE
 

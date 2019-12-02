@@ -39,8 +39,8 @@ uint64_t tsc_get_freq_hz_()
   return tsc_get_freq_hz();
 }
 
-int64_t tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const rem)
+double tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const sec, int64_t *const rem)
 {
-  return tsc_lap(freq_hz, beg, end, rem);
+  return tsc_lap(freq_hz, beg, end, sec, rem);
 }
 #endif /* ?VN_TEST */
