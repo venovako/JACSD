@@ -755,24 +755,69 @@ CONTAINS
     TYPE(CIMAGINARY), INTENT(IN) :: A
     COMPLEX(KIND=SWP), INTENT(IN) :: B
     COMPLEX(KIND=SWP) :: CJDIVC
+    REAL(KIND=SWP) :: AVB
+    AVB = ABS(CJDIVC)
     CJDIVC = CMPLX(AIMAG(B), REAL(B), SWP)
-    CJDIVC = (A%J / ABS(CJDIVC)) * CJDIVC
+#ifdef VN_FAST_JDIVC
+    CJDIVC = (A%J / AVB) * CJDIVC
+#else
+    IF (.NOT. (AVB .LE. HUGE(AVB))) THEN
+       CJDIVC = CMPLX(SCALE(AIMAG(B), -1), SCALE(REAL(B), -1), SWP)
+       AVB = ABS(CJDIVC)
+       CJDIVC = SCALE(A%J, 1) * (CJDIVC / AVB)
+    ELSE IF (AVB .EQ. S_ZERO) THEN
+       ! Return whatever the compiler would if A was COMPLEX.
+       CJDIVC = CMPLX(S_ZERO, A%J, SWP) / CJDIVC
+    ELSE ! general case
+       CJDIVC = A%J * (CJDIVC / AVB)
+    END IF
+#endif
   END FUNCTION CJDIVC
   PURE FUNCTION ZJDIVC(A,B)
     IMPLICIT NONE
     TYPE(ZIMAGINARY), INTENT(IN) :: A
     COMPLEX(KIND=DWP), INTENT(IN) :: B
     COMPLEX(KIND=DWP) :: ZJDIVC
+    REAL(KIND=DWP) :: AVB
+    AVB = ABS(ZJDIVC)
     ZJDIVC = CMPLX(AIMAG(B), REAL(B), DWP)
-    ZJDIVC = (A%J / ABS(ZJDIVC)) * ZJDIVC
+#ifdef VN_FAST_JDIVC
+    ZJDIVC = (A%J / AVB) * ZJDIVC
+#else
+    IF (.NOT. (AVB .LE. HUGE(AVB))) THEN
+       ZJDIVC = CMPLX(SCALE(AIMAG(B), -1), SCALE(REAL(B), -1), DWP)
+       AVB = ABS(ZJDIVC)
+       ZJDIVC = SCALE(A%J, 1) * (ZJDIVC / AVB)
+    ELSE IF (AVB .EQ. D_ZERO) THEN
+       ! Return whatever the compiler would if A was COMPLEX.
+       ZJDIVC = CMPLX(D_ZERO, A%J, DWP) / ZJDIVC
+    ELSE ! general case
+       ZJDIVC = A%J * (ZJDIVC / AVB)
+    END IF
+#endif
   END FUNCTION ZJDIVC
   PURE FUNCTION XJDIVC(A,B)
     IMPLICIT NONE
     TYPE(XIMAGINARY), INTENT(IN) :: A
     COMPLEX(KIND=QWP), INTENT(IN) :: B
     COMPLEX(KIND=QWP) :: XJDIVC
+    REAL(KIND=QWP) :: AVB
+    AVB = ABS(XJDIVC)
     XJDIVC = CMPLX(AIMAG(B), REAL(B), QWP)
-    XJDIVC = (A%J / ABS(XJDIVC)) * XJDIVC
+#ifdef VN_FAST_JDIVC
+    XJDIVC = (A%J / AVB) * XJDIVC
+#else
+    IF (.NOT. (AVB .LE. HUGE(AVB))) THEN
+       XJDIVC = CMPLX(SCALE(AIMAG(B), -1), SCALE(REAL(B), -1), QWP)
+       AVB = ABS(XJDIVC)
+       XJDIVC = SCALE(A%J, 1) * (XJDIVC / AVB)
+    ELSE IF (AVB .EQ. Q_ZERO) THEN
+       ! Return whatever the compiler would if A was COMPLEX.
+       XJDIVC = CMPLX(Q_ZERO, A%J, QWP) / XJDIVC
+    ELSE ! general case
+       XJDIVC = A%J * (XJDIVC / AVB)
+    END IF
+#endif
   END FUNCTION XJDIVC
 
   PURE FUNCTION CCDIVJ(A,B)
