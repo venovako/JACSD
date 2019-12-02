@@ -34,12 +34,12 @@ uint64_t rdtsc_end_(unsigned *const aux)
   return (aux ? rdtsc_end(aux) : UINT64_C(0));
 }
 
-uint64_t tsc_get_freq_hz_()
+uint64_t tsc_get_freq_hz_(unsigned *const rem_den)
 {
-  return tsc_get_freq_hz();
+  return tsc_get_freq_hz(rem_den);
 }
 
-double tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const sec, int64_t *const rem)
+double tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem)
 {
   return tsc_lap(freq_hz, beg, end, sec, rem);
 }

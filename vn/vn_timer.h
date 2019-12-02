@@ -30,14 +30,33 @@ static inline uint64_t rdtsc_end(unsigned *const aux)
   return tsc;
 }
 
-static inline uint64_t tsc_get_freq_hz()
+static inline uint64_t tsc_get_freq_hz(unsigned *const rem_den)
 {
 #ifdef TSC_FREQ_HZ
 #if (TSC_FREQ_HZ == 0ull)
-  unsigned eax = 0x15u, ebx = 0u, ecx = 0u, edx = 0u;
+  unsigned eax = 0u, ebx = 0u, ecx = 0u, edx = 0u;
   __cpuid(0x15u, eax, ebx, ecx, edx);
-  return (eax ? (((uint64_t)ebx * ecx) / eax) : UINT64_C(0));
+  if (eax) {
+    const uint64_t num = (uint64_t)ebx * ecx;
+    const uint64_t den = (uint64_t)eax;
+    if (rem_den) {
+      rem_den[0u] = (unsigned)(num % den);
+      rem_den[1u] = eax;
+    }
+    return (num / den);
+  }
+  else {
+    if (rem_den) {
+      rem_den[0u] = 0u;
+      rem_den[1u] = 0u;
+    }
+    return UINT64_C(0);
+  }
 #else /* TSC_FREQ_HZ > 0 */
+  if (rem_den) {
+    rem_den[0u] = 0u;
+    rem_den[1u] = 0u;
+  }
   return TSC_FREQ_HZ;
 #endif /* ?TSC_FREQ_HZ */
 #else /* !TSC_FREQ_HZ */
@@ -60,36 +79,48 @@ static inline uint64_t tsc_get_freq_hz()
   else
     perror("tsc_get_freq_hz:fopen");
 #endif /* ?__APPLE__ */
-
+  if (rem_den) {
+    rem_den[0u] = 0u;
+    rem_den[1u] = 0u;
+  }
   return hz;
 #endif /* ?TSC_FREQ_HZ */
 }
 
-static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const sec, int64_t *const rem)
+static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem)
 {
-  const long long freq_hz_ = (long long)freq_hz;
-  if (freq_hz <= 0ll)
-    return -1;
-  const long long beg_ = (long long)beg;
-  if (beg_ < 0ll)
-    return -2;
-  const long long end_ = (long long)end;
-  if (end_ < 0ll)
-    return -3;
-  const long long end_beg = end - beg;
-  if (end_beg < 0ll)
-    return -4;
-  const lldiv_t qr = lldiv(end_beg, freq_hz_);
-  if (sec)
-    *sec = (int64_t)(qr.quot);
-  if (rem)
-    *rem = (int64_t)(qr.rem);
-  return ((double)end_beg / (double)freq_hz_);
+  if (freq_hz) {
+    if (end >= beg) {
+      const uint64_t lap = end - beg;
+      if (sec)
+        *sec = lap / freq_hz;
+      if (rem)
+        *rem = lap % freq_hz;
+      if (lap >= freq_hz)
+        return (lap / (double)freq_hz);
+      else /* lap < freq_hz */
+        return ((double)lap / freq_hz);
+    }
+    else {
+      if (sec)
+        *sec = UINT64_C(0);
+      if (rem)
+        *rem = UINT64_C(0);      
+      return -0.0;
+    }
+  }
+  else {
+    if (sec)
+      *sec = UINT64_C(0);
+    if (rem)
+      *rem = UINT64_C(0);
+    return MqNaN(0);
+  }
 }
 
 VN_EXTERN_C uint64_t rdtsc_beg_(unsigned *const aux);
 VN_EXTERN_C uint64_t rdtsc_end_(unsigned *const aux);
-VN_EXTERN_C uint64_t tsc_get_freq_hz_();
-VN_EXTERN_C double tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, int64_t *const sec, int64_t *const rem);
+VN_EXTERN_C uint64_t tsc_get_freq_hz_(unsigned *const rem_den);
+VN_EXTERN_C double tsc_lap_(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem);
 
 #endif /* !VN_TIMER_H */
