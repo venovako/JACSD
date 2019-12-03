@@ -8,9 +8,9 @@ MODULE VN_MTXVIS_F
      FUNCTION VN_MTXVIS_START(ctx, fname, act, mA, nA, sx, sy, fname_len) BIND(C,name='vn_mtxvis_start')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
-       TYPE(c_ptr), INTENT(OUT) :: ctx
+       TYPE(c_ptr), INTENT(OUT), TARGET :: ctx
        INTEGER, INTENT(IN), VALUE :: act, mA, nA, sx, sy, fname_len
-       CHARACTER(KIND=c_char), INTENT(IN) :: fname(*)
+       CHARACTER(KIND=c_char), INTENT(IN), TARGET :: fname(*)
        INTEGER :: VN_MTXVIS_START
      END FUNCTION VN_MTXVIS_START
   END INTERFACE
@@ -21,7 +21,7 @@ MODULE VN_MTXVIS_F
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER, INTENT(IN), VALUE :: ldA
-       REAL(KIND=c_double), INTENT(IN) :: A(ldA,*)
+       REAL(KIND=c_double), INTENT(IN), TARGET :: A(ldA,*)
        INTEGER :: VN_MTXVIS_FRAME
      END FUNCTION VN_MTXVIS_FRAME
   END INTERFACE

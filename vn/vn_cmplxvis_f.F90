@@ -8,9 +8,9 @@ MODULE VN_CMPLXVIS_F
      FUNCTION VN_CMPLXVIS_START(ctx, fname, act, mA, nA, sx, sy, fname_len) BIND(C,name='vn_cmplxvis_start')
        USE, INTRINSIC :: ISO_C_BINDING
        IMPLICIT NONE
-       TYPE(c_ptr), INTENT(OUT) :: ctx
+       TYPE(c_ptr), INTENT(OUT), TARGET :: ctx
        INTEGER, INTENT(IN), VALUE :: act, mA, nA, sx, sy, fname_len
-       CHARACTER(KIND=c_char), INTENT(IN) :: fname(*)
+       CHARACTER(KIND=c_char), INTENT(IN), TARGET :: fname(*)
        INTEGER :: VN_CMPLXVIS_START
      END FUNCTION VN_CMPLXVIS_START
   END INTERFACE
@@ -21,7 +21,7 @@ MODULE VN_CMPLXVIS_F
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER, INTENT(IN), VALUE :: ldA
-       COMPLEX(KIND=c_double), INTENT(IN) :: A(ldA,*)
+       COMPLEX(KIND=c_double), INTENT(IN), TARGET :: A(ldA,*)
        INTEGER :: VN_CMPLXVIS_FRAME
      END FUNCTION VN_CMPLXVIS_FRAME
   END INTERFACE
