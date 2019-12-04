@@ -84,6 +84,12 @@
 #ifdef __AVX512PF__
 #include <hbwmalloc.h>
 #endif /* __AVX512PF__ */
+#include <x86intrin.h>
+#ifdef TSC_FREQ_HZ
+#if (TSC_FREQ_HZ == 0ull)
+#include <cpuid.h>
+#endif /* ?TSC_FREQ_HZ */
+#endif /* TSC_FREQ_HZ */
 
 #include "vn_stdc11.h"
 #include "vn_attrs.h"

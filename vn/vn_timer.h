@@ -10,13 +10,6 @@ VN_EXTERN_C vn_integer_8 vn_get_sys_us();
 
 /* see Intel(R) 64 and IA-32 Architectures Software Developer's Manual */
 
-#include <x86intrin.h>
-#ifdef TSC_FREQ_HZ
-#if (TSC_FREQ_HZ == 0ull)
-#include <cpuid.h>
-#endif /* ?TSC_FREQ_HZ */
-#endif /* TSC_FREQ_HZ */
-
 static inline uint64_t rdtsc_beg(unsigned *const aux)
 {
   _mm_mfence();

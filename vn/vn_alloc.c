@@ -14,7 +14,6 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
   return EXIT_SUCCESS;
 }
 #else /* !VN_TEST */
-
 void *vn_alloc1(const vn_integer m, const size_t szT, vn_integer *const ldA, const vn_integer act)
 {
   return vn_alloc2(m, MkInt(1), szT, ldA, act);
