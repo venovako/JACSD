@@ -29,6 +29,7 @@ qlansy.F90   \
 qlapy2.F90   \
 qlaran.F90   \
 qlarfg.F90   \
+qlarge.F90   \
 qlarnd.F90   \
 qlarnv.F90   \
 qlaror.F90   \
