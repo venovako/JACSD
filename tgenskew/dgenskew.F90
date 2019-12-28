@@ -1,0 +1,231 @@
+PROGRAM DGENSKEW
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
+  USE BIO
+  USE SEED
+  USE LAMGEN
+  USE DATGEN
+  IMPLICIT NONE
+#include "qx_wp.fi"
+
+  INTEGER, PARAMETER :: FNL = 253
+  DOUBLE PRECISION, PARAMETER :: ZERO = 0.0D0
+
+  ! command-line parameters
+  INTEGER :: SEEDI, N, K, IDIST, INFO
+  DOUBLE PRECISION :: EPS, SCAL
+  CHARACTER(LEN=FNL) :: LAMBDA, FIL
+
+  INTEGER :: ISEED(4), P
+
+  DOUBLE PRECISION, ALLOCATABLE :: DLAMBDA(:)
+  REAL(KIND=WP), ALLOCATABLE :: QLAMBDA(:), QWORK(:)
+
+  DOUBLE PRECISION, ALLOCATABLE :: DA(:,:)
+  REAL(KIND=WP), ALLOCATABLE :: QA(:,:)
+
+  CALL READCL(LAMBDA, SEEDI, N, K, FIL, IDIST, EPS, SCAL, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'READCL'
+  END IF
+
+  CALL SEEDIX(SEEDI, ISEED, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SEEDIX'
+  END IF
+
+  ALLOCATE(DLAMBDA(N))
+  IF (IDIST .NE. 0) THEN
+     CALL DGENLAM(N, K, ISEED, IDIST, EPS, SCAL, DLAMBDA, INFO)
+     P = K
+  ELSE
+     CALL DTXTLAM(LAMBDA, N, P, DLAMBDA, INFO)
+  END IF
+  IF ((INFO .NE. 0) .OR. (P .NE. K)) THEN
+     WRITE (ERROR_UNIT,*) INFO, P
+     ERROR STOP 'LAMBDA'
+  END IF
+
+  ALLOCATE(DA(N,N))
+  ALLOCATE(QA(N,N))
+  ALLOCATE(QLAMBDA(N))
+  DO P = 1, N
+     QLAMBDA(P) = REAL(DLAMBDA(P),WP)
+  END DO
+  P = 2 * N
+  ALLOCATE(QWORK(P))
+
+  CALL DGENDAT(N, ISEED, QLAMBDA, QA, DA, QWORK, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'DGENDAT'
+  END IF
+
+  DEALLOCATE(QWORK)
+  DEALLOCATE(QLAMBDA)
+  DEALLOCATE(QA)
+
+  P = -1
+  CALL BIO_OPEN(P, TRIM(FIL)//'.S', 'WO', INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(S)'
+  END IF
+  CALL BIO_WRITE_D2(P, N, N, DA, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D2(S)'
+  END IF
+  CALL BIO_CLOSE(P, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(S)'
+  END IF
+  DEALLOCATE(DA)
+
+  P = -1
+  CALL BIO_OPEN(P, TRIM(FIL)//'.L', 'WO', INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(L)'
+  END IF
+  CALL BIO_WRITE_D1(P, N, DLAMBDA, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_D1(L)'
+  END IF
+  CALL BIO_CLOSE(P, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(L)'
+  END IF
+  DEALLOCATE(DLAMBDA)
+
+CONTAINS
+
+  SUBROUTINE READCL(LAMBDA, SEEDI, N, K, FIL, IDIST, EPS, SCAL, INFO)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(OUT) :: SEEDI, N, K, IDIST, INFO
+    DOUBLE PRECISION, INTENT(OUT) :: EPS, SCAL
+    CHARACTER(LEN=*), INTENT(OUT) :: LAMBDA, FIL
+
+    INTEGER, PARAMETER :: NRQP = 5
+    INTEGER :: NXTA
+    CHARACTER(LEN=FNL) :: CAS
+
+    SEEDI = 0
+    N = 0
+    K = 0
+    IDIST = 0
+    INFO = 0
+
+    EPS = ZERO
+    SCAL = ZERO
+
+    LAMBDA = ''
+    FIL = ''
+
+    NXTA = NRQP
+    CAS = ''
+
+    IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
+       WRITE (OUTPUT_UNIT,*) 'dgenskew.exe LAMBDA SEEDIX N K FILE [ LAMBDA_PARAMS ]'
+       WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda(S); 1, 2, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
+       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 256 chars [each line = one real value]'
+       WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
+       WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
+       WRITE (OUTPUT_UNIT,*) 'K       : rank of the output matrix: >= 0, even, <= N'
+       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 256 chars'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
+       WRITE (OUTPUT_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
+       WRITE (OUTPUT_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
+       WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
+       WRITE (OUTPUT_UNIT,*) 'FILE.S  : double precision(N,N); a skew-symmetric matrix S'
+       WRITE (OUTPUT_UNIT,*) 'FILE.L  : double precision(N); \Lambda(S) as read/generated'
+       INFO = 1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(1, LAMBDA, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    IF (TRIM(LAMBDA) .EQ. '1') THEN
+       IDIST = 1
+    ELSE IF (TRIM(LAMBDA) .EQ. '2') THEN
+       IDIST = 2
+    ELSE IF (TRIM(LAMBDA) .EQ. '3') THEN
+       IDIST = 3
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(2, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+    READ (CAS,*) SEEDI
+    IF (SEEDI .LE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(3, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+    READ (CAS,*) N
+    IF (N .LE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(4, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -4
+       RETURN
+    END IF
+    READ (CAS,*) K
+    IF ((K .LT. 0) .OR. (K .GT. (N - MOD(N, 2))) .OR. (MOD(K, 2) .NE. 0)) THEN
+       INFO = -4
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(5, FIL, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -5
+       RETURN
+    END IF
+
+    IF (IDIST .NE. 0) THEN
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) EPS
+       IF (EPS .LT. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) SCAL
+       IF (SCAL .EQ. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+    END IF
+  END SUBROUTINE READCL
+
+END PROGRAM DGENSKEW
