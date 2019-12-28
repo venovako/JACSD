@@ -88,6 +88,7 @@ xlacgv.F90   \
 xlacpy.F90   \
 xlaev2.F90   \
 xlaghe.F90   \
+xlarge.F90   \
 xlarnd.F90   \
 xlarnv.F90   \
 xlaror.F90   \
