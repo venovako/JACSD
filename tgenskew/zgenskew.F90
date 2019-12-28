@@ -38,10 +38,10 @@ PROGRAM ZGENSKEW
 
   ALLOCATE(DLAMBDA(N))
   IF (IDIST .NE. 0) THEN
-     CALL DGENLAM(N, K, ISEED, IDIST, EPS, SCAL, DLAMBDA, INFO)
+     CALL ZGENLAM(N, K, ISEED, IDIST, EPS, SCAL, DLAMBDA, INFO)
      P = K
   ELSE
-     CALL DTXTLAM(LAMBDA, N, P, DLAMBDA, INFO)
+     CALL ZTXTLAM(LAMBDA, N, P, DLAMBDA, INFO)
   END IF
   IF ((INFO .NE. 0) .OR. (P .NE. K)) THEN
      WRITE (ERROR_UNIT,*) INFO, P
@@ -139,13 +139,13 @@ CONTAINS
        WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 256 chars [each line = one real value]'
        WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
        WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
-       WRITE (OUTPUT_UNIT,*) 'K       : rank of the output matrix: >= 0, even, <= N'
+       WRITE (OUTPUT_UNIT,*) 'K       : rank of the output matrix: 0 <= K <= N'
        WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 256 chars'
        WRITE (OUTPUT_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
        WRITE (OUTPUT_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
        WRITE (OUTPUT_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
        WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
-       WRITE (OUTPUT_UNIT,*) 'FILE.S  : double complex(N,N); a skew-symmetric matrix S'
+       WRITE (OUTPUT_UNIT,*) 'FILE.S  : double complex(N,N); a skew-Hermitian matrix S'
        WRITE (OUTPUT_UNIT,*) 'FILE.L  : double precision(N); \Lambda(S) as read/generated'
        INFO = 1
        RETURN
@@ -192,7 +192,7 @@ CONTAINS
        RETURN
     END IF
     READ (CAS,*) K
-    IF ((K .LT. 0) .OR. (K .GT. (N - MOD(N, 2))) .OR. (MOD(K, 2) .NE. 0)) THEN
+    IF ((K .LT. 0) .OR. (K .GT. N)) THEN
        INFO = -4
        RETURN
     END IF
