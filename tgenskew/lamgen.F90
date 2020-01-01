@@ -100,6 +100,8 @@ CONTAINS
              INFO = I
              GOTO 1
           END IF
+       ELSE
+          I = I + 1
        END IF
     END DO
 
