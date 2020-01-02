@@ -17,7 +17,7 @@ ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FC=ifort
 
 !IFDEF NDEBUG
-FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /4I8 /Qopenmp /standard-semantics
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DOLD_OMP /4I8 /Qopenmp /standard-semantics
 LIBS=qxblas$(WP)$(DEBUG).lib
 OPTFLAGS=/O$(NDEBUG) /QxHost
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
@@ -45,16 +45,16 @@ zgenskew.exe: zgenskew.F90 bio.mod seed.mod lamgen.mod datgen.mod Makefile
 	$(FC) $(FFLAGS) zgenskew.F90 bio.obj seed.obj lamgen.obj datgen.obj /Fe$@ $(LDFLAGS)
 
 bio.obj bio.mod: bio.F90 Makefile
-	$(FC) $(FFLAGS) /c $<
+	$(FC) $(FFLAGS) /c bio.F90
 
 seed.obj seed.mod: seed.F90 Makefile
-	$(FC) $(FFLAGS) /c $<
+	$(FC) $(FFLAGS) /c seed.F90
 
 lamgen.obj lamgen.mod: lamgen.F90 seed.mod Makefile
-	$(FC) $(FFLAGS) /c $<
+	$(FC) $(FFLAGS) /c lamgen.F90
 
 datgen.obj datgen.mod: datgen.F90 seed.mod Makefile
-	$(FC) $(FFLAGS) /c $<
+	$(FC) $(FFLAGS) /c datgen.F90
 
 clean:
 	-$(RM) *.exe
