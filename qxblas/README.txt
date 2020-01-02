@@ -8,11 +8,13 @@ nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 Output:
 
 ../qx_wp.fi
-../libqxblas.a
+../libqxblas$(WP)$(DEBUG).a
 (*nix, or)
 ..\qx_wp.fi
-..\qxblas.lib
+..\qxblas$(WP)$(DEBUG).lib
 (Windows)
+where $(WP) is as above, and $(DEBUG) is either an empty string for
+release (NDEBUG) builds, or `g' (*nix) or `d' (Windows) otherwise.
 
 Variables:
 
@@ -43,6 +45,6 @@ Some LAPACK routines are included, as well.
 
 TODO:
 
-xerbla.f90 and lsame.f90 not included in the build, since they are
+xerbla.F90 and lsame.F90 not included in the build, since they are
 available from other BLAS libraries; include them in the appropriate
 makefile, if needed.

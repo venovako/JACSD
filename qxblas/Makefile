@@ -58,6 +58,7 @@ qlansy.F90   \
 qlapy2.F90   \
 qlaran.F90   \
 qlarfg.F90   \
+qlarge.F90   \
 qlarnd.F90   \
 qlarnv.F90   \
 qlaror.F90   \
@@ -116,6 +117,7 @@ xlacgv.F90   \
 xlacpy.F90   \
 xlaev2.F90   \
 xlaghe.F90   \
+xlarge.F90   \
 xlarnd.F90   \
 xlarnv.F90   \
 xlaror.F90   \
@@ -150,6 +152,8 @@ qgemv.obj    \
 qger.obj     \
 qisnan.obj   \
 qlacpy.obj   \
+qlaev2.obj   \
+qlagsy.obj   \
 qlaisnan.obj \
 qlamch.obj   \
 qlangb.obj   \
@@ -160,9 +164,12 @@ qlansy.obj   \
 qlapy2.obj   \
 qlaran.obj   \
 qlarfg.obj   \
+qlarge.obj   \
 qlarnd.obj   \
+qlarnv.obj   \
 qlaror.obj   \
 qlartg.obj   \
+qlaruv.obj   \
 qlaset.obj   \
 qlassq.obj   \
 qnrm2.obj    \
@@ -212,6 +219,15 @@ xherk.obj    \
 xhpmv.obj    \
 xhpr.obj     \
 xhpr2.obj    \
+xlacgv.obj   \
+xlacpy.obj   \
+xlaev2.obj   \
+xlaghe.obj   \
+xlarge.obj   \
+xlarnd.obj   \
+xlarnv.obj   \
+xlaror.obj   \
+xlaset.obj   \
 xqrot.obj    \
 xqscal.obj   \
 xrotg.obj    \
