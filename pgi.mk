@@ -14,7 +14,7 @@ endif # ?NDEBUG
 RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
-CPUFLAGS=-DUSE_PGI -DUSE_X64 -DKIND_QUAD=$(WP) -m64 -mp -Minfo #-Mnollvm
+CPUFLAGS=-DUSE_PGI -DUSE_X64 -DKIND_QUAD=$(WP) -DOLD_OMP -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -Mnollvm
 ifneq ($(ARCH),Darwin)
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 endif # Linux

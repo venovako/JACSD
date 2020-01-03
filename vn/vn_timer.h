@@ -12,15 +12,23 @@ VN_EXTERN_C vn_integer_8 vn_get_sys_us();
 
 static inline uint64_t rdtsc_beg(unsigned *const aux)
 {
+#ifdef USE_PGI
+  return UINT64_C(0);
+#else /* !USE_PGI */
   _mm_mfence();
   return __rdtscp(aux);
+#endif /* ?USE_PGI */
 }
 
 static inline uint64_t rdtsc_end(unsigned *const aux)
 {
+#ifdef USE_PGI
+  return UINT64_C(0);
+#else /* !USE_PGI */
   const uint64_t tsc = __rdtscp(aux);
   _mm_lfence();
   return tsc;
+#endif /* ?USE_PGI */
 }
 
 static inline uint64_t tsc_get_freq_hz(unsigned *const rem_den)
