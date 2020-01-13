@@ -162,11 +162,11 @@ typedef vn_logical_8 vn_logical;
 #endif /* ?VN_FALSE */
 
 #ifndef VN_TRUE
-#ifdef __ICC
+#if (defined(__ICC) || defined(USE_PGI))
 #define VN_TRUE MkBool(-1)
-#else /* !__ICC */
+#else /* GNU */
 #define VN_TRUE MkBool(1)
-#endif /* ?__ICC */
+#endif /* ?(ICC|PGI) */
 #endif /* ?VN_TRUE */
 
 typedef float vn_real_4;
