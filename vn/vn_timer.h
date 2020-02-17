@@ -106,7 +106,7 @@ static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const u
       if (sec)
         *sec = UINT64_C(0);
       if (rem)
-        *rem = UINT64_C(0);      
+        *rem = UINT64_C(0);
       return -0.0;
     }
   }

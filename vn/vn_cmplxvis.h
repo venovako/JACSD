@@ -26,13 +26,13 @@ typedef struct {
 #define VN_CMPLXVIS_OP_A MkInt(0)
 #else /* VN_CMPLXVIS_OP_A */
 #error VN_CMPLXVIS_OP_A already defined
-#endif /* !VN_CMPLXVIS_OP_A */
+#endif /* ?VN_CMPLXVIS_OP_A */
 
 #ifndef VN_CMPLXVIS_OP_Ah
 #define VN_CMPLXVIS_OP_Ah MkInt(1)
 #else /* VN_CMPLXVIS_OP_Ah */
 #error VN_CMPLXVIS_OP_Ah already defined
-#endif /* !VN_CMPLXVIS_OP_Ah */
+#endif /* ?VN_CMPLXVIS_OP_Ah */
 
 #ifndef VN_NO_BLAS
 
@@ -40,13 +40,13 @@ typedef struct {
 #define VN_CMPLXVIS_OP_AAh MkInt(2)
 #else /* VN_CMPLXVIS_OP_AAh */
 #error VN_CMPLXVIS_OP_AAh already defined
-#endif /* !VN_CMPLXVIS_OP_AAh */
+#endif /* ?VN_CMPLXVIS_OP_AAh */
 
 #ifndef VN_CMPLXVIS_OP_AhA
 #define VN_CMPLXVIS_OP_AhA MkInt(3)
 #else /* VN_CMPLXVIS_OP_AhA */
 #error VN_CMPLXVIS_OP_AhA already defined
-#endif /* !VN_CMPLXVIS_OP_AhA */
+#endif /* ?VN_CMPLXVIS_OP_AhA */
 
 #endif /* !VN_NO_BLAS */
 
@@ -54,31 +54,31 @@ typedef struct {
 #define VN_CMPLXVIS_FN_Id MkInt(0)
 #else /* VN_CMPLXVIS_FN_Id */
 #error VN_CMPLXVIS_FN_Id already defined
-#endif /* !VN_CMPLXVIS_FN_Id */
+#endif /* ?VN_CMPLXVIS_FN_Id */
 
 #ifndef VN_CMPLXVIS_FN_Lg
 #define VN_CMPLXVIS_FN_Lg MkInt(4)
 #else /* VN_CMPLXVIS_FN_Lg */
 #error VN_CMPLXVIS_FN_Lg already defined
-#endif /* !VN_CMPLXVIS_FN_Lg */
+#endif /* ?VN_CMPLXVIS_FN_Lg */
 
 #ifndef VN_CMPLXVIS_FN_Ln
 #define VN_CMPLXVIS_FN_Ln MkInt(8)
 #else /* VN_CMPLXVIS_FN_Ln */
 #error VN_CMPLXVIS_FN_Ln already defined
-#endif /* !VN_CMPLXVIS_FN_Ln */
+#endif /* ?VN_CMPLXVIS_FN_Ln */
 
 #ifndef VN_CMPLXVIS_FN_Log
 #define VN_CMPLXVIS_FN_Log MkInt(12)
 #else /* VN_CMPLXVIS_FN_Log */
 #error VN_CMPLXVIS_FN_Log already defined
-#endif /* !VN_CMPLXVIS_FN_Log */
+#endif /* ?VN_CMPLXVIS_FN_Log */
 
 #ifndef VN_CMPLXVIS_FN_Arg2PI
 #define VN_CMPLXVIS_FN_Arg2PI MkInt(16)
 #else /* VN_CMPLXVIS_FN_Arg2PI */
 #error VN_CMPLXVIS_FN_Arg2PI already defined
-#endif /* !VN_CMPLXVIS_FN_Arg2PI */
+#endif /* ?VN_CMPLXVIS_FN_Arg2PI */
 
 VN_EXTERN_C vn_integer vn_cmplxvis_start(vn_cmplxvis_ctx **const ctx, const char *const fname, const vn_integer act, const vn_integer mA, const vn_integer nA, const vn_integer sx, const vn_integer sy, const vn_integer fname_len);
 VN_EXTERN_C vn_integer vn_cmplxvis_frame(vn_cmplxvis_ctx *const ctx, const vn_complex *const A, const vn_integer ldA);

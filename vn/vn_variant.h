@@ -15,6 +15,7 @@ typedef union {
 
 #ifdef VN_VARIANT_TAG_BITS
 #error VN_VARIANT_TAG_BITS already defined
+#else /* !VN_VARIANT_TAG_BITS */
 #define VN_VARIANT_TAG_BITS 3
 #endif /* ?VN_VARIANT_TAG_BITS */
 

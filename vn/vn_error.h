@@ -9,7 +9,7 @@
 #define VN_BTRACE_BUFSIZ 128
 #else /* VN_BTRACE_BUFSIZ */
 #error VN_BTRACE_BUFSIZ already defined
-#endif /* !VN_BTRACE_BUFSIZ */
+#endif /* ?VN_BTRACE_BUFSIZ */
 
 #ifndef VN_BTRACE
 #define VN_BTRACE {                                        \
@@ -22,7 +22,7 @@
   }
 #else /* VN_BTRACE */
 #error VN_BTRACE already defined
-#endif /* !VN_BTRACE */
+#endif /* ?VN_BTRACE */
 
 #ifndef VN_STOP
 #ifdef _OPENMP
@@ -56,7 +56,7 @@
 #endif /* ?_OPENMP */
 #else /* VN_STOP */
 #error VN_STOP already defined
-#endif /* !VN_STOP */
+#endif /* ?VN_STOP */
 
 #ifndef VN_SYSI_CALL
 #define VN_SYSI_CALL(call) {    \
@@ -65,7 +65,7 @@
   }
 #else /* VN_SYSI_CALL */
 #error VN_SYSI_CALL already defined
-#endif /* !VN_SYSI_CALL */
+#endif /* ?VN_SYSI_CALL */
 
 #ifndef VN_SYSP_CALL
 #define VN_SYSP_CALL(call) {         \
@@ -74,6 +74,6 @@
   }
 #else /* VN_SYSP_CALL */
 #error VN_SYSP_CALL already defined
-#endif /* !VN_SYSP_CALL */
+#endif /* ?VN_SYSP_CALL */
 
 #endif /* !VN_ERROR_H */

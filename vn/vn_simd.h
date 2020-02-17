@@ -25,7 +25,7 @@
 #define VN_SIMD_BYTES_MAX ((VN_SIMD_BITS_MAX) / (CHAR_BIT))
 #else /* VN_SIMD_BYTES_MAX */
 #error VN_SIMD_BYTES_MAX already defined
-#endif /* !VN_SIMD_BYTES_MAX */
+#endif /* ?VN_SIMD_BYTES_MAX */
 
 #ifndef VN_SIMD_BITS
 #define VN_SIMD_BITS VN_SIMD_BITS_MAX
@@ -33,19 +33,19 @@
 #if ((VN_SIMD_BITS) > (VN_SIMD_BITS_MAX))
 #error VN_SIMD_BITS > VN_SIMD_BITS_MAX
 #endif /* VN_SIMD_BITS > VN_SIMD_BITS_MAX */
-#endif /* !VN_SIMD_BITS */
+#endif /* ?VN_SIMD_BITS */
 
 #ifndef VN_SIMD_BYTES
 #define VN_SIMD_BYTES ((VN_SIMD_BITS) / (CHAR_BIT))
 #else /* VN_SIMD_BYTES */
 #error VN_SIMD_BYTES already defined
-#endif /* !VN_SIMD_BYTES */
+#endif /* ?VN_SIMD_BYTES */
 
 #ifndef VN_SIMD_LANES_I
 #define VN_SIMD_LANES_I ((VN_SIMD_BYTES) / (VN_INTEGER_KIND))
 #else /* VN_SIMD_LANES_I */
 #error VN_SIMD_LANES_I already defined
-#endif /* !VN_SIMD_LANES_I */
+#endif /* ?VN_SIMD_LANES_I */
 
 #ifndef VN_SIMD_LANES_R
 #if ((VN_REAL_KIND) == 10)
@@ -56,7 +56,7 @@
 #endif /* ?VN_REAL_KIND */
 #else /* VN_SIMD_LANES_R */
 #error VN_SIMD_LANES_R already defined
-#endif /* !VN_SIMD_LANES_R */
+#endif /* ?VN_SIMD_LANES_R */
 
 #ifndef VN_SIMD_LANES_C
 #if ((VN_REAL_KIND) == 10)
@@ -67,7 +67,7 @@
 #endif /* ?VN_REAL_KIND */
 #else /* VN_SIMD_LANES_C */
 #error VN_SIMD_LANES_C already defined
-#endif /* !VN_SIMD_LANES_C */
+#endif /* ?VN_SIMD_LANES_C */
 
 #ifndef VN_L1D_CLS_B
 #ifdef __SSE__
@@ -77,13 +77,13 @@
 #endif /* __SSE__ */
 #else /* VN_L1D_CLS_B */
 #error VN_L1D_CLS_B already defined
-#endif /* !VN_L1D_CLS_B */
+#endif /* ?VN_L1D_CLS_B */
 
 #ifndef VN_CL1_I
 #define VN_CL1_I ((VN_L1D_CLS_B) / (VN_INTEGER_KIND))
 #else /* VN_CL1_I */
 #error VN_CL1_I already defined
-#endif /* !VN_CL1_I */
+#endif /* ?VN_CL1_I */
 
 #ifndef VN_CL1_R
 #if ((VN_REAL_KIND) == 10)
@@ -93,7 +93,7 @@
 #endif /* ?VN_REAL_KIND */
 #else /* VN_CL1_R */
 #error VN_CL1_R already defined
-#endif /* !VN_CL1_R */
+#endif /* ?VN_CL1_R */
 
 #ifndef VN_CL1_C
 #if ((VN_REAL_KIND) == 10)
@@ -103,7 +103,7 @@
 #endif /* ?VN_REAL_KIND */
 #else /* VN_CL1_C */
 #error VN_CL1_C already defined
-#endif /* !VN_CL1_C */
+#endif /* ?VN_CL1_C */
 
 #ifndef VN_L1D_B
 #ifdef __SSE__
@@ -113,7 +113,7 @@
 #endif /* __SSE__ */
 #else /* VN_L1D_B */
 #error VN_L1D_B already defined
-#endif /* !VN_L1D_B */
+#endif /* ?VN_L1D_B */
 
 /* SMT/hyperthreading */
 
@@ -131,14 +131,14 @@
 #endif /* __MIC__ */
 #else /* VN_MAX_TPC */
 #error VN_MAX_TPC already defined
-#endif /* !VN_MAX_TPC */
+#endif /* ?VN_MAX_TPC */
 
 #ifndef VN_TPC
 #define VN_TPC 1
 #else /* VN_TPC */
 #if (((VN_TPC) < 1) || ((VN_TPC) > (VN_MAX_TPC)))
 #error VN_TPC invalid
+#endif /* VN_TPC */
 #endif /* ?VN_TPC */
-#endif /* !VN_TPC */
 
 #endif /* !VN_SIMD_H */

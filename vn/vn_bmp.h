@@ -9,7 +9,7 @@
 #define VN_RGB_24(r, g, b) (((((r) << 8u) | (g)) << 8u) | (b))
 #else /* VN_RGB_24 */
 #error VN_RGB_24 already defined
-#endif /* !VN_RGB_24 */
+#endif /* ?VN_RGB_24 */
 
 typedef struct
 {

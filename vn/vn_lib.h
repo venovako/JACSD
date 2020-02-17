@@ -12,8 +12,8 @@
 #else /* !__cplusplus */
 #include <complex.h>
 #include <math.h>
-#endif /* __cplusplus */
-#endif /* __ICC */
+#endif /* ?__cplusplus */
+#endif /* ?__ICC */
 
 #ifdef __APPLE__
 #include <alloca.h>
@@ -42,7 +42,7 @@
 #endif /* !USE_PGI */
 #include <ctime>
 #include <cwchar>
-#else /* C11 */
+#else /* !__cplusplus */
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -61,7 +61,7 @@
 #endif /* !USE_PGI */
 #include <time.h>
 #include <wchar.h>
-#endif /* __cplusplus */
+#endif /* ?__cplusplus */
 #include <stdalign.h>
 #include <execinfo.h>
 #include <dlfcn.h>
