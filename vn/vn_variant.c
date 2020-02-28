@@ -222,7 +222,11 @@ int vn_varentry_print(const vn_varentry_t *const e, FILE *const f)
     ret = fprintf(f, "%llu", (e->v).ull);
     break;
   case VN_VARIANT_TAG_d:
+#if (8 > VN_REAL_KIND)
     ret = fprintf(f, "%#.17e", (e->v).d);
+#else /* 8 <= VN_REAL_KIND */
+    ret = fprintf(f, "%s", vn_realtostr((e->v).d));
+#endif /* ?VN_REAL_KIND */
     break;
   }
   return ret;
