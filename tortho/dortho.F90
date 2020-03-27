@@ -1,0 +1,181 @@
+PROGRAM DORTHO
+  USE, INTRINSIC :: ISO_C_BINDING
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
+  USE OMP_LIB
+  USE BINIO
+  IMPLICIT NONE
+
+  INTEGER, PARAMETER :: WP = KIND_QUAD
+  ! Max file name length.
+  INTEGER, PARAMETER :: FNL = 252
+
+  REAL(KIND=c_double), PARAMETER :: D_ZERO = 0.0_c_double
+  REAL(KIND=WP), PARAMETER :: Q_ZERO = 0.0_WP, Q_ONE = 1.0_WP
+
+  REAL(KIND=c_double), ALLOCATABLE, TARGET :: U(:,:)
+  REAL(KIND=WP), ALLOCATABLE :: xU(:,:), xC(:,:), xA(:)
+
+  CHARACTER(LEN=FNL,KIND=c_char) :: FN
+  INTEGER :: M, N, T
+  INTEGER :: FD, SZ, INFO
+  INTEGER :: I, J
+  REAL(KIND=WP) :: CNF
+
+  CALL READCL(FN, M, N, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,'(I2,A)',ADVANCE='NO') INFO, ' '
+     FLUSH(ERROR_UNIT)
+     ERROR STOP 'READCL'
+  END IF
+  T = MAX(INT(OMP_GET_MAX_THREADS()),1)
+
+  ALLOCATE(U(M,N))
+
+  ! Read YU
+  CALL BOPEN_RO((TRIM(FN)//c_char_'.YU'), SZ, FD)
+  IF (FD .LT. 0) ERROR STOP 'BOPEN_YU_RO'
+  CALL BREAD_YU(FD, U, M, N, SZ, INFO)
+  IF (INFO .NE. 0) ERROR STOP 'BREAD_YU'
+  CALL BCLOSE(FD)
+
+  ALLOCATE(xU(M,N))
+
+  !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(I,J)
+  DO J = 1, N
+     DO I = 1, M
+        xU(I,J) = REAL(U(I,J), WP)
+     END DO
+  END DO
+  !$OMP END PARALLEL DO
+
+  DEALLOCATE(U)
+  ALLOCATE(xC(N,N))
+  ALLOCATE(xA(T))
+
+  ! Compute || U^T U - I ||_F
+  CALL PXGEMM(M, N, xU, M, xC, N, xA, T, CNF)
+  WRITE (OUTPUT_UNIT,1) '|| U^T U - I ||_F =', CNF
+  FLUSH(OUTPUT_UNIT)
+
+  DEALLOCATE(xA)
+  DEALLOCATE(xC)
+  DEALLOCATE(xU)
+
+1 FORMAT(A,ES25.17E3)
+
+CONTAINS
+
+  SUBROUTINE PXGEMM(M, N, U, LDU, C, LDC, xA, T, CNF)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(IN) :: M, N, LDU, LDC, T
+    REAL(KIND=WP), INTENT(IN) :: U(LDU,N)
+    REAL(KIND=WP), INTENT(INOUT) :: C(LDC,N)
+    REAL(KIND=WP), INTENT(OUT) :: xA(T), CNF
+
+    REAL(KIND=WP) :: RE
+    INTEGER :: I, J, L
+
+    !$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(I,J,L)
+    DO J = 1, N
+       DO L = 1, N
+          C(L,J) = Q_ZERO
+          !DIR$ VECTOR ALWAYS
+          DO I = 1, M
+             !DIR$ FMA
+             C(L,J) = C(L,J) + U(I,L) * U(I,J)
+          END DO
+          IF (L .EQ. J) C(L,J) = C(L,J) - Q_ONE
+       END DO
+    END DO
+    !$OMP END PARALLEL DO
+
+    xA = Q_ZERO
+    !$OMP PARALLEL DEFAULT(SHARED) PRIVATE(I,J,L, RE)
+    L = INT(OMP_GET_THREAD_NUM()) + 1
+    !$OMP DO
+    DO J = 1, N
+       !DIR$ VECTOR ALWAYS
+       DO I = 1, N
+          RE = REAL(C(I,J), WP)
+          !DIR$ FMA
+          xA(L) = xA(L) + RE*RE
+       END DO
+    END DO
+    !$OMP END DO
+    !$OMP END PARALLEL
+
+    CNF = SQRT(SUM(xA))
+  END SUBROUTINE PXGEMM
+
+  SUBROUTINE READCL(FN, M, N, INFO)
+    IMPLICIT NONE
+
+    CHARACTER(LEN=*,KIND=c_char), INTENT(OUT) :: FN
+    INTEGER, INTENT(OUT) :: M, N, INFO
+
+    CHARACTER(LEN=FNL) :: ARG
+    INTEGER :: TMP
+
+    INFO = 0
+    IF (COMMAND_ARGUMENT_COUNT() .NE. 3) ERROR STOP 'dortho.exe FN M N'
+
+    CALL GET_COMMAND_ARGUMENT(1, ARG, TMP, INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    FN = TRIM(ARG)
+    IF (LEN_TRIM(FN) .LE. 0) THEN
+       INFO = 1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(2, ARG, TMP, INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+    READ (ARG,*) M
+    IF (M .LE. 0) THEN
+       INFO = 2
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(3, ARG, TMP, INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+    READ (ARG,*) N
+    IF (N .LE. 0) THEN
+       INFO = 3
+       RETURN
+    END IF
+  END SUBROUTINE READCL
+
+  SUBROUTINE BREAD_YU(FD, YU, M, N, SZ, INFO)
+    IMPLICIT NONE
+    INTEGER, INTENT(IN) :: FD, M, N
+    REAL(KIND=c_double), INTENT(OUT), TARGET :: YU(M,N)
+    INTEGER, INTENT(OUT) :: SZ, INFO
+
+    INTEGER :: I, J
+
+    SZ = M * C_SIZEOF(D_ZERO)
+    INFO = 0
+
+    !$OMP PARALLEL DEFAULT(NONE) PRIVATE(I,J) SHARED(YU,N,FD,SZ) REDUCTION(MAX:INFO)
+    INFO = 0
+    !$OMP DO
+    DO J = 1, N
+       I = BREAD(FD, C_LOC(YU(1,J)), SZ, (J-1) * SZ)
+       IF (I .NE. SZ) INFO = MAX(INFO,J)
+    END DO
+    !$OMP END DO
+    !$OMP END PARALLEL
+
+    SZ = SZ * N
+  END SUBROUTINE BREAD_YU
+
+END PROGRAM DORTHO
