@@ -6,7 +6,7 @@ MKFS=GNUmakefile ../$(CPU).mk
 
 .PHONY: all help clean
 
-all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe svalserr.exe
+all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe svalserr.exe dtgsja_test.exe
 
 help:
 	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -25,6 +25,9 @@ zerrgsvd.exe: zerrgsvd.F90 binio.mod $(MKFS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
+
+dtgsja_test.exe: dtgsja_test.F90 binio.mod ../vn/vn_blas_f.mod ../vn/vn_timer_f.mod $(MKFS)
+	$(FC) $(FFLAGS) dtgsja_test.F90 binio.o -o$@ $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
