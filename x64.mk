@@ -21,7 +21,7 @@ ifneq ($(ARCH),Darwin)
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 endif # Linux
 FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
-C11FLAGS=$(CPUFLAGS) -std=c11
+C18FLAGS=$(CPUFLAGS) -std=c18
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG) -xHost
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
@@ -56,4 +56,4 @@ LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_inte
 endif # ?Darwin
 LDFLAGS += -lpthread -lm -ldl
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
-CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)
+CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)

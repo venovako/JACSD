@@ -28,7 +28,7 @@ Run ``make`` as follows:
 ```bash
 make [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 ```
-where ``CPU`` should be set for the Intel C/C++ and Fortran compilers to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
+where ``CPU`` should be set for the Intel C/C++ and Fortran compilers (version 19.1+/2020+ recommended) to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
 If ``CPU`` is not set, GNU C/C++/Fortran compilers will be used instead.
 
 GNU Fortran 9 is *not* supported (though it might work)!
