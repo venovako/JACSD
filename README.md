@@ -5,14 +5,19 @@ Available here (for now):
 * a shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas),
 * a GSVD test data generator (tgengsvd) \[2\],
-* a HSVD test data generator (tgenhsvd),
+* a HSVD test data generator (tgenhsvd), \[3\],
+* a skew-symmetric/Hermitian test data generator (tgenskew), \[4\],
 * a Jacobi strategies library (jstrat) \[1,2\],
-* a utility library (vn) \[1,2\],
+* a utility library (vn) \[1,2,3\],
 * and some testing code for the LAPACK CS.
 
-\[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1907.08560](https://arxiv.org/abs/1907.08560) \[math.NA\].
+\[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
 
-\[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1909.00101](https://arxiv.org/abs/1909.00101) \[math.NA\].
+\[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1909.00101](https://arxiv.org/abs/1909.00101 "An implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") \[math.NA\].
+
+\[3\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[2003.06701](https://arxiv.org/abs/2003.06701 "A Kogbetliantz-type algorithm for the hyperbolic SVD") \[math.NA\].
+
+\[4\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper [doi:10.1016/j.amc.2020.125263](https://doi.org/10.1016/j.amc.2020.125263 "The antitriangular factorization of skew-symmetric matrices") with the preprint at arXiv:[1909.00092](https://arxiv.org/abs/1909.00092 "The antitriangular factorization of skew-symmetric matrices") \[math.NA\].
 
 ## Building
 
