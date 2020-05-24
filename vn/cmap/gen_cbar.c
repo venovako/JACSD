@@ -1,9 +1,9 @@
-/* Linux: clang -DNDEBUG -D_GNU_SOURCE -I.. gen_cbar.c -L../.. -lvn -lm */
-/* macOS: clang -DNDEBUG               -I.. gen_cbar.c -L../.. -lvn -lm */
+// Linux: clang -DNDEBUG -D_GNU_SOURCE -I.. gen_cbar.c -L../.. -lvn -lm
+// macOS: clang -DNDEBUG               -I.. gen_cbar.c -L../.. -lvn -lm
 
 #ifndef _GNU_SOURCE
 #define exp10 __exp10
-#endif // !_GNU_SOURCE
+#endif /* !_GNU_SOURCE */
 #include "vn_lib.h"
 
 typedef double (*pfn)(double);
@@ -22,14 +22,14 @@ int main(int argc, char *argv[])
   char *endptr = (char*)NULL;
   const double min_val = strtod(argv[1], &endptr);
 #ifndef NDEBUG
-  (void)fprintf(stdout, "min_val = %#+.17e\n", min_val);
-#endif // !NDEBUG
+  (void)fprintf(stdout, "min_val = %s\n", vn_realtostr(min_val));
+#endif /* !NDEBUG */
   if (*endptr || !isfinite(min_val))
     return EXIT_FAILURE;
   const double max_val = strtod(argv[2], &endptr);
 #ifndef NDEBUG
-  (void)fprintf(stdout, "max_val = %#+.17e\n", max_val);
-#endif // !NDEBUG
+  (void)fprintf(stdout, "max_val = %s\n", vn_realtostr(max_val));
+#endif /* !NDEBUG */
   if (*endptr || !isfinite(max_val))
     return EXIT_FAILURE;
   if (max_val < min_val) {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
   const long n_barsl = strtol(argv[3], &endptr, 0);
 #ifndef NDEBUG
   (void)fprintf(stdout, "n_bars = %ld\n", n_barsl);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
   if (*endptr)
     return EXIT_FAILURE;
   // should be n_barsl <= 0L, but for now handle only the non-degenerate case
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
   const unsigned n_colors = ((max_val == min_val) ? 1u : 254u);
 #ifndef NDEBUG
   (void)fprintf(stdout, "n_colors = %u\n", n_colors);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
   if (n_colors < n_bars) {
     (void)fprintf(stderr, "n_colors < n_bars\n");
     return EXIT_FAILURE;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
   const long widthl = strtol(argv[4], &endptr, 0);
 #ifndef NDEBUG
   (void)fprintf(stdout, "width = %ld\n", widthl);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
   if (*endptr)
     return EXIT_FAILURE;
   if (widthl <= 0L) {
@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
   const long heightl = strtol(argv[5], &endptr, 0);
 #ifndef NDEBUG
   (void)fprintf(stdout, "height = %ld\n", heightl);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
   if (*endptr)
     return EXIT_FAILURE;
   if (heightl < n_barsl) {
@@ -99,11 +99,11 @@ int main(int argc, char *argv[])
   const char *const plt = argv[6];
 #ifndef NDEBUG
   (void)fprintf(stdout, "plt = %s\n", plt);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
   const char *const bmp = argv[7];
 #ifndef NDEBUG
   (void)fprintf(stdout, "bmp = %s\n", bmp);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
 
   pfn fn = id;
   if (!strcmp(argv[8], "lg"))
@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  const char *const fmt = ((argc == 10) ? argv[9] : "%#+.17e");
+  const char *const fmt = ((argc == 10) ? argv[9] : (char*)NULL);
 
   vn_bmp_t cbar = (vn_bmp_t)NULL;
   if (vn_bmp_create(&cbar, height, height, 8u))
@@ -157,13 +157,13 @@ int main(int argc, char *argv[])
                 // Font name is Courier-Bold on Linux, CourierNewB on macOS.
 #ifdef _GNU_SOURCE
                 "Courier-Bold"
-#else // macOS
+#else /* macOS */
                 "CourierNewB"
-#endif // _GNU_SOURCE
+#endif /* ?_GNU_SOURCE */
                 );
   (void)fprintf(stdout, "-pointsize %u ", bar_h);
   (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, (bar_h - color_h));
-  (void)fprintf(stdout, fmt, fn(max_val));
+  (void)(fmt ? fprintf(stdout, fmt, fn(max_val)) : fprintf(stdout, "%s", vn_realtostr(fn(max_val))));
   (void)fprintf(stdout, "\' ");
   const unsigned n_bars_1 = n_bars - 1u;
   const unsigned cpb = 256 / n_bars;
@@ -172,11 +172,11 @@ int main(int argc, char *argv[])
     const unsigned c = 255u - b * cpb;
     const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
     (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, ((b + 1u) * bar_h - color_h));
-    (void)fprintf(stdout, fmt, val);
+    (void)(fmt ? fprintf(stdout, fmt, val) : fprintf(stdout, "%s", vn_realtostr(val)));
     (void)fprintf(stdout, "\' ");
   }
   (void)fprintf(stdout, "-annotate +%u+%u \'>= ", spc_x, (height - color_h));
-  (void)fprintf(stdout, fmt, fn(min_val));
+  (void)(fmt ? fprintf(stdout, fmt, fn(min_val)) : fprintf(stdout, "%s", vn_realtostr(fn(min_val))));
   (void)fprintf(stdout, "\' A%s\n", bmp);
 
   if (vn_bmp_fwrite(cbar, bmp))
