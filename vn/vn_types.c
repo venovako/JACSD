@@ -51,9 +51,7 @@ sNaN x SNaN: NAN, HI(FFFF), LO(C000000000000004)
 #include "vn_lib.h"
 
 #ifdef VN_TEST
-/*
-  On MacOS (Intel64) + Clang, signalling NaNs are quieted.
-*/
+// On macOS (Intel64) + Clang, signalling NaNs are quieted.
 int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 {
   const vn_real
@@ -150,29 +148,32 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 char *vn_realtostr(const vn_real x)
 {
   static __thread char s[VN_REAL_WID + 1];
-  int l = sprintf(s, VN_REAL_FMT, x);
+  int l = sprintf((char*)memset(s, 0, (size_t)(VN_REAL_WID + 1)), VN_REAL_FMT, x);
   if (l <= 0)
     return (char*)NULL;
   char *d = s + VN_REAL_WID;
-  for (--d; isblank(*d); --d)
-    *d = '\0';
   char *e = strrchr(s, 'E');
-  if (!e)
-    return s;
-  e += 2;
-  l = (int)(strchr(e, '\0') - e);
-  if (l >= VN_REAL_EDG)
-    return s;
-  d = s + VN_REAL_WID;
-  e += l;
-  for (int i = 0; i < l; ++i)
-    *--d = *--e;
-  for (--d; isdigit(*d); --d)
-    *d = '0';
+  if (e) {
+    for (--d; isblank(*d); --d)
+      *d = '\0';
+    e += 2;
+    l = (int)(strchr(e, '\0') - e);
+    if (l >= VN_REAL_EDG)
+      return s;
+    d = s + VN_REAL_WID;
+    e += l;
+    for (int i = 0; i < l; ++i)
+      *--d = *--e;
+    for (--d; isdigit(*d); --d)
+      *d = '0';
+  }
+  else
+    for (--d; !*d; --d)
+      *d = ' ';
   return s;
 }
 #if (4 == VN_REAL_KIND)
-/* If payload == 0 and quiet == VN_FALSE, will generate +/-Infinity instead. */
+// If payload == 0 and quiet == VN_FALSE, will generate +/-Infinity instead.
 vn_real MkNaN(const vn_logical sgn, const vn_logical quiet, const vn_integer_4 payload)
 {
   vn_real_view ret;
@@ -191,7 +192,7 @@ vn_real MsNaN(const vn_integer_4 payload)
   return MkNaN((payload < INT32_C(0)), VN_FALSE, payload);
 }
 #elif (8 == VN_REAL_KIND)
-/* If payload == 0 and quiet == VN_FALSE, will generate +/-Infinity instead. */
+// If payload == 0 and quiet == VN_FALSE, will generate +/-Infinity instead.
 vn_real MkNaN(const vn_logical sgn, const vn_logical quiet, const vn_integer_8 payload)
 {
   vn_real_view ret;
@@ -210,7 +211,7 @@ vn_real MsNaN(const vn_integer_8 payload)
   return MkNaN((payload < INT64_C(0)), VN_FALSE, payload);
 }
 #elif (10 == VN_REAL_KIND)
-/* For quiet == VN_TRUE, if payload >= 0, will generate +/-Indefinite. */
+// For quiet == VN_TRUE, if payload >= 0, will generate +/-Indefinite.
 vn_real MkNaN(const vn_logical sgn, const vn_logical quiet, const vn_integer_8 payload)
 {
   vn_real_view ret;
