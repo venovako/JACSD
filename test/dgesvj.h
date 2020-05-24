@@ -1,7 +1,7 @@
 #ifndef DGESVJ_H
 #define DGESVJ_H
 
-/* define to int, long, or long long */
+// define to int, long, or long long
 #ifndef integer
 #define integer int
 #endif /* !integer */

@@ -1,14 +1,14 @@
-/* Intel: icc -std=gnu11 [-DNDEBUG] -D_GNU_SOURCE -O3 -xHost -no-ftz -prec-div -prec-sqrt -mkl=sequential AVX512_DJACV.c -o AVX512_DJACV.exe -L.. -ljstrat */
+// Intel: icc -std=gnu11 [-DNDEBUG] -D_GNU_SOURCE -O3 -xHost -no-ftz -prec-div -prec-sqrt -mkl=sequential AVX512_DJACV.c -o AVX512_DJACV.exe -L.. -ljstrat
 #include <emmintrin.h>
 #include <immintrin.h>
-/* standard headers */
+// standard headers
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-/* Jacobi strategies */
+// Jacobi strategies
 #include "../jstrat/jstrat.h"
 #define VSIZE_B 64
 #define DBLE_SZ 8
@@ -19,7 +19,7 @@
 #define USGN signed
 #else /* unsigneds allowed */
 #define USGN unsigned
-#endif /* SIGNED_INTS_ONLY */
+#endif /* ?SIGNED_INTS_ONLY */
 
 static inline __m256d avx512_ddots(const USGN int m, const double *const restrict Gp, const double *const restrict Gq)
 {
@@ -40,7 +40,7 @@ static inline __m256d avx512_ddots(const USGN int m, const double *const restric
   }
 
   register const double pq = _mm512_reduce_add_pd(Gpq);
-  /* out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|; */
+  // out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|;
   return _mm256_set_pd(fabs(pq), pq, _mm512_reduce_add_pd(Gqq), _mm512_reduce_add_pd(Gpp));
 }
 
@@ -104,10 +104,10 @@ EXTERN_C USGN __Int64 avx512_djacv(const USGN int np, const USGN int m, const do
     register const __m512d Cos = _mm512_div_pd(ones, _mm512_sqrt_pd(_mm512_fmadd_pd(Tan, Tan, ones)));
 
 #ifndef NDEBUG
-    /* Should never happen. */
+    // Should never happen.
     const USGN int Tan0 = _mm512_cmp_pd_mask(Tan, _mm512_setzero_pd(), _CMP_EQ_UQ);
 
-    if (Tan0 == 0x0F) /* all-zero */
+    if (Tan0 == 0x0F) // all-zero
       goto swapme;
 #endif /* !NDEBUG */
 
@@ -246,11 +246,11 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
       *info = -2;
     return 0;
   }
-  /* see DGESVJ, JOBU = 'N', i.e., as if CTOL = M */
+  // see DGESVJ, JOBU = 'N', i.e., as if CTOL = M
   const double tol = m * (DBL_EPSILON / 2);
-  /* const double tol = sqrt((double)m) * (DBL_EPSILON / 2); */
+  // const double tol = sqrt((double)m) * (DBL_EPSILON / 2);
 
-  /* Mantharam-Eberlein-like strategy. */
+  // Mantharam-Eberlein-like strategy.
   jstrat_maneb2 me;
   const int stp = (int)jstrat_init((jstrat_common*)&me, (__Int64)2, (__Int64)n);
   if (stp <= 0) {
@@ -268,7 +268,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
 
   __Int64 piv[n_2][2] __attribute__((aligned(VSIZE_B)));
 
-  /* create the sweep */
+  // create the sweep
   for (USGN int i = 0, r = 0; i < (USGN int)stp; ++i) {
     const int jnr = (int)jstrat_next((jstrat_common*)&me, piv[0]);
     if ((USGN int)jnr != n_2) {
@@ -286,7 +286,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
     }
   }
 
-  /* V = I, see DGESVJ, JOBV = 'V' */
+  // V = I, see DGESVJ, JOBV = 'V'
   dlaset_("A", &n, &n, &zero, &one, V, &ldV);
 
   USGN int s = 0;
@@ -297,7 +297,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
       break;
   } while (r >= ((USGN __Int64)1 << 32));
 
-  /* info = #sweeps */
+  // info = #sweeps
   if (info)
     *info = (int)s;
   return R;

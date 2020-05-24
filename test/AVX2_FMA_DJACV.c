@@ -1,20 +1,20 @@
-/* -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets) */
-/* macOS: clang -std=c11   -Ofast [-DNDEBUG]               -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
-/* macOS: clang -std=c11   -Ofast [-DNDEBUG]               -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl */
-/* Linux: gcc   -std=gnu11 -Ofast [-DNDEBUG]               -march=native                AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
-/* Linux: clang -std=c11   -Ofast [-DNDEBUG] -D_GNU_SOURCE -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas */
-/* -DNDEBUG => time comparison with DGESVJ for small matrix sizes, i.e., for the innermost blocking level */
-/* Intel: icc -std=gnu11 [-DNDEBUG] -D_GNU_SOURCE -O3 -xHost -no-ftz -prec-div -prec-sqrt -mkl=sequential AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat */
+// -march=native must imply at least -march=haswell (AVX2 & FMA instruction subsets)
+// macOS: clang -std=c11   -Ofast [-DNDEBUG]               -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas
+// macOS: clang -std=c11   -Ofast [-DNDEBUG]               -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl
+// Linux: gcc   -std=gnu11 -Ofast [-DNDEBUG]               -march=native                AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas
+// Linux: clang -std=c11   -Ofast [-DNDEBUG] -D_GNU_SOURCE -march=native -integrated-as AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat -L$HOME/OpenBLAS-seq/lib -lopenblas
+// -DNDEBUG => time comparison with DGESVJ for small matrix sizes, i.e., for the innermost blocking level */
+// Intel: icc -std=gnu11 [-DNDEBUG] -D_GNU_SOURCE -O3 -xHost -no-ftz -prec-div -prec-sqrt -mkl=sequential AVX2_FMA_DJACV.c -o AVX2_FMA_DJACV.exe -L.. -ljstrat */
 #include <emmintrin.h>
 #include <immintrin.h>
-/* standard headers */
+// standard headers
 #include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-/* Jacobi strategies */
+// Jacobi strategies
 #include "../jstrat/jstrat.h"
 #define VSIZE_B 32
 #define DBLE_SZ 8
@@ -25,7 +25,7 @@
 #define USGN signed
 #else /* unsigneds allowed */
 #define USGN unsigned
-#endif /* SIGNED_INTS_ONLY */
+#endif /* ?SIGNED_INTS_ONLY */
 
 static inline __m256d avx2_fma_ddots(const USGN int m, const double *const restrict Gp, const double *const restrict Gq)
 {
@@ -50,10 +50,10 @@ static inline __m256d avx2_fma_ddots(const USGN int m, const double *const restr
   register const __m256d GppGpq_ = _mm256_permute4x64_pd(GppGpq, 0xD8);
   register const __m256d GqqGpq_ = _mm256_permute4x64_pd(GqqGpq, 0xD8);
   register const __m256d intm = _mm256_hadd_pd(GppGpq_, GqqGpq_);
-  /*                                          |Gpq|, Gpq, Gqq, Gpp */
+  //                                          |Gpq|, Gpq, Gqq, Gpp
   register const __m256d mask = _mm256_set_pd(-0.0, 0.0, -0.0, -0.0);
 
-  /* out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|; */
+  // out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|;
   return _mm256_andnot_pd(mask, intm);
 }
 
@@ -112,10 +112,10 @@ EXTERN_C USGN __Int64 avx2_fma_djacv(const USGN int np, const USGN int m, const 
     register const __m256d Cos = _mm256_div_pd(ones, _mm256_sqrt_pd(_mm256_fmadd_pd(Tan, Tan, ones)));
 
 #ifndef NDEBUG
-    /* Should never happen. */
+    // Should never happen.
     const USGN int Tan0 = _mm256_movemask_pd(_mm256_cmp_pd(Tan, _mm256_setzero_pd(), _CMP_EQ_UQ));
 
-    if (Tan0 == 0x0F) /* all-zero */
+    if (Tan0 == 0x0F) // all-zero
       goto swapme;
 #endif /* !NDEBUG */
 
@@ -254,11 +254,11 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
       *info = -2;
     return 0;
   }
-  /* see DGESVJ, JOBU = 'N', i.e., as if CTOL = M */
+  // see DGESVJ, JOBU = 'N', i.e., as if CTOL = M
   const double tol = m * (DBL_EPSILON / 2);
-  /* const double tol = sqrt((double)m) * (DBL_EPSILON / 2); */
+  // const double tol = sqrt((double)m) * (DBL_EPSILON / 2);
 
-  /* Mantharam-Eberlein-like strategy. */
+  // Mantharam-Eberlein-like strategy.
   jstrat_maneb2 me;
   const int stp = (int)jstrat_init((jstrat_common*)&me, (__Int64)2, (__Int64)n);
   if (stp <= 0) {
@@ -276,7 +276,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
 
   __Int64 piv[n_2][2] __attribute__((aligned(VSIZE_B)));
 
-  /* create the sweep */
+  // create the sweep
   for (USGN int i = 0, r = 0; i < (USGN int)stp; ++i) {
     const int jnr = (int)jstrat_next((jstrat_common*)&me, piv[0]);
     if ((USGN int)jnr != n_2) {
@@ -294,7 +294,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
     }
   }
 
-  /* V = I, see DGESVJ, JOBV = 'V' */
+  // V = I, see DGESVJ, JOBV = 'V'
   dlaset_("A", &n, &n, &zero, &one, V, &ldV);
 
   USGN int s = 0;
@@ -305,7 +305,7 @@ EXTERN_C USGN __Int64 djacv0(const USGN int n, const USGN int m, double *const r
       break;
   } while (r >= ((USGN __Int64)1 << 32));
 
-  /* info = #sweeps */
+  // info = #sweeps
   if (info)
     *info = (int)s;
   return R;
@@ -342,19 +342,19 @@ static double G[8][8] __attribute__((aligned(VSIZE_B))) =
     {0.0078125, 0.0156250, 0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 1.0000000}
   };
 
-/* static double G[8][8] __attribute__((aligned(VSIZE_B))) = */
-/*   { */
-/*     {9.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000}, */
-/*     {0.5000000, 8.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000}, */
-/*     {0.2500000, 0.5000000, 7.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000}, */
-/*     {0.1250000, 0.2500000, 0.5000000, 6.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000}, */
-/*     {0.0625000, 0.1250000, 0.2500000, 0.5000000, 5.0000000, 0.0000000, 0.0000000, 0.0000000}, */
-/*     {0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 4.0000000, 0.0000000, 0.0000000}, */
-/*     {0.0156250, 0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 3.0000000, 0.0000000}, */
-/*     {0.0078125, 0.0156250, 0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 2.0000000} */
-/*   }; */
+// static double G[8][8] __attribute__((aligned(VSIZE_B))) =
+//   {
+//     {9.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000},
+//     {0.5000000, 8.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000},
+//     {0.2500000, 0.5000000, 7.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000},
+//     {0.1250000, 0.2500000, 0.5000000, 6.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000},
+//     {0.0625000, 0.1250000, 0.2500000, 0.5000000, 5.0000000, 0.0000000, 0.0000000, 0.0000000},
+//     {0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 4.0000000, 0.0000000, 0.0000000},
+//     {0.0156250, 0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 3.0000000, 0.0000000},
+//     {0.0078125, 0.0156250, 0.0312500, 0.0625000, 0.1250000, 0.2500000, 0.5000000, 2.0000000}
+//   };
 
-/* V = I_8 */
+// V = I_8
 static double V[8][8] __attribute__((aligned(VSIZE_B))) =
   {
     {1.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 0.0000000},
@@ -412,7 +412,7 @@ static void init_step(const USGN int step)
     Vq_[j] = V[q];
   }
 }
-#endif /* NDEBUG */
+#endif /* ?NDEBUG */
 
 #ifndef __APPLE__
 #ifdef NDEBUG
@@ -486,6 +486,6 @@ int main(int argc, char* argv[])
       break;
   }
   print_matrices(step);
-#endif /* NDEBUG */
+#endif /* ?NDEBUG */
   return EXIT_SUCCESS;
 }

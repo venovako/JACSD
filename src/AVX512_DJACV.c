@@ -4,7 +4,7 @@
 
 #include <emmintrin.h>
 #include <immintrin.h>
-/* standard headers */
+// standard headers
 #include <assert.h>
 #include <float.h>
 #include <math.h>
@@ -38,7 +38,7 @@ static inline __m256d avx512_ddots(const unsigned m, const double *const restric
   }
 
   register const double pq = _mm512_reduce_add_pd(Gpq);
-  /* out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|; */
+  // out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|;
   return _mm256_set_pd(fabs(pq), pq, _mm512_reduce_add_pd(Gqq), _mm512_reduce_add_pd(Gpp));
 }
 
@@ -88,10 +88,10 @@ static unsigned long avx512_djacv(const unsigned np, const unsigned m, double *c
     register const __m512d Cos = _mm512_div_pd(ones, _mm512_sqrt_pd(_mm512_fmadd_pd(Tan, Tan, ones)));
 
 #ifndef NDEBUG
-    /* Should never happen. */
+    // Should never happen.
     const unsigned Tan0 = (unsigned)_mm512_cmp_pd_mask(Tan, _mm512_setzero_pd(), _CMP_EQ_UQ);
 
-    if (Tan0 == 0x0Fu) /* all-zero */
+    if (Tan0 == 0x0Fu) // all-zero
       goto swapme;
 #endif /* !NDEBUG */
 
@@ -211,7 +211,7 @@ unsigned long avx512_djacv0_execute(const unsigned m, const unsigned n, double *
       break;
   } while (r >= (1ul << 32u));
 
-  /* info = #sweeps */
+  // info = #sweeps
   *info = (int)s;
   return R;
 }

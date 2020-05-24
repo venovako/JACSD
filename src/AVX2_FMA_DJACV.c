@@ -4,7 +4,7 @@
 
 #include <emmintrin.h>
 #include <immintrin.h>
-/* standard headers */
+// standard headers
 #include <assert.h>
 #include <float.h>
 #include <math.h>
@@ -42,10 +42,10 @@ static inline __m256d avx2_fma_ddots(const unsigned m, const double *const restr
   register const __m256d GppGpq_ = _mm256_permute4x64_pd(GppGpq, 0xD8);
   register const __m256d GqqGpq_ = _mm256_permute4x64_pd(GqqGpq, 0xD8);
   register const __m256d intm = _mm256_hadd_pd(GppGpq_, GqqGpq_);
-  /*                                          |Gpq|, Gpq, Gqq, Gpp */
+  //                                          |Gpq|, Gpq, Gqq, Gpp
   register const __m256d mask = _mm256_set_pd(-0.0, 0.0, -0.0, -0.0);
 
-  /* out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|; */
+  // out[0] = Gpp; out[1] = Gqq; out[2] = Gpq; out[3] = |Gpq|;
   return _mm256_andnot_pd(mask, intm);
 }
 
@@ -94,10 +94,10 @@ static unsigned long avx2_fma_djacv(const unsigned np, const unsigned m, double 
     register const __m256d Cos = _mm256_div_pd(ones, _mm256_sqrt_pd(_mm256_fmadd_pd(Tan, Tan, ones)));
 
 #ifndef NDEBUG
-    /* Should never happen. */
+    // Should never happen.
     const unsigned Tan0 = (unsigned)_mm256_movemask_pd(_mm256_cmp_pd(Tan, _mm256_setzero_pd(), _CMP_EQ_UQ));
 
-    if (Tan0 == 0x0Fu) /* all-zero */
+    if (Tan0 == 0x0Fu) // all-zero
       goto swapme;
 #endif /* !NDEBUG */
 
@@ -217,7 +217,7 @@ unsigned long avx2_fma_djacv0_execute(const unsigned m, const unsigned n, double
       break;
   } while (r >= (1ul << 32u));
 
-  /* info = #sweeps */
+  // info = #sweeps
   *info = (int)s;
   return R;
 }
