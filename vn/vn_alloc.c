@@ -26,7 +26,7 @@ void *vn_alloc2(const vn_integer m, const vn_integer n, const size_t szT, vn_int
   void *ret = NULL;
   vn_integer ld_ = MkInt(0);
 
-  /* align to page size, if possible */
+  // align to page size, if possible
   const long page_sz = sysconf(_SC_PAGESIZE);
   const size_t algnB = (size_t)((page_sz <= 0L) ? 0UL : (unsigned long)((page_sz >= VN_ALIGN_BYTES) ? ((page_sz % VN_ALIGN_BYTES) ? (long)VN_ALIGN_BYTES : page_sz) : (long)VN_ALIGN_BYTES));
 

@@ -9,8 +9,8 @@ typedef union {
   double d;
   unsigned long long ull;
   long long ll;
-  char *s; /* string, owned or not */
-  void *p; /* any data, owned or not */
+  char *s; // string, owned or not
+  void *p; // any data, owned or not
 } vn_variant_t;
 
 #ifdef VN_VARIANT_TAG_BITS

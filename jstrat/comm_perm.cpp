@@ -11,47 +11,47 @@
 
 #ifndef N
 #error N not defined
-#endif // !N
+#endif /* !N */
 
 #ifndef Strat
 #error Strat not defined
-#endif // !Strat
+#endif /* !Strat */
 
 #if (N < 2)
 #error N too small
-#endif // ?N
+#endif /* ?N */
 
 #if (N % 2)
 #error N not even
-#endif // ?N
+#endif /* ?N */
 
 // define S to N for a quasi-cyclic strategy
 // e.g., for the modified modulus; else, N-1
 #ifndef S
 #define S ((N) - 1)
-#endif // !S
+#endif /* ?S */
 
 #ifndef S_
 #define S_ ((S) - 1)
-#else // S_
+#else /* S_ */
 #error S_ already defined
-#endif // !S_
+#endif /* ?S_ */
 
 #ifndef P
 #define P ((N) >> 1)
-#else // P
+#else /* P */
 #error P already defined
-#endif // !P
+#endif /* ?P */
 
 #ifndef P_
 #define P_ ((P) - 1)
-#else // P_
+#else /* P_ */
 #error P_ already defined
-#endif // !P_
+#endif /* ?P_ */
 
 #ifndef Int
 #define Int int
-#endif // !Int
+#endif /* !Int */
 typedef Int integer;
 #include "jstrat_ME.h"
 
@@ -61,9 +61,9 @@ typedef unsigned long Int Natural;
 // good for enforcing a particular topology
 #ifndef INF_DISTANCE
 #define INF_DISTANCE 0U
-#else // INF_DISTANCE
+#else /* INF_DISTANCE */
 #error INF_DISTANCE already defined
-#endif // !INF_DISTANCE
+#endif /* ?INF_DISTANCE */
 
 // the matrices of distances from a node i to a node j
 // e.g., given by numa_distance(), in multiples of 10;
@@ -71,21 +71,21 @@ typedef unsigned long Int Natural;
 // of the rank-to-rank transfer time for large buffers
 #ifdef Distance
 #include "distances.h"
-#else // !Distance
+#else /* !Distance */
 static natural Distance[P][P];
-#endif // Distance
+#endif /* ?Distance */
 
 #ifndef INF_COST
 #define INF_COST ~0UL
-#else // INF_COST
+#else /* INF_COST */
 #error INF_COST already defined
-#endif // !INF_COST
+#endif /* ?INF_COST */
 static Natural min_cost = INF_COST;
 #ifndef NO_COST
 #define NO_COST 0UL
-#else // NO_COST
+#else /* NO_COST */
 #error NO_COST already defined
-#endif // !NO_COST
+#endif /* ?NO_COST */
 
 typedef std::pair<integer,integer> pivot;
 typedef std::pair<integer,integer> pcomm;
@@ -108,7 +108,7 @@ static void init_distance()
     for (integer j = 0; j < P; ++j)
       Distance[i][j] = (natural)(abs(i - j) + 1);
 }
-#endif // !Distance
+#endif /* !Distance */
 
 static void init_curr()
 {
@@ -138,7 +138,7 @@ static void int_handler(int)
 {
   CtrlC = true;
 }
-#endif // !NDEBUG
+#endif /* !NDEBUG */
 
 static bool find_best(const integer s, const Natural cost)
 {
@@ -150,7 +150,7 @@ static bool find_best(const integer s, const Natural cost)
     for (integer j = 0; j < P; ++j) {
 #ifndef NDEBUG
       comm_curr[S_][j].second = comm_curr[S_][j].first = 0;
-#endif // !NDEBUG
+#endif /* !NDEBUG */
       for (integer k = 0; k < P; ++k) {
         if (curr[S_][j].first == curr[0][k].first) {
           comm_curr[S_][j].first = -(k + 1);
@@ -201,9 +201,9 @@ static bool find_best(const integer s, const Natural cost)
     }
 #ifdef NDEBUG
     return true;
-#else // !NDEBUG
+#else /* !NDEBUG */
     return (CtrlC ? false : true);
-#endif // NDEBUG
+#endif /* ?NDEBUG */
   }
   else if (s > 0) {
     if (cost > min_cost)
@@ -215,7 +215,7 @@ static bool find_best(const integer s, const Natural cost)
       for (integer j = 0; j < P; ++j) {
 #ifndef NDEBUG
         comm_curr[s_][j].second = comm_curr[s_][j].first = 0;
-#endif // !NDEBUG
+#endif /* !NDEBUG */
         for (integer k = 0; k < P; ++k) {
           if (curr[s_][j].first == curr[s][k].first) {
             comm_curr[s_][j].first = -(k + 1);
@@ -283,12 +283,12 @@ int main(int argc, char* argv[])
 {
 #ifndef Distance
   init_distance();
-#endif // !Distance
+#endif /* !Distance */
   init_curr();
   sort_curr();
 #ifndef NDEBUG
   (void)signal(SIGINT, int_handler);
-#endif // !NDEBUG
+#endif /* !NDEBUG */
   const bool ret = find_best(0, NO_COST);
   if (min_cost == INF_COST)
     goto the_end;
@@ -305,9 +305,9 @@ int main(int argc, char* argv[])
       (void)fprintf(stdout, "{%3u,%3u}", (natural)(best[i][j].first), (natural)(best[i][j].second));
 #elif (N <= 10000)
       (void)fprintf(stdout, "{%4u,%4u}", (natural)(best[i][j].first), (natural)(best[i][j].second));
-#else // N > 10000
+#else /* N > 10000 */
       (void)fprintf(stdout, "{%u,%u}", (natural)(best[i][j].first), (natural)(best[i][j].second));
-#endif // ?N
+#endif /* ?N */
       if (j < P_)
         (void)fprintf(stdout, ",");
     }
@@ -327,9 +327,9 @@ int main(int argc, char* argv[])
       (void)fprintf(stdout, "{%4d,%4d}", comm_best[i][j].first, comm_best[i][j].second);
 #elif (N <= 10000)
       (void)fprintf(stdout, "{%5d,%5d}", comm_best[i][j].first, comm_best[i][j].second);
-#else // N > 10000
+#else /* N > 10000 */
       (void)fprintf(stdout, "{%d,%d}", comm_best[i][j].first, comm_best[i][j].second);
-#endif // ?N
+#endif /* ?N */
       if (j < P_)
         (void)fprintf(stdout, ",");
     }

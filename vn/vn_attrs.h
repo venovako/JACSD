@@ -8,7 +8,7 @@
 #ifndef VN_EXTERN_C
 #ifdef __cplusplus
 #define VN_EXTERN_C extern "C"
-#else /* C11 */
+#else /* C */
 #define VN_EXTERN_C extern
 #endif /* __cplusplus */
 #else /* VN_EXTERN_C */

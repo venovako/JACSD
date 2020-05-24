@@ -15,7 +15,7 @@
 #error VN_BLAS_C already defined
 #endif /* VN_BLAS_C */
 
-#if defined(USE_MKL)
+#ifdef USE_MKL
 #ifndef MKL_Complex8
 #define MKL_Complex8 vn_complex_4
 #endif /* !MKL_Complex8 */
@@ -26,6 +26,10 @@
 #ifndef MKL_ILP64
 #define MKL_ILP64
 #endif /* !MKL_ILP64 */
+#else /* 8 != VN_INTEGER_KIND */
+#ifdef MKL_ILP64
+#undef MKL_ILP64
+#endif /* MKL_ILP64 */
 #endif /* ?VN_INTEGER_KIND */
 #include <mkl.h>
 #if (4 == (VN_REAL_KIND))
@@ -52,7 +56,7 @@
 #endif /* ?VN_REAL_KIND */
 VN_EXTERN_C void VN_BLAS_R(syrk)(const vn_character *const, const vn_character *const, const vn_integer *const, const vn_integer *const, const vn_real *const, const vn_real *const, const vn_integer *const, const vn_real *const, vn_real *const, const vn_integer *const);
 VN_EXTERN_C void VN_BLAS_C(herk)(const vn_character *const, const vn_character *const, const vn_integer *const, const vn_integer *const, const vn_real *const, const vn_complex *const, const vn_integer *const, const vn_real *const, vn_complex *const, const vn_integer *const);
-#endif /* ?BLAS */
+#endif /* ?USE_MKL */
 
 VN_EXTERN_C vn_integer vn_blas_prepare();
 VN_EXTERN_C vn_integer vn_blas_finish(vn_integer *const curr, vn_integer *const nbuf);

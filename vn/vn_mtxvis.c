@@ -189,7 +189,7 @@ vn_integer vn_mtxvis_start(vn_mtxvis_ctx **const ctx, const char *const fname, c
     VN_DEAD_CODE;
   }
 
-  /* allocate C, set ldC */
+  // allocate C, set ldC
   VN_SYSP_CALL((*ctx)->C = VN_ALLOC2(vn_real, (*ctx)->mC, (*ctx)->nC, &((*ctx)->ldC), MkInt(-1)));
 
   const vn_integer asc = ((*ctx)->act) & MkInt(16);
@@ -213,7 +213,7 @@ vn_integer vn_mtxvis_start(vn_mtxvis_ctx **const ctx, const char *const fname, c
 
   const size_t len = 128u * sizeof(char);
   char *const buf = (char*)alloca(len);
-  /* set first 128 B of ctx->out to newlines */
+  // set first 128 B of ctx->out to newlines
   VN_SYSI_CALL(fwrite(memset(buf, (int)'\n', len), sizeof(char), len, (*ctx)->out) != len);
 
   return MkInt(0);
@@ -241,9 +241,9 @@ static inline uint32_t normalise(const vn_real x, const vn_real minv, const vn_r
 {
   if (x == -VN_REAL_INF)
     return 0u;
-  if (!isfinite(x)) /* +Inf || NaN */
+  if (!isfinite(x)) // +Inf || NaN
     return 255u;
-  /* const vn_real y = ((x - minv) / wid) * MkReal(253.0) + MkReal(1.0); */
+  // const vn_real y = ((x - minv) / wid) * MkReal(253.0) + MkReal(1.0);
   const vn_real y = fma((x - minv) / wid, MkReal(253.0), MkReal(1.0));
   return (uint32_t)lround(y);
 }
@@ -317,7 +317,7 @@ vn_integer vn_mtxvis_stop(vn_mtxvis_ctx *const ctx)
           const uint32_t jsx = (uint32_t)j * (uint32_t)(ctx->sx);
           for (vn_integer ii = MkInt(0); ii < ctx->sy; ++ii)
             for (vn_integer jj = MkInt(0); jj < ctx->sx; ++jj)
-              /* mid-value for a constant image */
+              // mid-value for a constant image
               ps(bmp, jsx + (uint32_t)jj, isy + (uint32_t)ii, 127u);
         }
       }

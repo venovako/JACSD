@@ -10,7 +10,7 @@ typedef struct {
 typedef struct {
   void *addr;
   uintptr_t off;
-  char sym[48]; /* min 32 */
+  char sym[48]; // min 32
 } vn_addr_rec_t;
 
 #endif /* !VN_PROFILE_H */

@@ -200,7 +200,7 @@ vn_integer vn_cmplxvis_start(vn_cmplxvis_ctx **const ctx, const char *const fnam
 
   (*ctx)->fn = fn_[((*ctx)->act >> MkInt(2)) & MkInt(7)];
 
-  /* allocate C, set ldC */
+  // allocate C, set ldC
   VN_SYSP_CALL((*ctx)->C = VN_ALLOC2(vn_complex, (*ctx)->mC, (*ctx)->nC, &((*ctx)->ldC), MkInt(-1)));
 
   const vn_integer fnl = ((fname_len > MkInt(7)) ? MkInt(7) : fname_len);
@@ -216,7 +216,7 @@ vn_integer vn_cmplxvis_start(vn_cmplxvis_ctx **const ctx, const char *const fnam
 
   const size_t len = 184u * sizeof(char);
   char *const buf = (char*)alloca(len);
-  /* set first 184 B of ctx->out to newlines */
+  // set first 184 B of ctx->out to newlines
   VN_SYSI_CALL(fwrite(memset(buf, (int)'\n', len), sizeof(char), len, (*ctx)->out) != len);
 
   return MkInt(0);
@@ -244,9 +244,9 @@ static inline uint32_t normalise(const vn_real x, const vn_real minv, const vn_r
 {
   if (x == -VN_REAL_INF)
     return 0u;
-  if (!isfinite(x)) /* +Inf || NaN */
+  if (!isfinite(x)) // +Inf || NaN
     return 255u;
-  /* const vn_real y = ((x - minv) / wid) * MkReal(253.0) + MkReal(1.0); */
+  // const vn_real y = ((x - minv) / wid) * MkReal(253.0) + MkReal(1.0);
   const vn_real y = fma((x - minv) / wid, MkReal(253.0), MkReal(1.0));
   return (uint32_t)lround(y);
 }
@@ -336,7 +336,7 @@ vn_integer vn_cmplxvis_stop(vn_cmplxvis_ctx *const ctx)
       for (vn_integer j = MkInt(0); j < ctx->nC; ++j) {
         const uint32_t jsx = (uint32_t)j * (uint32_t)(ctx->sx);
         VN_SYSI_CALL(fread(&z, sizeof(z), (size_t)1u, ctx->out) != (size_t)1u);
-        /* compute the colour, or use the mid-value for a constant image */
+        // compute the colour, or use the mid-value for a constant image
         const uint32_t cR = ((widR == MkReal(0.0)) ? 127u : normalise(creal(z), creal(ctx->small), widR));
         const uint32_t cA = ((widA == MkReal(0.0)) ? 127u : normalise(cimag(z), cimag(ctx->small), widA));
         for (vn_integer ii = MkInt(0); ii < ctx->sy; ++ii) {

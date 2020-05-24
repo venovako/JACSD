@@ -8,7 +8,7 @@
 VN_EXTERN_C vn_integer_8 vn_get_thread_ns();
 VN_EXTERN_C vn_integer_8 vn_get_sys_us();
 
-/* see Intel(R) 64 and IA-32 Architectures Software Developer's Manual */
+// see Intel(R) 64 and IA-32 Architectures Software Developer's Manual
 
 static inline uint64_t rdtsc_beg(unsigned *const aux)
 {
@@ -67,12 +67,12 @@ static inline uint64_t tsc_get_freq_hz(unsigned *const rem_den)
   if (sysctlbyname("machdep.tsc.frequency", &hz, &hzl, NULL, (size_t)0u))
     perror("tsc_get_freq_hz:sysctlbyname");
 #else /* Linux */
-  /* see https://github.com/trailofbits/tsc_freq_khz */
+  // see https://github.com/trailofbits/tsc_freq_khz
   FILE *const f = fopen("/sys/devices/system/cpu/cpu0/tsc_freq_hz", "r");
   if (f) {
     if (fscanf(f, "%llu", &hz) != 1)
       perror("tsc_get_freq_hz:fscanf");
-    else /* successful read */
+    else // successful read
       hz *= UINT64_C(1000);
     if (fclose(f))
       perror("tsc_get_freq_hz:fclose");
@@ -99,7 +99,7 @@ static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const u
         *rem = lap % freq_hz;
       if (lap >= freq_hz)
         return (lap / (double)freq_hz);
-      else /* lap < freq_hz */
+      else // lap < freq_hz
         return ((double)lap / freq_hz);
     }
     else {

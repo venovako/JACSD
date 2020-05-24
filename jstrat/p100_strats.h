@@ -1,7 +1,7 @@
 #ifndef P100_STRATS_H
 #define P100_STRATS_H
 
-/* P100_4_1 cost = 110 */
+// P100_4_1 cost = 110
 static const integer me0008[   7][   4][2] =
 {
   {{0,7},{1,6},{2,5},{3,4}},

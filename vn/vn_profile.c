@@ -52,8 +52,8 @@ static void VN_NO_PROF bt_destroy()
 
 static void VN_NO_PROF on_prog_exit()
 {
-  /* IT IS ASSUMED THAT atexit() HANDLERS ARE CALLED WHEN EXACTLY ONE THREAD OF */
-  /* THE PROCESS HAS REMAINED RUNNING; OTHERWISE, THIS IS UNSAFE AND DANGEROUS! */
+  // IT IS ASSUMED THAT atexit() HANDLERS ARE CALLED WHEN EXACTLY ONE THREAD OF
+  // THE PROCESS HAS REMAINED RUNNING; OTHERWISE, THIS IS UNSAFE AND DANGEROUS!
   if (pthread_mutex_destroy(&prof_lock))
     perror("pthread_mutex_destroy");
   if (fflush((FILE*)NULL))
@@ -87,7 +87,7 @@ static int VN_NO_PROF bt_insert(void *const addr)
       perror("dladdr");
       goto bt_err;
     }
-    /* replace the node's value with a pointer to a dynamically allocated struct */
+    // replace the node's value with a pointer to a dynamically allocated struct
     vn_addr_rec_t *const ar = (vn_addr_rec_t*)malloc(sizeof(vn_addr_rec_t));
     if (!ar) {
       perror("malloc");
@@ -95,8 +95,8 @@ static int VN_NO_PROF bt_insert(void *const addr)
     }
     ar->addr = addr;
     ar->off = (info.dli_saddr ? ((uintptr_t)addr - (uintptr_t)(info.dli_saddr)) : (uintptr_t)0u);
-    (void)memset(ar->sym, 0, (sizeof(ar->sym)-1));
-    strncpy(ar->sym, (info.dli_sname ? info.dli_sname : ""), sizeof(ar->sym))[sizeof(ar->sym)-1] = '\0';
+    const size_t asl_1 = (sizeof(ar->sym) - 1u);
+    strncpy((char*)memset(ar->sym, 0, asl_1), (info.dli_sname ? info.dli_sname : ""), sizeof(ar->sym))[asl_1] = '\0';
     if (pthread_mutex_lock(&prof_lock))
       perror("pthread_mutex_lock");
     *node = ar;
@@ -154,7 +154,7 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_exit(void *const this_fn, void *c
 {
   vn_prof_rec_t pr;
   pr.this_fn = this_fn;
-  pr.call_site = NULL; /* a marker for func_exit */
+  pr.call_site = NULL; // a marker for func_exit
   if (clock_gettime(CLOCK_MONOTONIC_RAW, &(pr.tv))) {
     perror("clock_gettime");
     return;

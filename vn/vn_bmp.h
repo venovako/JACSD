@@ -14,19 +14,19 @@
 typedef struct
 {
   uint32_t f_size;
-  uint16_t reserved[2]; /* { 0u, 0u } */
+  uint16_t reserved[2]; // { 0u, 0u }
   uint32_t i_offset;
-  uint32_t d_size; /* 40u = BMPINFOHEADER */
+  uint32_t d_size; // 40u = BMPINFOHEADER
   uint32_t width;
   int32_t height;
-  uint16_t planes; /* 1u */
+  uint16_t planes; // 1u
   uint16_t bpp;
-  uint32_t compression; /* 0u */
+  uint32_t compression; // 0u
   uint32_t i_size;
-  int32_t h_ppm; /* 0 */
-  int32_t v_ppm; /* 0 */
-  uint32_t c_palette; /* may be 0u if implied */
-  uint32_t i_colors; /* 0u */
+  int32_t h_ppm; // 0
+  int32_t v_ppm; // 0
+  uint32_t c_palette; // may be 0u if implied
+  uint32_t i_colors; // 0u
 } vn_bmp_header_t;
 
 typedef union

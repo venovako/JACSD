@@ -1,7 +1,7 @@
 #ifndef KNL_STRATS_H
 #define KNL_STRATS_H
 
-/* KNL_QHA2A cost = 246 */
+// KNL_QHA2A cost = 246
 static const integer me0004[   3][   2][2] =
 {
   {{0,3},{1,2}},
@@ -15,7 +15,7 @@ static const integer comm0004[   3][   2][2] =
   {{-1,-2},{ 2, 1}}
 };
 
-/* KNL_SNC2 cost = 1188 */
+// KNL_SNC2 cost = 1188
 static const integer me0008[   7][   4][2] =
 {
   {{0,7},{1,6},{2,5},{3,4}},

@@ -80,7 +80,7 @@
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
-/* for the KNLs */
+// for the KNLs
 #ifdef __AVX512PF__
 #include <hbwmalloc.h>
 #endif /* __AVX512PF__ */

@@ -38,7 +38,7 @@ typedef int32_t vn_integer_4;
 typedef int64_t vn_integer_8;
 typedef intmax_t vn_integer_max;
 
-/* default integer is 64-bit signed */
+// default integer is 64-bit signed
 #ifndef VN_INTEGER_KIND
 #define VN_INTEGER_KIND 8
 #endif /* !VN_INTEGER_KIND */
@@ -171,20 +171,20 @@ typedef vn_logical_8 vn_logical;
 
 typedef float vn_real_4;
 typedef double vn_real_8;
-/* TODO: FIXME for long doubles that are not Intel's 80-bit extended! */
+// TODO: FIXME for long doubles that are not Intel's 80-bit extended!
 typedef long double vn_real_10;
 
 #ifdef __cplusplus
 typedef std::complex<float> vn_complex_4;
 typedef std::complex<double> vn_complex_8;
 typedef std::complex<long double> vn_complex_10;
-#else /* C11 */
+#else /* C */
 typedef float complex vn_complex_4;
 typedef double complex vn_complex_8;
 typedef long double complex vn_complex_10;
 #endif /* ?__cplusplus */
 
-/* default real is double precision */
+// default real is double precision
 #ifndef VN_REAL_KIND
 #define VN_REAL_KIND 8
 #endif /* !VN_REAL_KIND */
@@ -221,7 +221,7 @@ typedef long double complex vn_complex_10;
 #error VN_REAL_EDG already defined
 #endif /* VN_REAL_EDG */
 
-/* (1 + 1 + 1 + VN_REAL_DIG + 1 + 1 + VN_REAL_EDG) */
+// (1 + 1 + 1 + VN_REAL_DIG + 1 + 1 + VN_REAL_EDG)
 #ifdef VN_REAL_WID
 #error VN_REAL_WID already defined
 #endif /* VN_REAL_WID */
@@ -344,8 +344,7 @@ VN_EXTERN_C char *vn_realtostr(const vn_real x);
 #define MkCmplx(r,i) vn_complex((r),(i))
 #endif /* !MkCmplx */
 
-/*
-  Adoi: macros for array offset calculation
+/* Adoi: macros for array offset calculation
   - d: number of array dimensions
   - o: memory order (C or Fortran)
   - i: 0-based or 1-based indexing
@@ -387,7 +386,7 @@ VN_EXTERN_C char *vn_realtostr(const vn_real x);
 #error VN_A2F already defined
 #endif /* !VN_A2F */
 
-/* default array order is column-major (Fortran) */
+// default array order is column-major (Fortran)
 #ifndef MkIx2
 #define MkIx2 VN_A2F
 #endif /* !MkIx2 */

@@ -64,7 +64,7 @@ sig_atomic_t vn_lock(vn_lock_t *const lock)
   }
   if (lock->count >= 0)
     return ++(lock->count);
-  /* else this lock is about to die */
+  // else this lock is about to die
   if ((e = pthread_mutex_unlock(&(lock->mutex))))
     VN_SYSI_CALL(e);
   return -1;

@@ -38,7 +38,7 @@
 #pragma optimize("", off)
 #endif /* USE_INTEL */
 
-/* to avoid pulling in a compiler-dependent memset as a dependency */
+// to avoid pulling in a compiler-dependent memset as a dependency
 static void *mset(void *const p, const unsigned char b, const size_t s)
 {
   if (p)
@@ -47,7 +47,7 @@ static void *mset(void *const p, const unsigned char b, const size_t s)
   return p;
 }
 
-/* to avoid pulling in a compiler-dependent memcpy as a dependency */
+// to avoid pulling in a compiler-dependent memcpy as a dependency
 static void *mcpy(void *const dst, const void *const src, const size_t szb)
 {
   if (dst && src && (dst != src))
@@ -87,7 +87,7 @@ static integer test_maneb2(const integer id, const integer n)
     return ret;
   (void)fprintf(stdout, "{\n\t");
   const integer n_2 = n >> 1;
-  if (id & (integer)1) { /* comm */
+  if (id & (integer)1) { // comm
     integer arr[n_2][2][2];
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = jstrat_next(&js, (integer*)arr);
@@ -100,7 +100,7 @@ static integer test_maneb2(const integer id, const integer n)
     }
     (void)fprintf(stdout, "\b \n}\n");
   }
-  else { /* no comm */
+  else { // no comm
     integer arr[n_2][2];
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = jstrat_next(&js, (integer*)arr);
@@ -124,7 +124,7 @@ static integer test_modmod(const integer id, const integer n)
     return ret;
   (void)fprintf(stdout, "{\n\t");
   const integer n_2 = n >> 1;
-  if (id & (integer)1) { /* comm */
+  if (id & (integer)1) { // comm
     int arr[n_2][2][2][2];
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = -jstrat_next(&js, (integer*)arr);
@@ -137,7 +137,7 @@ static integer test_modmod(const integer id, const integer n)
     }
     (void)fprintf(stdout, "\b \n}\n");
   }
-  else { /* no comm */
+  else { // no comm
     int arr[n_2][2][2];
     for (integer stp = 0; stp < ret; ++stp) {
       const integer r = -jstrat_next(&js, (integer*)arr);
@@ -194,7 +194,7 @@ static integer *me_dup(const integer n1, const integer *const tbl)
   const integer s1 = (n1 - 1);
   const integer p1 = (n1 >> 1);
   const integer n2 = (n1 << 1);
-  /* const integer s2 = (n2 - 1); */
+  // const integer s2 = (n2 - 1);
   const integer p2 = (n2 >> 1);
 
   integer (*const tbl2)[2] = (integer (*)[2])malloc(((size_t)n2 - 1u) * (size_t)n2 * sizeof(integer));
@@ -202,7 +202,7 @@ static integer *me_dup(const integer n1, const integer *const tbl)
     return (integer*)NULL;
   const integer (*const tbl1)[2] = (const integer (*)[2])tbl;
 
-  /* (NE,SW); (NW,SE) */
+  // (NE,SW); (NW,SE)
   for (integer p = 0; p < s1; ++p) {
     const integer q = (p << 1);
     for (integer a = 0; a < p1; ++a) {
@@ -214,21 +214,21 @@ static integer *me_dup(const integer n1, const integer *const tbl)
       const integer j = tbl1[k][1];
       const integer i2 = (i << 1);
       const integer j2 = (j << 1);
-      /* NE */
+      // NE
       tbl2[l][0] = i2;
       tbl2[l][1] = (j2 + 1);
-      /* SW */
+      // SW
       tbl2[l + 1][0] = (i2 + 1);
       tbl2[l + 1][1] = j2;
-      /* NW */
+      // NW
       tbl2[m][0] = i2;
       tbl2[m][1] = j2;
-      /* SE */
+      // SE
       tbl2[m + 1][0] = (i2 + 1);
       tbl2[m + 1][1] = (j2 + 1);
     }
   }
-  /* super-diag */
+  // super-diag
   const integer d = ((n2 - 2) * p2);
   for (integer i = 0; i < p2; ++i)
     tbl2[d + i][1] = ((tbl2[d + i][0] = (i << 1)) + 1);
@@ -286,7 +286,7 @@ static integer *me_p2(const integer n)
     bp = &(ME0038[0][0][0]);
   else if (b == 42)
     bp = &(ME0042[0][0][0]);
-  else /* no such base table */
+  else // no such base table
     return (integer*)NULL;
 
   const size_t bsz = (bp ? (((size_t)b - 1u) * (size_t)b * sizeof(integer)) : (size_t)0u);
@@ -317,14 +317,14 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
     return -3;
   integer info = 0;
 
-  if (!(id & ~(integer)1)) { /* row/col-cyclic */
+  if (!(id & ~(integer)1)) { // row/col-cyclic
     (void)mset(js, 0u, sizeof(jstrat_rolcyc));
-    if (n & (integer)1) /* n odd */
+    if (n & (integer)1) // n odd
       info = n * ((n - 1) >> 1);
-    else /* n even */
+    else // n even
       info = (n >> 1) * (n - 1);
   }
-  else if ((id & ~(integer)1) == 2) { /* Mantharam-Eberlein */
+  else if ((id & ~(integer)1) == 2) { // Mantharam-Eberlein
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)mset(js, 0u, sizeof(jstrat_maneb2));
     const integer *const cur = me_p2(n);
     if (!cur)
@@ -332,9 +332,9 @@ integer jstrat_init(jstrat_common *const js, const integer id, const integer n)
     me2->nxt = me2->tbl = cur;
     info = n - 1;
   }
-  else if ((id & ~(integer)1) == 4) { /* modified modulus */
+  else if ((id & ~(integer)1) == 4) { // modified modulus
     (void)mset(js, 0u, sizeof(jstrat_modmod));
-    if (n & (integer)1) /* n odd */
+    if (n & (integer)1) // n odd
       return -3;
     info = n;
   }
@@ -354,7 +354,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     return -2;
   integer info = 0;
 
-  if (!(js->id)) { /* row-cyclic */
+  if (!(js->id)) { // row-cyclic
     jstrat_rolcyc *const row = (jstrat_rolcyc*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
 
@@ -371,7 +371,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
 
     info = 1;
   }
-  else if (js->id == 1) { /* column-cyclic */
+  else if (js->id == 1) { // column-cyclic
     jstrat_rolcyc *const col = (jstrat_rolcyc*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
 
@@ -389,8 +389,8 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
 
     info = 1;
   }
-  else if (js->id == 2) { /* Mantharam-Eberlein, no comm */
-    /* [RANK][p/q] */
+  else if (js->id == 2) { // Mantharam-Eberlein, no comm
+    // [RANK][p/q]
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
 
@@ -410,8 +410,8 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
 
     info = n_2;
   }
-  else if (js->id == 3) { /* Mantharam-Eberlein */
-    /* [RANK][0=PAIR,1=COMM][p/q] */
+  else if (js->id == 3) { // Mantharam-Eberlein
+    // [RANK][0=PAIR,1=COMM][p/q]
     jstrat_maneb2 *const me2 = (jstrat_maneb2*)js;
     integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
 
@@ -430,10 +430,10 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
       me2->nxt = me2->tbl;
     }
 
-    /* communication */
+    // communication
     for (integer i = 0; i < me2->n; ++i) {
       for (integer j = 0; j < me2->n; ++j) {
-        /* cur[i] sent to nxt[j] */
+        // cur[i] sent to nxt[j]
         if (cur[i] == (me2->nxt)[j]) {
           const integer k_1 = i & (integer)1;
           const integer k_2 = i >> 1;
@@ -447,8 +447,8 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
 
     info = n_2;
   }
-  else if (js->id == 4) { /* modified modulus, no comm */
-    /* [RANK][p/q][0=PAIR,1=SHADOW] */
+  else if (js->id == 4) { // modified modulus, no comm
+    // [RANK][p/q][0=PAIR,1=SHADOW]
     jstrat_modmod *const mom = (jstrat_modmod*)js;
     integer (*const pairs)[2] = (integer (*)[2])arr;
     int (*const ij)[2][2] = (int (*)[2][2])pairs;
@@ -457,13 +457,13 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     const int _n_2 = _n >> 1;
     const int _n1 = _n - 1;
 
-    if (!(mom->stp) && !(mom->swp)) { /* init */
+    if (!(mom->stp) && !(mom->swp)) { // init
       for (int r = 0; r < _n_2; ++r) {
         ij[r][0][1] = ij[r][0][0] = r;
         ij[r][1][1] = ij[r][1][0] = _n1 - r;
       }
     }
-    else { /* step */
+    else { // step
       for (int r = 0; r < _n_2; ++r) {
         if ((ij[r][0][1] + ij[r][1][1]) >= _n1) {
           if (++(ij[r][0][1]) == ij[r][1][1])
@@ -481,8 +481,8 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     }
     info = -_n_2;
   }
-  else if (js->id == 5) { /* modified modulus */
-    /* [RANK][0=PAIR,1=COMM][p/q][0=PAIR,1=SHADOW] */
+  else if (js->id == 5) { // modified modulus
+    // [RANK][0=PAIR,1=COMM][p/q][0=PAIR,1=SHADOW]
     jstrat_modmod *const mom = (jstrat_modmod*)js;
     integer (*const pairs)[2][2] = (integer (*)[2][2])arr;
     int (*const ij)[2][2][2] = (int (*)[2][2][2])pairs;
@@ -491,13 +491,13 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     const int _n_2 = _n >> 1;
     const int _n1 = _n - 1;
 
-    if (!(mom->stp) && !(mom->swp)) { /* init */
+    if (!(mom->stp) && !(mom->swp)) { // init
       for (int r = 0; r < _n_2; ++r) {
         ij[r][0][0][1] = ij[r][0][0][0] = r;
         ij[r][0][1][1] = ij[r][0][1][0] = _n1 - r;
       }
     }
-    else { /* step */
+    else { // step
       for (int r = 0; r < _n_2; ++r) {
         if ((ij[r][0][0][1] + ij[r][0][1][1]) >= _n1) {
           if (++(ij[r][0][0][1]) == ij[r][0][1][1])
@@ -539,7 +539,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
     }
     info = -_n_2;
 
-    /* communication */
+    // communication
     for (int i = 0; i < _n; ++i) {
       for (int j = 0; j < _n; ++j) {
         const int Is1 = i >> 1;
@@ -548,7 +548,7 @@ integer jstrat_next(jstrat_common *const js, integer *const arr)
         const int Ja1 = j & (integer)1;
         const int cur = ij[Is1][0][Ia1][0];
         const int nxt = ij[Js1][1][Ja1][1];
-        /* cur sent to nxt */
+        // cur sent to nxt
         if (cur == nxt) {
           const int k_1 = Ia1;
           const int k_2 = Is1;
