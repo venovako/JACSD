@@ -1,6 +1,3 @@
-// Linux: clang -DNDEBUG -D_GNU_SOURCE -I.. gen_cbar.c -L../.. -lvn -lm
-// macOS: clang -DNDEBUG               -I.. gen_cbar.c -L../.. -lvn -lm
-
 #ifndef _GNU_SOURCE
 #define exp10 __exp10
 #endif /* !_GNU_SOURCE */
@@ -42,7 +39,6 @@ int main(int argc, char *argv[])
 #endif /* !NDEBUG */
   if (*endptr)
     return EXIT_FAILURE;
-  // should be n_barsl <= 0L, but for now handle only the non-degenerate case
   if (n_barsl <= 1L) {
     (void)fprintf(stderr, "n_bars <= 1\n");
     return EXIT_FAILURE;
@@ -56,12 +52,12 @@ int main(int argc, char *argv[])
 #ifndef NDEBUG
   (void)fprintf(stdout, "n_colors = %u\n", n_colors);
 #endif /* !NDEBUG */
-  if (n_colors < n_bars) {
-    (void)fprintf(stderr, "n_colors < n_bars\n");
-    return EXIT_FAILURE;
-  }
   if (n_colors <= 1u) {
     (void)fprintf(stderr, "n_colors <= 1\n");
+    return EXIT_FAILURE;
+  }
+  if (n_colors < n_bars) {
+    (void)fprintf(stderr, "n_colors < n_bars\n");
     return EXIT_FAILURE;
   }
 
@@ -83,7 +79,7 @@ int main(int argc, char *argv[])
   if (*endptr)
     return EXIT_FAILURE;
   if (heightl < n_barsl) {
-    (void)fprintf(stderr, "height <= n_bars\n");
+    (void)fprintf(stderr, "height < n_bars\n");
     return EXIT_FAILURE;
   }
   if (heightl < widthl) {
