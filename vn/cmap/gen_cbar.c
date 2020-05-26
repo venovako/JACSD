@@ -153,7 +153,7 @@ int main(int argc, char *argv[])
           if (((x + x_) < width) && ((y + y_) < height))
             ps(cbar, x + x_, y + y_, 255u);
   const unsigned spc_x = width + color_h;
-  (void)fprintf(stdout, "convert %s -font %s ", bmp,
+  (void)fprintf(stdout, "#!/bin/sh\nconvert %s -font %s ", bmp,
                 // Font name is Courier-Bold on Linux, CourierNewB on macOS.
 #ifdef _GNU_SOURCE
                 "Courier-Bold"
@@ -177,7 +177,7 @@ int main(int argc, char *argv[])
   }
   (void)fprintf(stdout, "-annotate +%u+%u \'>= ", spc_x, (height - color_h));
   (void)(fmt ? fprintf(stdout, fmt, fn(min_val)) : fprintf(stdout, "%s", vn_realtostr(fn(min_val))));
-  (void)fprintf(stdout, "\' A%s\n", bmp);
+  (void)fprintf(stdout, "\' A%s\nmv -fv A%s %s\n", bmp, bmp, bmp);
 
   if (vn_bmp_fwrite(cbar, bmp))
     return EXIT_FAILURE;
