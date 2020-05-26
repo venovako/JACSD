@@ -158,7 +158,7 @@ int main(int argc, char *argv[])
 #endif /* ?_GNU_SOURCE */
                 );
   (void)fprintf(stdout, "-pointsize %u ", bar_h);
-  (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, (bar_h - color_h));
+  (void)fprintf(stdout, "-annotate +%u+%u \'≤", spc_x, (bar_h - color_h));
   (void)(fmt ? fprintf(stdout, fmt, fn(max_val)) : fprintf(stdout, "%s", vn_realtostr(fn(max_val))));
   (void)fprintf(stdout, "\' ");
   const unsigned n_bars_1 = n_bars - 1u;
@@ -167,11 +167,11 @@ int main(int argc, char *argv[])
   for (unsigned b = 1u; b < n_bars_1; ++b) {
     const unsigned c = 255u - b * cpb;
     const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
-    (void)fprintf(stdout, "-annotate +%u+%u \'<= ", spc_x, ((b + 1u) * bar_h - color_h));
+    (void)fprintf(stdout, "-annotate +%u+%u \'≤", spc_x, ((b + 1u) * bar_h - color_h));
     (void)(fmt ? fprintf(stdout, fmt, val) : fprintf(stdout, "%s", vn_realtostr(val)));
     (void)fprintf(stdout, "\' ");
   }
-  (void)fprintf(stdout, "-annotate +%u+%u \'>= ", spc_x, (height - color_h));
+  (void)fprintf(stdout, "-annotate +%u+%u \'≥", spc_x, (height - color_h));
   (void)(fmt ? fprintf(stdout, fmt, fn(min_val)) : fprintf(stdout, "%s", vn_realtostr(fn(min_val))));
   (void)fprintf(stdout, "\' A%s\nmv -fv A%s %s\n", bmp, bmp, bmp);
 
