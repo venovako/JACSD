@@ -49,7 +49,7 @@
 !> \endverbatim
 !>
 !  =====================================================================
-      FUNCTION QDOT(N,SX,INCX,SY,INCY)
+FUNCTION QDOT(N,SX,INCX,SY,INCY)
 !
 !  -- Reference BLAS level1 routine (version 3.4.0) --
 !  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -57,7 +57,7 @@
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   INTEGER, INTENT(IN) :: INCX,INCY,N
 !     ..

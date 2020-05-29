@@ -73,7 +73,7 @@ FUNCTION QLARAN(ISEED)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Array Arguments ..
   INTEGER, INTENT(INOUT) :: ISEED(4)
 !     ..

@@ -118,7 +118,7 @@ SUBROUTINE XLAEV2(A, B, C, RT1, RT2, CS1, SN1)
 !     December 2016
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(OUT) :: CS1, RT1, RT2
   COMPLEX(WP), INTENT(IN) :: A, B, C

@@ -28,8 +28,8 @@ endif # ?CPU
 xCSGEN.exe: xCSGEN.o FTNUTILS.o ftnutils.mod ../libqxblas$(WP)$(PROFILE)$(DEBUG).a $(MKFS)
 	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
-xCSGEN.o: xCSGEN.F90 ../qx_wp.fi ftnutils.mod $(MKFS)
-	$(FC) $(FFLAGS) -I.. -c xCSGEN.F90
+xCSGEN.o: xCSGEN.F90 ftnutils.mod $(MKFS)
+	$(FC) $(FFLAGS) -c xCSGEN.F90
 
 xLACSD.exe: xLACSD.o BSCSD.o BLAS.o FTNUTILS.o $(MKFS)
 	$(FC) $(FFLAGS) xLACSD.o BSCSD.o BLAS.o FTNUTILS.o -o$@ $(LDFLAGS)

@@ -44,7 +44,7 @@
 *__genmod.mod
 *.bin
 *.bin.tcs
-qx_wp.fi
+qx_wp*.fi
 
 # Directories
 .svn

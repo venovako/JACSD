@@ -43,7 +43,7 @@ else # !PROFILE
 endif # ?PROFILE
 endif # ?NDEBUG
 
-qx_wp.fi libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(MKFS)
+libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
 ifdef PROFILE
 	pushd qxblas && $(MAKE) WP=$(WP) CPU=$(CPU) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) && popd

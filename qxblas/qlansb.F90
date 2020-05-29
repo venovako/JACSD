@@ -133,7 +133,7 @@ FUNCTION QLANSB( NORM, UPLO, N, K, AB, LDAB, WORK )
 !     September 2012
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: NORM, UPLO
   INTEGER, INTENT(IN) :: K, LDAB, N

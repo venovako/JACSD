@@ -58,7 +58,7 @@ SUBROUTINE XQSCAL(N,SA,CX,INCX)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(IN) :: SA

@@ -133,7 +133,7 @@ SUBROUTINE QSPR(UPLO,N,ALPHA,X,INCX,AP)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(IN) :: ALPHA
   INTEGER, INTENT(IN) :: INCX,N

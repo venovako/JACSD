@@ -14,7 +14,7 @@ endif # ?NDEBUG
 RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
-CPUFLAGS=-DUSE_PGI -DUSE_X64 -DKIND_QUAD=$(WP) -DOLD_OMP -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -Mnollvm
+CPUFLAGS=-DUSE_PGI -DUSE_X64 -DQX_WP=$(WP) -DOLD_OMP -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -Mnollvm
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -Mnoinline -Minstrument=functions
 endif # PROFILE

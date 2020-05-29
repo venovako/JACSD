@@ -179,7 +179,7 @@ SUBROUTINE XHERK(UPLO,TRANS,N,K,ALPHA,A,LDA,BETA,C,LDC)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(IN) :: ALPHA,BETA

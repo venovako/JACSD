@@ -109,7 +109,7 @@ SUBROUTINE QLACPY( UPLO, M, N, A, LDA, B, LDB )
 !     September 2012
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: UPLO
   INTEGER, INTENT(IN) :: LDA, LDB, M, N

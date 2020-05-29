@@ -12,19 +12,19 @@ help:
 	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 dgenhsvd.exe: dgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) dgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) dgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
 zgenhsvd.exe: zgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) zgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) zgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
 derrhsvd.exe: derrhsvd.F90 binio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) derrhsvd.F90 binio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) derrhsvd.F90 binio.o -o$@ $(LDFLAGS)
 
 zerrhsvd.exe: zerrhsvd.F90 binio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) zerrhsvd.F90 binio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) zerrhsvd.F90 binio.o -o$@ $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
@@ -36,10 +36,10 @@ lamgen.o lamgen.mod: lamgen.F90 seed.mod $(MKFS)
 	$(FC) $(FFLAGS) -c lamgen.F90
 
 indeff.o indeff.mod: indeff.F90 $(MKFS)
-	$(FC) -I.. $(FFLAGS) -c indeff.F90
+	$(FC) $(FFLAGS) -c indeff.F90
 
 datgen.o datgen.mod: datgen.F90 seed.mod indeff.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) -c datgen.F90
+	$(FC) $(FFLAGS) -c datgen.F90
 
 binio.o binio.mod: binio.F90 ../vn/vn_binio_f.mod $(MKFS)
 	$(FC) $(FFLAGS) -c binio.F90

@@ -153,7 +153,7 @@ SUBROUTINE XTRMV(UPLO,TRANS,DIAG,N,A,LDA,X,INCX)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !
 !     .. Scalar Arguments ..
   INTEGER, INTENT(IN) :: INCX,LDA,N

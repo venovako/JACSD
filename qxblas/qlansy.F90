@@ -128,7 +128,7 @@ FUNCTION QLANSY(NORM, UPLO, N, A, LDA, WORK)
 !     November 2015
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: NORM, UPLO
   INTEGER, INTENT(IN) :: LDA, N

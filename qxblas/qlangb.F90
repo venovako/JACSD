@@ -128,7 +128,7 @@ FUNCTION QLANGB(NORM, N, KL, KU, AB, LDAB, WORK)
 !     September 2012
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: NORM
   INTEGER, INTENT(IN) :: KL, KU, LDAB, N

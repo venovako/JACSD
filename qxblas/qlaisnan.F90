@@ -80,7 +80,7 @@ LOGICAL FUNCTION QLAISNAN(SIN1, SIN2)
 !     September 2012
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(IN) :: SIN1, SIN2
 !     ..

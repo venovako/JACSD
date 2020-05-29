@@ -130,7 +130,7 @@
 !> \endverbatim
 !>
 !  =====================================================================
-      SUBROUTINE QSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
+SUBROUTINE QSYR(UPLO,N,ALPHA,X,INCX,A,LDA)
 !
 !  -- Reference BLAS level2 routine (version 3.4.0) --
 !  -- Reference BLAS is a software package provided by Univ. of Tennessee,    --
@@ -138,7 +138,7 @@
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(IN) :: ALPHA
   INTEGER, INTENT(IN) :: INCX,LDA,N

@@ -164,7 +164,7 @@ SUBROUTINE XLAROR(SIDE, INIT, M, N, A, LDA, ISEED, X, INFO)
 !     December 2016
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: INIT, SIDE
   INTEGER, INTENT(IN) :: LDA, M, N

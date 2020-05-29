@@ -118,10 +118,7 @@ all: ../libqxblas$(WP)$(PROFILE)$(DEBUG).a
 help:
 	@echo "gmake [WP=4|8|10|16] [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-prepare:
-	echo '      INTEGER, PARAMETER :: WP =' $(WP) > ../qx_wp.fi
-
-../libqxblas$(WP)$(PROFILE)$(DEBUG).a: prepare $(OBJS) $(MKFS)
+../libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 %.o: %.F90 $(MKFS)
@@ -129,7 +126,6 @@ prepare:
 
 clean:
 	-$(RM) ../libqxblas$(WP)$(PROFILE)$(DEBUG).a
-	-$(RM) ../qx_wp.fi
 	-$(RM) *.optrpt
 	-$(RM) $(OBJS)
 	-$(RM) *__genmod.mod

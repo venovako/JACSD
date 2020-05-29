@@ -4,8 +4,8 @@ PROGRAM DERRHSVD
   USE OMP_LIB
   USE BINIO
   IMPLICIT NONE
-#include "qx_wp.fi"
 
+  INTEGER, PARAMETER :: WP = QX_WP
   ! Max file name length.
   INTEGER, PARAMETER :: FNL = 252
 

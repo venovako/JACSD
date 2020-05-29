@@ -97,7 +97,7 @@ SUBROUTINE QROTMG(SD1,SD2,SX1,SY1,SPARAM)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(INOUT) :: SD1,SD2,SX1
   REAL(WP), INTENT(IN) :: SY1

@@ -57,7 +57,7 @@ SUBROUTINE QROT(N,SX,INCX,SY,INCY,C,S)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   REAL(WP), INTENT(IN) :: C,S
   INTEGER, INTENT(IN) :: INCX,INCY,N

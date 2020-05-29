@@ -80,7 +80,4 @@ SUBROUTINE XERBLA(SRNAME, INFO)
   STOP
 !
 9 FORMAT(' ** On entry to ', A, ' parameter number ', I2, ' had an illegal value')
-!
-!     End of XERBLA
-!
 END SUBROUTINE XERBLA

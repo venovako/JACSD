@@ -95,7 +95,7 @@ SUBROUTINE XLARNV(IDIST, ISEED, N, X)
 !     December 2016
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   INTEGER, INTENT(IN) :: IDIST, N
 !     ..

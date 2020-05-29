@@ -57,7 +57,7 @@ INTEGER FUNCTION IXAMAX(N,CX,INCX)
 !     November 2015
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !
 !     .. Scalar Arguments ..
   INTEGER, INTENT(IN) :: INCX,N

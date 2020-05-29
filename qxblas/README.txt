@@ -7,10 +7,8 @@ nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]
 
 Output:
 
-../qx_wp.fi
 ../libqxblas$(WP)$(DEBUG).a
 (*nix, or)
-..\qx_wp.fi
 ..\qxblas$(WP)$(DEBUG).lib
 (Windows)
 where $(WP) is as above, and $(DEBUG) is either an empty string for

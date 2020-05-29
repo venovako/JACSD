@@ -120,7 +120,7 @@ FUNCTION QLANGE( NORM, M, N, A, LDA, WORK )
 !     September 2012
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: NORM
   INTEGER, INTENT(IN) :: LDA, M, N

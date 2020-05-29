@@ -79,7 +79,7 @@ FUNCTION QLARND(IDIST, ISEED)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   INTEGER, INTENT(IN) :: IDIST
 !     ..

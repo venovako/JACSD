@@ -73,7 +73,7 @@ FUNCTION QLAMCH(CMACH)
 !     November 2011
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: CMACH
 !     ..

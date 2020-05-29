@@ -107,7 +107,7 @@ SUBROUTINE QLAGSY(N, K, D, A, LDA, ISEED, WORK, INFO)
 !     December 2016
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   INTEGER, INTENT(IN) :: N, K, LDA
   INTEGER, INTENT(OUT) :: INFO

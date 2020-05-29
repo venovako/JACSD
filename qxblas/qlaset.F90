@@ -116,7 +116,7 @@ SUBROUTINE QLASET( UPLO, M, N, ALPHA, BETA, A, LDA )
 !     November 2015
 !
   IMPLICIT NONE
-  INCLUDE 'qx_wp.fi'
+  INTEGER, PARAMETER :: WP = QX_WP
 !     .. Scalar Arguments ..
   CHARACTER, INTENT(IN) :: UPLO
   INTEGER, INTENT(IN) :: LDA, M, N

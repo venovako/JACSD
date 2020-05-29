@@ -3,7 +3,9 @@
 ! real, complex, and/or imaginary arguments/values have the same kind.
 MODULE VN_IMAGINARY_F
 #ifndef KIND_QUAD
+#ifndef QX_WP
   USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: REAL128
+#endif
 #endif
   IMPLICIT NONE
 
@@ -22,7 +24,11 @@ MODULE VN_IMAGINARY_F
 #ifdef KIND_QUAD
   INTEGER, PARAMETER, PRIVATE :: QWP = KIND_QUAD
 #else
+#ifdef QX_WP
+  INTEGER, PARAMETER, PRIVATE :: QWP = QX_WP
+#else
   INTEGER, PARAMETER, PRIVATE :: QWP = REAL128
+#endif
 #endif
 
   REAL(KIND=SWP), PARAMETER, PRIVATE :: S_ZERO = 0.0_SWP
