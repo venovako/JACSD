@@ -12,23 +12,24 @@ DEBUG=
 DEBUG=d
 !ENDIF # ?NDEBUG
 
+LIBS=qxblas$(WP)$(DEBUG).lib
+
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FC=ifort
 
-FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DOLD_OMP /Qopenmp /standard-semantics #/4I8
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DOLD_OMP /DQX_WP=$(WP) /Qopenmp /standard-semantics #/4I8
 !IFDEF NDEBUG
-LIBS=qxblas$(WP)$(DEBUG).lib
-OPTFLAGS=/O$(NDEBUG) /QxHost
+OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
 FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
-LIBFLAGS=/I.. /Qmkl /libs:dll /threads
+LIBFLAGS=/Qmkl /libs:dll /threads
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
-OPTFLAGS=/O$(DEBUG) /QxHost
+OPTFLAGS=/O$(DEBUG) /QxHost /Qopt-multi-version-aggressive
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
-FPUFLAGS=/Qfma /fp:source /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
-LIBFLAGS=/I.. /Qmkl /libs:dll /threads /dbglibs
+FPUFLAGS=/fp:source /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
+LIBFLAGS=/Qmkl /libs:dll /threads /dbglibs
 LDFLAGS=/link /DEBUG /LIBPATH:.. $(LIBS)
 !ENDIF # ?NDEBUG
 FFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
@@ -60,5 +61,7 @@ clean:
 	-$(RM) *.exe
 	-$(RM) *.mod
 	-$(RM) *.obj
+	-$(RM) *.pdb
 	-$(RM) *.optrpt
-	-$(RM) *__genmod.*
+	-$(RM) *__genmod.f90
+	-$(RM) *__genmod.mod
