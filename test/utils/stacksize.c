@@ -9,9 +9,9 @@ static size_t siz;
 static int err;
 
 int main(void) {
-  (void)memset(&rl, 0, sizeof(rl));
-  if ((err = getrlimit(RLIMIT_STACK, &rl))) {
-    (void)fprintf(stderr, "%d ", err);
+  (void)printf("getrlimit(RLIMIT_STACK) = %d\n",
+               (err = getrlimit(RLIMIT_STACK, (struct rlimit*)memset(&rl, 0, sizeof(rl)))));
+  if (err) {
     perror("getrlimit");
     return EXIT_FAILURE;
   }

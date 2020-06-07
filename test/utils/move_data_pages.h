@@ -1,6 +1,8 @@
 #ifndef MOVE_DATA_PAGES_H
 #define MOVE_DATA_PAGES_H
 
+#include <stdlib.h>
+
 // C/C++ interface
 extern
 #ifdef __cplusplus
@@ -13,6 +15,6 @@ extern
 #ifdef __cplusplus
 "C"
 #endif /* __cplusplus */
-void move_data_pages_(void *const addr, const size_t *const sz, const int *const to_node, long *const info);
+void move_data_pages_(void *const addr, const size_t sz[static 1], const int to_node[static 1], long info[static 1]);
 
 #endif /* !MOVE_DATA_PAGES_H */
