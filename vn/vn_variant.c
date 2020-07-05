@@ -232,9 +232,64 @@ int vn_varentry_print(const vn_varentry_t *const e, FILE *const f)
   return ret;
 }
 
+vn_varentry_t *vn_varentry_read(FILE *const f, const int t)
+{
+  vn_varentry_t *e = (vn_varentry_t*)NULL;
+  if (!f)
+    return e;
+  if (!(e = (vn_varentry_t*)calloc(1u, sizeof(vn_varentry_t))))
+    return e;
+    
+  switch (t) {
+  case VN_VARIANT_TAG_S:
+    // TODO: FIX this UNSAFE assumption on the maximal string length
+    if (!(e->v.s = (char*)calloc(512u, sizeof(char))))
+      free(e);
+    else if (1 != fscanf(f,
+#ifdef VN_NO_STR_CSV_QUOTE
+                         " %[^,\n]"
+#else /* !VN_NO_STR_CSV_QUOTE */
+                         " \"%[^\"]\""
+#endif /* ?VN_NO_STR_CSV_QUOTE */
+                         , e->v.s)) {
+      free(e->v.s);
+      free(e);
+      e = (vn_varentry_t*)NULL;
+    }
+    break;
+  case VN_VARIANT_TAG_ll:
+    if (1 != fscanf(f, " %lld", &(e->v.ll))) {
+      free(e);
+      e = (vn_varentry_t*)NULL;
+    }
+    break;
+  case VN_VARIANT_TAG_ull:
+    if (1 != fscanf(f, " %llu", &(e->v.ull))) {
+      free(e);
+      e = (vn_varentry_t*)NULL;
+    }
+    break;
+  case VN_VARIANT_TAG_d:
+    if (1 != fscanf(f, " %lE", &(e->v.d))) {
+      free(e);
+      e = (vn_varentry_t*)NULL;
+    }
+    break;
+  default:
+    free(e);
+    e = (vn_varentry_t*)NULL;
+  }
+
+  if (e) {
+    (void)vn_varentry_set_t(e, t);
+    (void)fscanf(f, " ,");
+  }
+  return e;
+}
+
 vn_varentry_t *vn_varstack_push_ptr(vn_varentry_t *const e, void *const p, const bool o)
 {
-  vn_varentry_t *const h = calloc(1u, sizeof(vn_varentry_t));
+  vn_varentry_t *const h = (vn_varentry_t*)calloc(1u, sizeof(vn_varentry_t));
   (void)vn_varentry_set_ptr(h, p, o);
   if (e)
     (void)vn_varentry_set_p(h, e);
@@ -243,7 +298,7 @@ vn_varentry_t *vn_varstack_push_ptr(vn_varentry_t *const e, void *const p, const
 
 vn_varentry_t *vn_varstack_push_str(vn_varentry_t *const e, const char *const s, const int oc)
 {
-  vn_varentry_t *const h = calloc(1u, sizeof(vn_varentry_t));
+  vn_varentry_t *const h = (vn_varentry_t*)calloc(1u, sizeof(vn_varentry_t));
   if (vn_varentry_set_str(h, s, oc)) {
     free(h);
     return (vn_varentry_t*)NULL;
@@ -255,7 +310,7 @@ vn_varentry_t *vn_varstack_push_str(vn_varentry_t *const e, const char *const s,
 
 vn_varentry_t *vn_varstack_push_int(vn_varentry_t *const e, const long long ll)
 {
-  vn_varentry_t *const h = calloc(1u, sizeof(vn_varentry_t));
+  vn_varentry_t *const h = (vn_varentry_t*)calloc(1u, sizeof(vn_varentry_t));
   (void)vn_varentry_set_int(h, ll);
   if (e)
     (void)vn_varentry_set_p(h, e);
@@ -264,7 +319,7 @@ vn_varentry_t *vn_varstack_push_int(vn_varentry_t *const e, const long long ll)
 
 vn_varentry_t *vn_varstack_push_nat(vn_varentry_t *const e, const unsigned long long ull)
 {
-  vn_varentry_t *const h = calloc(1u, sizeof(vn_varentry_t));
+  vn_varentry_t *const h = (vn_varentry_t*)calloc(1u, sizeof(vn_varentry_t));
   (void)vn_varentry_set_nat(h, ull);
   if (e)
     (void)vn_varentry_set_p(h, e);
@@ -273,7 +328,7 @@ vn_varentry_t *vn_varstack_push_nat(vn_varentry_t *const e, const unsigned long 
 
 vn_varentry_t *vn_varstack_push_flt(vn_varentry_t *const e, const double d)
 {
-  vn_varentry_t *const h = calloc(1u, sizeof(vn_varentry_t));
+  vn_varentry_t *const h = (vn_varentry_t*)calloc(1u, sizeof(vn_varentry_t));
   (void)vn_varentry_set_flt(h, d);
   if (e)
     (void)vn_varentry_set_p(h, e);

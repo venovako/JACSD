@@ -95,6 +95,7 @@ VN_EXTERN_C unsigned long long vn_varentry_get_nat(const vn_varentry_t *const);
 VN_EXTERN_C double vn_varentry_get_flt(const vn_varentry_t *const);
 
 VN_EXTERN_C int vn_varentry_print(const vn_varentry_t *const, FILE *const);
+VN_EXTERN_C vn_varentry_t *vn_varentry_read(FILE *const, const int);
 
 VN_EXTERN_C vn_varentry_t *vn_varstack_push_ptr(vn_varentry_t *const, void *const, const bool);
 VN_EXTERN_C vn_varentry_t *vn_varstack_push_str(vn_varentry_t *const, const char *const, const int);
