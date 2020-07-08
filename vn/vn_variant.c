@@ -223,7 +223,7 @@ int vn_varentry_print(const vn_varentry_t *const e, FILE *const f)
     break;
   case VN_VARIANT_TAG_d:
 #if (8 > VN_REAL_KIND)
-    ret = fprintf(f, "%#.17e", (e->v).d);
+    ret = fprintf(f, "%# .17e", (e->v).d);
 #else /* 8 <= VN_REAL_KIND */
     ret = fprintf(f, "%s", vn_realtostr((e->v).d));
 #endif /* ?VN_REAL_KIND */
@@ -242,20 +242,22 @@ vn_varentry_t *vn_varentry_read(FILE *const f, const int t)
     
   switch (t) {
   case VN_VARIANT_TAG_S:
-    // TODO: FIX this UNSAFE assumption on the maximal string length
+    // TODO: increase the maximal string length if necessary
     if (!(e->v.s = (char*)calloc(512u, sizeof(char))))
       free(e);
     else if (1 != fscanf(f,
 #ifdef VN_NO_STR_CSV_QUOTE
-                         " %[^,\n]"
+                         " %511[^,\n]"
 #else /* !VN_NO_STR_CSV_QUOTE */
-                         " \"%[^\"]\""
+                         " \"%511[^\"]\""
 #endif /* ?VN_NO_STR_CSV_QUOTE */
                          , e->v.s)) {
       free(e->v.s);
       free(e);
       e = (vn_varentry_t*)NULL;
     }
+    else // shrink the allocation if possible
+      e->v.s = (char*)realloc(e->v.s, (strlen(e->v.s) + 1u));
     break;
   case VN_VARIANT_TAG_ll:
     if (1 != fscanf(f, " %lld", &(e->v.ll))) {
