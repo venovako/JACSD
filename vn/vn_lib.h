@@ -37,9 +37,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#ifndef USE_PGI
+#ifndef USE_NVIDIA
 #include <ctgmath>
-#endif /* !USE_PGI */
+#endif /* !USE_NVIDIA */
 #include <ctime>
 #include <cwchar>
 #else /* !__cplusplus */
@@ -56,9 +56,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef USE_PGI
+#ifndef USE_NVIDIA
 #include <tgmath.h>
-#endif /* !USE_PGI */
+#endif /* !USE_NVIDIA */
 #include <time.h>
 #include <wchar.h>
 #endif /* ?__cplusplus */

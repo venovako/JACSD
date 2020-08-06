@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 ARCH=$(shell uname)
 ifneq ($(ARCH),Linux)
-$(error PGI is supported on Linux only)
+$(error NVIDIA HPC SDK is supported on Linux only)
 endif # !Linux
 ifndef WP
 WP=8
@@ -14,16 +14,16 @@ endif # ?NDEBUG
 RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
-CPUFLAGS=-DUSE_PGI -DUSE_X64 -DQX_WP=$(WP) -DOLD_OMP -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -Mnollvm
+CPUFLAGS=-DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -DOLD_OMP -m64 -mp -KPIC -Mframe -Meh_frame -Minfo
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -Mnoinline -Minstrument=functions
 endif # PROFILE
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 FORFLAGS=$(CPUFLAGS) -i8 -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
 C11FLAGS=$(CPUFLAGS) -c11
-CC=pgcc
-FC=pgfortran
-CXX=pgc++
+CC=nvc
+FC=nvfortran
+CXX=nvc++
 FPUFLAGS=-Kieee -Mfma -Mnodaz -Mnoflushz -Mnofpapprox -Mnofprelaxed
 ifdef NDEBUG
 OPTFLAGS=-O$(NDEBUG)
