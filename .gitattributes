@@ -1,5 +1,8 @@
 *.h linguist-language=C
-*.mk linguist-language=Makefile
 jstrat/jstrat_ME.h linguist-generated=true
 jstrat/knl_strats.h linguist-generated=true
 jstrat/p100_strats.h linguist-generated=true
+vn/cmap/plt4/*.txt linguist-generated=true
+vn/cmap/plt8/*.txt linguist-generated=true
+test/*.csv linguist-generated=true
+test/*.txt linguist-generated=true
