@@ -50,17 +50,15 @@ static void print_addrs(const void *const this_fn, const void *const call_site)
   (void)fprintf(stdout, "\n");
 }
 
-static void print_times(const struct timespec *const a, const struct timespec *const b)
+static void print_times(const long a, const long b)
 {
-  const long long at = (a ? (a->tv_sec * 1000000000ll + a->tv_nsec) : 0ll);
-  const long long bt = (b ? (b->tv_sec * 1000000000ll + b->tv_nsec) : 0ll);
-  const long long ns = (b ? (bt - at) : 0ll);
-  (void)fprintf(stdout, "%lld,%lld,%lld,", at, bt, ns);
+  const long ns = (b ? (b - a) : 0L);
+  (void)fprintf(stdout, "%ld,%ld,%ld,", a, b, ns);
 }
 
 static void print_call(const vn_prof_rec_t *const a, const vn_prof_rec_t *const b)
 {
-  print_times(&(a->tv), (b ? &(b->tv) : (const struct timespec*)NULL));
+  print_times(a->tns, (b ? b->tns : 0L));
   print_addrs(a->this_fn, a->call_site);
 }
 
