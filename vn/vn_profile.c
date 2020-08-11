@@ -30,7 +30,7 @@ static int VN_NO_PROF bt_comp(const void *a, const void *b)
 static void VN_NO_PROF bt_action(const void *node, VISIT order, int level)
 {
   const vn_addr_rec_t *const ar = *(const vn_addr_rec_t**)node;
-   switch (order) {
+  switch (order) {
   case postorder:
   case leaf:
     if (fwrite(ar, sizeof(*ar), 1, bt_file) != 1)
@@ -82,8 +82,7 @@ static int VN_NO_PROF bt_insert(void *const addr)
   }
   if ((const void*)*node == (const void*)&addr) {
     Dl_info info;
-    (void)memset(&info, 0, sizeof(info));
-    if (addr && !dladdr(addr, &info)) {
+    if (addr && !dladdr(addr, (Dl_info*)memset(&info, 0, sizeof(info)))) {
       perror("dladdr");
       goto bt_err;
     }
@@ -140,10 +139,13 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_enter(void *const this_fn, void *
   vn_prof_rec_t pr;
   pr.this_fn = this_fn;
   pr.call_site = call_site;
-  if (clock_gettime(CLOCK_MONOTONIC_RAW, &(pr.tv))) {
+  struct timespec tv;
+  if (clock_gettime(CLOCK_MONOTONIC_RAW, &tv)) {
     perror("clock_gettime");
     return;
   }
+  pr.tns = t2ns(&tv);
+
   if (fwrite(&pr, sizeof(pr), 1, prof_file) != 1) {
     perror("fwrite");
     return;
@@ -155,10 +157,13 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_exit(void *const this_fn, void *c
   vn_prof_rec_t pr;
   pr.this_fn = this_fn;
   pr.call_site = NULL; // a marker for func_exit
-  if (clock_gettime(CLOCK_MONOTONIC_RAW, &(pr.tv))) {
+  struct timespec tv;
+  if (clock_gettime(CLOCK_MONOTONIC_RAW, &tv)) {
     perror("clock_gettime");
     return;
   }
+  pr.tns = t2ns(&tv);
+
   if (fwrite(&pr, sizeof(pr), 1, prof_file) != 1) {
     perror("fwrite");
     return;

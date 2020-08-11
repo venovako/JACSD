@@ -4,7 +4,7 @@
 typedef struct {
   void *this_fn;
   void *call_site;
-  struct timespec tv;
+  long tns;
 } vn_prof_rec_t;
 
 typedef struct {

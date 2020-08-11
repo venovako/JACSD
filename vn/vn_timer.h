@@ -10,7 +10,7 @@ VN_EXTERN_C vn_integer_8 vn_get_sys_us();
 
 // see Intel(R) 64 and IA-32 Architectures Software Developer's Manual
 
-static inline uint64_t rdtsc_beg(unsigned *const aux)
+static inline uint64_t VN_NO_PROF rdtsc_beg(unsigned *const aux)
 {
 #ifdef USE_NVIDIA
   return UINT64_C(0);
@@ -20,7 +20,7 @@ static inline uint64_t rdtsc_beg(unsigned *const aux)
 #endif /* ?USE_NVIDIA */
 }
 
-static inline uint64_t rdtsc_end(unsigned *const aux)
+static inline uint64_t VN_NO_PROF rdtsc_end(unsigned *const aux)
 {
 #ifdef USE_NVIDIA
   return UINT64_C(0);
@@ -31,7 +31,7 @@ static inline uint64_t rdtsc_end(unsigned *const aux)
 #endif /* ?USE_NVIDIA */
 }
 
-static inline uint64_t tsc_get_freq_hz(unsigned *const rem_den)
+static inline uint64_t VN_NO_PROF tsc_get_freq_hz(unsigned *const rem_den)
 {
 #ifdef TSC_FREQ_HZ
 #if (TSC_FREQ_HZ == 0ull)
@@ -58,7 +58,7 @@ static inline uint64_t tsc_get_freq_hz(unsigned *const rem_den)
     rem_den[0u] = 0u;
     rem_den[1u] = 0u;
   }
-  return TSC_FREQ_HZ;
+  return (TSC_FREQ_HZ);
 #endif /* ?TSC_FREQ_HZ */
 #else /* !TSC_FREQ_HZ */
   uint64_t hz = UINT64_C(0);
@@ -88,7 +88,7 @@ static inline uint64_t tsc_get_freq_hz(unsigned *const rem_den)
 #endif /* ?TSC_FREQ_HZ */
 }
 
-static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem)
+static inline double VN_NO_PROF tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem)
 {
   if (freq_hz) {
     if (end >= beg) {
@@ -117,6 +117,16 @@ static inline double tsc_lap(const uint64_t freq_hz, const uint64_t beg, const u
       *rem = UINT64_C(0);
     return MqNaN(0);
   }
+}
+
+static inline long VN_NO_PROF t2ns(const struct timespec tp[static 1])
+{
+  return (tp->tv_sec * 1000000000L + tp->tv_nsec);
+}
+
+static inline long VN_NO_PROF t2us(const struct timeval tp[static 1])
+{
+  return (tp->tv_sec * 1000000L + tp->tv_usec);
 }
 
 VN_EXTERN_C uint64_t rdtsc_beg_(unsigned *const aux);

@@ -10,18 +10,14 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 #else /* !VN_TEST */
 vn_integer_8 vn_get_thread_ns()
 {
-  struct timespec tp;
-  if (clock_gettime(CLOCK_THREAD_CPUTIME_ID, &tp))
-    return (vn_integer_8)-1;
-  return (tp.tv_sec * (vn_integer_8)1000000000 + tp.tv_nsec);
+  struct timespec t;
+  return (vn_integer_8)(clock_gettime(CLOCK_THREAD_CPUTIME_ID, &t) ? -1L : t2ns(&t));
 }
 
 vn_integer_8 vn_get_sys_us()
 {
-  struct timeval tv;
-  if (gettimeofday(&tv, NULL))
-    return (vn_integer_8)-1;
-  return (tv.tv_sec * (vn_integer_8)1000000 + tv.tv_usec);
+  struct timeval t;
+  return (vn_integer_8)(gettimeofday(&t, NULL) ? -1L : t2us(&t));
 }
 
 uint64_t rdtsc_beg_(unsigned *const aux)
