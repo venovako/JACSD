@@ -114,9 +114,12 @@ int main(int argc, char *argv[])
   }
 
   const char *const fmt = ((argc == 10) ? argv[9] : (char*)NULL);
+  const unsigned color_h = height / 256u;
+  const unsigned bar_h = height / n_bars;
+  const unsigned bar_h2 = bar_h / 2u;
 
   vn_bmp_t cbar = (vn_bmp_t)NULL;
-  if (vn_bmp_create(&cbar, height, height, 8u))
+  if (vn_bmp_create(&cbar, height, height + bar_h, 8u))
     return EXIT_FAILURE;
   if (vn_bmp_read_cmap(cbar, plt))
     return EXIT_FAILURE;
@@ -129,25 +132,23 @@ int main(int argc, char *argv[])
   if (vn_bmp_set_palette_color(cbar, 255u, 0u))
     return EXIT_FAILURE;
 
-  const unsigned color_h = height / 256u;
   unsigned y = 0u;
   for (int c = 255; c >= 0; --c)
     for (unsigned y_ = 0u; y_ < color_h; ++y, ++y_)
       for (unsigned x = 0u; x < width; ++x)
-        ps(cbar, x, y, (unsigned)(c ? c : 255));
+        ps(cbar, x, y + bar_h2, (unsigned)(c ? c : 255));
   for (y = 0u; y < height; ++y)
     for (unsigned x = width - color_h; x < width; ++x)
-      ps(cbar, x, y, 255u);
+      ps(cbar, x, y + bar_h2, 255u);
   for (y = 0u; y < height; ++y)
     for (unsigned x = 0u; x < color_h; ++x)
-      ps(cbar, x, y, 255u);
-  const unsigned bar_h = height / n_bars;
+      ps(cbar, x, y + bar_h2, 255u);
   for (y = 0u; y < height; y += bar_h)
     for (unsigned y_ = 0u; y_ < color_h; ++y_)
       for (unsigned x = color_h; x < width; x += 2u * color_h)
         for (unsigned x_ = 0u; x_ < color_h; ++x_)
           if (((x + x_) < width) && ((y + y_) < height))
-            ps(cbar, x + x_, y + y_, 255u);
+            ps(cbar, x + x_, y + y_ + bar_h2, 255u);
   const unsigned spc_x = width + color_h;
   (void)fprintf(stdout, "#!/bin/sh\nconvert %s -font %s ", bmp,
                 // Font name is Courier-Bold on Linux, CourierNewB on macOS.
@@ -161,17 +162,16 @@ int main(int argc, char *argv[])
   (void)fprintf(stdout, "-annotate +%u+%u \'≤", spc_x, (bar_h - color_h));
   (void)(fmt ? fprintf(stdout, fmt, fn(max_val)) : fprintf(stdout, "%s", vn_realtostr(fn(max_val))));
   (void)fprintf(stdout, "\' ");
-  const unsigned n_bars_1 = n_bars - 1u;
   const unsigned cpb = 256 / n_bars;
   const double wid = max_val - min_val;
-  for (unsigned b = 1u; b < n_bars_1; ++b) {
+  for (unsigned b = 1u; b < n_bars; ++b) {
     const unsigned c = 255u - b * cpb;
     const double val = fn(fma((fma(0.5, nextafter(1.0, 0.5), (c - 1.0)) / 253.0), wid, min_val));
-    (void)fprintf(stdout, "-annotate +%u+%u \'≤", spc_x, ((b + 1u) * bar_h - color_h));
+    (void)fprintf(stdout, "-annotate +%u+%u \'=", spc_x, ((b + 1u) * bar_h - color_h));
     (void)(fmt ? fprintf(stdout, fmt, val) : fprintf(stdout, "%s", vn_realtostr(val)));
     (void)fprintf(stdout, "\' ");
   }
-  (void)fprintf(stdout, "-annotate +%u+%u \'≥", spc_x, (height - color_h));
+  (void)fprintf(stdout, "-annotate +%u+%u \'≥", spc_x, (height + bar_h - color_h));
   (void)(fmt ? fprintf(stdout, fmt, fn(min_val)) : fprintf(stdout, "%s", vn_realtostr(fn(min_val))));
   (void)fprintf(stdout, "\' A%s\nmv -fv A%s %s\n", bmp, bmp, bmp);
 
