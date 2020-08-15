@@ -13,7 +13,7 @@
 
 #ifndef VN_BTRACE
 #define VN_BTRACE {                                        \
-    void* buffer[(VN_BTRACE_BUFSIZ)];                      \
+    void* buffer[VN_BTRACE_BUFSIZ];                        \
     const int bsz = backtrace(buffer, (VN_BTRACE_BUFSIZ)); \
     if (bsz > 0) {                                         \
       backtrace_symbols_fd(buffer, bsz, STDERR_FILENO);    \

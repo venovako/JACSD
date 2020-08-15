@@ -1,14 +1,16 @@
 #ifndef VN_LIB_H
 #define VN_LIB_H
 
+// the latest language versions are assumed
+// if some parts of this library are compiled with `nvcc`, use
+// `--std=c++17` flag and an adequately recent GCC on the host
+
 #ifdef __ICC
 #include <mathimf.h>
 #else /* !__ICC */
 #ifdef __cplusplus
 #include <complex>
-#ifndef __CUDACC__
-#include <math>
-#endif /* !__CUDACC__ */
+#include <cmath>
 #else /* !__cplusplus */
 #include <complex.h>
 #include <math.h>
@@ -30,6 +32,7 @@
 #include <cerrno>
 #include <cfenv>
 #include <cfloat>
+#include <cinttypes>
 #include <climits>
 #include <csignal>
 #include <cstddef>
@@ -37,9 +40,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#ifndef USE_NVIDIA
-#include <ctgmath>
-#endif /* !USE_NVIDIA */
 #include <ctime>
 #include <cwchar>
 #else /* !__cplusplus */
@@ -48,6 +48,7 @@
 #include <errno.h>
 #include <fenv.h>
 #include <float.h>
+#include <inttypes.h>
 #include <limits.h>
 #include <signal.h>
 #include <stdbool.h>
@@ -93,11 +94,11 @@
 
 #include "vn_stdc11.h"
 #include "vn_attrs.h"
+#include "vn_types.h"
+#include "vn_simd.h"
 #include "vn_align.h"
 #include "vn_assert.h"
 #include "vn_error.h"
-#include "vn_types.h"
-#include "vn_simd.h"
 #include "vn_variant.h"
 #include "vn_alloc.h"
 #include "vn_binio.h"

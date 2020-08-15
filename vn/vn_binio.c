@@ -93,9 +93,9 @@ ssize_t vn_bwrite(const int fd, const void *buf, size_t nB, off_t off)
       return ret1;
     ret += ret1;
     (void)fsync(fd);
-    if (ret1 < GiB)
+    if ((size_t)ret1 < GiB)
       return ret;
-    if (ret1 > GiB)
+    if ((size_t)ret1 > GiB)
       return -(int)ret1;
     buf = (const void*)(((const char*)buf) + ret1);
     off += ret1;
@@ -108,7 +108,7 @@ ssize_t vn_bwrite(const int fd, const void *buf, size_t nB, off_t off)
     return ret1;
   ret += ret1;
   (void)fsync(fd);
-  if (ret1 > nB)
+  if ((size_t)ret1 > nB)
     return -(int)ret1;
   return ret;
 }
@@ -132,9 +132,9 @@ ssize_t vn_bread(const int fd, void *buf, size_t nB, off_t off)
     if (ret1 < 0)
       return ret1;
     ret += ret1;
-    if (ret1 < GiB)
+    if ((size_t)ret1 < GiB)
       return ret;
-    if (ret1 > GiB)
+    if ((size_t)ret1 > GiB)
       return -(int)ret1;
     buf = (void*)(((char*)buf) + ret1);
     off += ret1;
@@ -146,7 +146,7 @@ ssize_t vn_bread(const int fd, void *buf, size_t nB, off_t off)
   if (ret1 < 0)
     return ret1;
   ret += ret1;
-  if (ret1 > nB)
+  if ((size_t)ret1 > nB)
     return -(int)ret1;
   return ret;
 }

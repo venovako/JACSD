@@ -8,7 +8,6 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
   const vn_integer act = MkInt(1);
   vn_integer ldA = MkInt(0);
   vn_real *const A = VN_ALLOC2(vn_real, m, n, &ldA, act);
-  VN_IS_ALIGNED2(A, ldA);
   VN_SYSI_CALL(printf("ldA: %lld\n", (long long)ldA) <= 0);
   vn_free(A);
   return EXIT_SUCCESS;

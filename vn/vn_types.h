@@ -5,14 +5,12 @@
 #error vn_types.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-#ifndef __CUDACC__
 static_assert(8 == CHAR_BIT, "vn_char_bit_8");
 static_assert(1 == sizeof(char), "vn_char_sz_1");
 static_assert(4 == sizeof(wchar_t), "vn_wchar_t_sz_4");
 static_assert(4 == sizeof(float), "vn_float_sz_4");
 static_assert(8 == sizeof(double), "vn_double_sz_8");
 static_assert(16 == sizeof(long double), "vn_ldouble_sz_16");
-#endif /* !__CUDACC__ */
 
 #ifndef VN_CHARACTER_KIND
 #define VN_CHARACTER_KIND 1
