@@ -1,23 +1,16 @@
 !IFNDEF WP
 WP=16
 !ENDIF # !WP
-
-!IFNDEF RM
-RM=del /F
-!ENDIF # !RM
-
 !IFDEF NDEBUG
 DEBUG=
 !ELSE # DEBUG
 DEBUG=d
 !ENDIF # ?NDEBUG
-
+RM=del /F
 LIBS=qxblas$(WP)$(DEBUG).lib
-
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FC=ifort.exe
-
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-semantics #/4I8
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive

@@ -1,15 +1,15 @@
-ifndef CPU
-CPU=gnu
-endif # !CPU
-include ../$(CPU).mk
-MKFS=GNUmakefile ../$(CPU).mk
+ifndef COMPILER
+COMPILER=gnu
+endif # !COMPILER
+include ../$(COMPILER).mk
+MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
 all: dgenskew.exe zgenskew.exe
 
 help:
-	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [WP=4|8|16] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [WP=4|8|16] [all|clean|help]"
 
 dgenskew.exe: dgenskew.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) dgenskew.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)

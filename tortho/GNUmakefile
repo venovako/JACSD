@@ -1,15 +1,15 @@
-ifndef CPU
-CPU=gnu
-endif # !CPU
-include ../$(CPU).mk
-MKFS=GNUmakefile ../$(CPU).mk
+ifndef COMPILER
+COMPILER=gnu
+endif # !COMPILER
+include ../$(COMPILER).mk
+MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
 all: dortho.exe zortho.exe
 
 help:
-	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 dortho.exe: dortho.F90 binio.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) dortho.F90 binio.o -o$@ $(LDFLAGS)

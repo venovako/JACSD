@@ -1,17 +1,17 @@
-ifndef CPU
-CPU=gnu
-endif # !CPU
-include ../$(CPU).mk
-MKFS=GNUmakefile ../$(CPU).mk
+ifndef COMPILER
+COMPILER=gnu
+endif # !COMPILER
+include ../$(COMPILER).mk
+MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help svd_test clean
 
 all: ../libl0c$(PROFILE)$(DEBUG).a xCSGEN.exe xLACSD.exe xL0.exe svd_test
 
 help:
-	@echo "gmake [CPU=x64|x200|gnu] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
-ifeq ($(CPU),x200)
+ifeq ($(COMPILER),x200)
 AVX512_DJACV.o: AVX512_DJACV.c AVX512_DJACV.h $(MKFS)
 	$(CC) $(CFLAGS) -c AVX512_DJACV.c
 
@@ -23,7 +23,7 @@ AVX2_FMA_DJACV.o: AVX2_FMA_DJACV.c AVX2_FMA_DJACV.h $(MKFS)
 
 ../libl0c$(PROFILE)$(DEBUG).a: AVX2_FMA_DJACV.o $(MKFS)
 	$(AR) $(ARFLAGS) $@ AVX2_FMA_DJACV.o
-endif # ?CPU
+endif # ?COMPILER
 
 xCSGEN.exe: xCSGEN.o FTNUTILS.o ftnutils.mod ../libqxblas$(WP)$(PROFILE)$(DEBUG).a $(MKFS)
 	$(FC) $(FFLAGS) xCSGEN.o FTNUTILS.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
@@ -55,13 +55,13 @@ BLAS.o blas.mod: BLAS.F90 ftnutils.mod $(MKFS)
 FTNUTILS.o ftnutils.mod: FTNUTILS.F90 BIN_IO.F90 BIN_IO_IFACES.F90 CONSTANTS.F90 GET_IOUNIT.F90 GET_NTHR.F90 IFACES_IMPL.F90 INTERFACES.F90 KIND_PARAMS.F90 TIMER.F90 USE_MODULES.F90 VEC_PARAMS.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c FTNUTILS.F90
 
-ifeq ($(CPU),x200)
+ifeq ($(COMPILER),x200)
 svd_test: xLASVD.F90 BLAS.o blas.mod FTNUTILS.o ftnutils.mod $(MKFS)
 	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do for z in FN FW; do $(FC) $(FFLAGS) -D$${z} -D$${x}LASVD -D$${y} xLASVD.F90 BLAS.o FTNUTILS.o -o$${x}$${y}$${z}.exe $(LDFLAGS); done; done; done
 else # non-KNL
 svd_test: xLASVD.F90 BLAS.o blas.mod FTNUTILS.o ftnutils.mod $(MKFS)
 	for x in C D S Z; do for y in GEJSV GESDD GESVD GESVJ; do $(FC) $(FFLAGS) -D$${x}LASVD -D$${y} xLASVD.F90 BLAS.o FTNUTILS.o -o$${x}$${y}.exe $(LDFLAGS); done; done
-endif # ?CPU
+endif # ?COMPILER
 
 clean:
 	-$(RM) ../libl0c$(PROFILE)$(DEBUG).a
