@@ -11,7 +11,7 @@ Available here (for now):
 * a utility library (vn) \[1,2,3\],
 * and some testing code for the LAPACK CS.
 
-\[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
+\[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper [doi:10.1137/19M1277813](https://doi.org/10.1137/19M1277813 "The LAPW Method with Eigendecomposition Based on the Hari–Zimmermann Generalized Hyperbolic SVD") with the preprint at arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
 
 \[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1909.00101](https://arxiv.org/abs/1909.00101 "An implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") \[math.NA\].
 
