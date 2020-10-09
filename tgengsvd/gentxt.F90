@@ -1,0 +1,199 @@
+PROGRAM GENTXT
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT
+  IMPLICIT NONE
+
+  CHARACTER(LEN=5), PARAMETER :: FN = 'F.txt', GN = 'G.txt', SN = 'S.txt', XN = 'X.txt'
+  INTEGER, PARAMETER :: FU = 1, GU = 2, SU = 3, XU = 4
+
+  INTEGER :: N, INFO, I
+  DOUBLE PRECISION :: MIN_F, MAX_F, MIN_G, MAX_G, MIN_X, MAX_X
+  REAL(KIND=16) :: FV, GV, XV, FD, GD, XD
+
+  CALL READCL(N, MIN_F, MAX_F, MIN_G, MAX_G, MIN_X, MAX_X, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'invalid command line'
+  END IF
+  IF (MIN_F .GT. MAX_F) ERROR STOP 'MIN_F > MAX_F'
+  IF (MIN_G .GT. MAX_G) ERROR STOP 'MIN_G > MAX_G'
+  IF (MIN_X .GT. MAX_X) ERROR STOP 'MIN_X > MAX_X'
+
+  OPEN(UNIT=FU, FILE=FN, IOSTAT=INFO, STATUS='REPLACE')
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error opening F.txt'
+  END IF
+  OPEN(UNIT=GU, FILE=GN, IOSTAT=INFO, STATUS='REPLACE')
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error opening G.txt'
+  END IF
+  OPEN(UNIT=SU, FILE=SN, IOSTAT=INFO, STATUS='REPLACE')
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error opening S.txt'
+  END IF
+  OPEN(UNIT=XU, FILE=XN, IOSTAT=INFO, STATUS='REPLACE')
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error opening X.txt'
+  END IF
+
+  FV = REAL(MAX_F,16)
+  GV = REAL(MAX_G,16)
+  XV = REAL(MAX_X,16)
+
+  FD = (FV - REAL(MIN_F,16)) / (N - 1)
+  GD = (GV - REAL(MIN_G,16)) / (N - 1)
+  XD = (XV - REAL(MIN_X,16)) / (N - 1)
+
+  DO I = 1, N
+     WRITE (FU,1) FV
+     WRITE (GU,1) GV
+     WRITE (SU,1) (FV / GV)
+     WRITE (XU,1) XV
+     FV = FV - FD
+     GV = GV - GD
+     XV = XV - XD
+  END DO
+
+  CLOSE(UNIT=XU, IOSTAT=INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error closing X.txt'
+  END IF
+  CLOSE(UNIT=SU, IOSTAT=INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error closing S.txt'
+  END IF
+  CLOSE(UNIT=GU, IOSTAT=INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error closing G.txt'
+  END IF
+  CLOSE(UNIT=FU, IOSTAT=INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error closing F.txt'
+  END IF
+
+1 FORMAT(ES25.17E3)
+CONTAINS
+  SUBROUTINE READCL(N, MIN_F, MAX_F, MIN_G, MAX_G, MIN_X, MAX_X, INFO)
+    IMPLICIT NONE
+    INTEGER, INTENT(OUT) :: N, INFO
+    DOUBLE PRECISION, INTENT(OUT) :: MIN_F, MAX_F, MIN_G, MAX_G, MIN_X, MAX_X
+
+    CHARACTER(LEN=25) :: CAS
+
+    IF (COMMAND_ARGUMENT_COUNT() .NE. 7) THEN
+       WRITE (ERROR_UNIT,*) 'gentxt.exe N MIN_F MAX_F MIN_G MAX_G MIN_X MAX_X'
+       INFO = 1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(1, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    READ (CAS,*) N
+    IF (N .LE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(2, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+    READ (CAS,*) MIN_F
+    IF (.NOT. (MIN_F .GT. 0.0D0)) THEN
+       INFO = -2
+       RETURN
+    END IF
+    IF (.NOT. (MIN_F .LE. HUGE(MIN_F))) THEN
+       INFO = -2
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(3, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+    READ (CAS,*) MAX_F
+    IF (.NOT. (MAX_F .GT. 0.0D0)) THEN
+       INFO = -3
+       RETURN
+    END IF
+    IF (.NOT. (MAX_F .LE. HUGE(MAX_F))) THEN
+       INFO = -3
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(4, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -4
+       RETURN
+    END IF
+    READ (CAS,*) MIN_G
+    IF (.NOT. (MIN_G .GT. 0.0D0)) THEN
+       INFO = -4
+       RETURN
+    END IF
+    IF (.NOT. (MIN_G .LE. HUGE(MIN_G))) THEN
+       INFO = -4
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(5, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -5
+       RETURN
+    END IF
+    READ (CAS,*) MAX_G
+    IF (.NOT. (MAX_G .GT. 0.0D0)) THEN
+       INFO = -5
+       RETURN
+    END IF
+    IF (.NOT. (MAX_G .LE. HUGE(MAX_G))) THEN
+       INFO = -5
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(6, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -6
+       RETURN
+    END IF
+    READ (CAS,*) MIN_X
+    IF (.NOT. (ABS(MIN_X) .GT. 0.0D0)) THEN
+       INFO = -6
+       RETURN
+    END IF
+    IF (.NOT. (ABS(MIN_X) .LE. HUGE(MIN_X))) THEN
+       INFO = -6
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(7, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -7
+       RETURN
+    END IF
+    READ (CAS,*) MAX_X
+    IF (.NOT. (ABS(MAX_X) .GT. 0.0D0)) THEN
+       INFO = -7
+       RETURN
+    END IF
+    IF (.NOT. (ABS(MAX_X) .LE. HUGE(MAX_X))) THEN
+       INFO = -7
+       RETURN
+    END IF
+
+    INFO = 0
+  END SUBROUTINE READCL
+END PROGRAM GENTXT

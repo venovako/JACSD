@@ -6,7 +6,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
-all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe svalserr.exe dtgsja_test.exe
+all: dgengsvd.exe zgengsvd.exe derrgsvd.exe zerrgsvd.exe svalserr.exe dtgsja_test.exe gentxt.exe
 
 help:
 	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
@@ -25,6 +25,9 @@ zerrgsvd.exe: zerrgsvd.F90 binio.mod $(MKFS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
+
+gentxt.exe: gentxt.F90 $(MKFS)
+	$(FC) $(FFLAGS) gentxt.F90 -o$@ $(LDFLAGS)
 
 dtgsja_test.exe: dtgsja_test.F90 binio.mod ../vn/vn_blas_f.mod ../vn/vn_timer_f.mod $(MKFS)
 	$(FC) $(FFLAGS) dtgsja_test.F90 binio.o -o$@ $(LDFLAGS)
