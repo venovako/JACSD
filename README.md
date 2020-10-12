@@ -4,9 +4,10 @@ Some utilities for the Jacobi-type (G/H)SVD algorithms and beyond, plus a Cosine
 Available here (for now):
 * a shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas),
+* an orthogonality checker (tortho),
 * a GSVD test data generator (tgengsvd) \[2\],
-* a HSVD test data generator (tgenhsvd), \[3\],
-* a skew-symmetric/Hermitian test data generator (tgenskew), \[4\],
+* a HSVD test data generator (tgenhsvd) \[3\],
+* a skew-symmetric/Hermitian test data generator (tgenskew) \[4\],
 * a Jacobi strategies library (jstrat) \[1,2\],
 * a utility library (vn) \[1,2,3\],
 * and some testing code for the LAPACK CS.
@@ -23,7 +24,7 @@ Available here (for now):
 
 ### Prerequisites
 
-A recent 64-bit Linux (e.g., CentOS 7.7 with devtoolset-8) or macOS (e.g., Catalina) is needed.
+A recent 64-bit Linux (e.g., CentOS 7.8 with devtoolset-8) or macOS (e.g., Catalina) is needed.
 
 Have the Intel MKL (Math Kernel Library) installed.
 
