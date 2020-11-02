@@ -7,24 +7,19 @@ int main(int argc VN_VAR_UNUSED, char *argv[] VN_VAR_UNUSED)
 }
 #else /* !VN_TEST */
 #ifndef VN_NO_BLAS
-#ifdef USE_GNU
-#ifndef OLD_OMP
-#define OLD_OMP
-#endif /* !OLD_OMP */
-#endif /* USE_GNU */
 static volatile bool vn_blas_prepared = false;
 
 vn_integer vn_blas_prepare()
 {
   if (!vn_blas_prepared) {
 #ifdef _OPENMP
-#ifdef OLD_OMP
-    if (!omp_get_nested())
-      omp_set_nested(1);
-#else /* !OLD_OMP */
+#ifdef USE_INTEL
     if (omp_get_max_active_levels() <= 1)
       omp_set_max_active_levels(omp_get_supported_active_levels());
-#endif /* ?OLD_OMP */
+#else /* !USE_INTEL */
+    if (!omp_get_nested())
+      omp_set_nested(1);
+#endif /* ?USE_INTEL */
     if (!omp_get_dynamic())
       omp_set_dynamic(1);
 #endif /* _OPENMP */

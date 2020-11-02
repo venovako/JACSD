@@ -18,7 +18,7 @@ AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FC=ifort
 
-FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DOLD_OMP /DQX_WP=$(WP) /Qopenmp /standard-semantics #/4I8
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-semantics #/4I8
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
