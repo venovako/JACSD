@@ -27,7 +27,7 @@ OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
 DBGFFLAGS=$(DBGFLAGS)
 DBGCFLAGS=$(DBGFLAGS) -w3 -diag-disable=1572,2547
-FPUFLAGS=-fma -fp-model source -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt -fimf-precision=high -fimf-use-svml=true
+FPUFLAGS=-fp-model source -fp-stack-check -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt -fimf-precision=high -fimf-use-svml=true
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 else # DEBUG
