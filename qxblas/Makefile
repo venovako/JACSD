@@ -15,13 +15,13 @@ FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-sem
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
-FPUFLAGS=/fp:source /Qimf-precision:high /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+FPUFLAGS=/fp:source /Qfp-stack-check /Qimf-precision:high /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/I.. /libs:dll /threads
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
 OPTFLAGS=/O$(DEBUG) /QxHost /Qopt-multi-version-aggressive
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
-FPUFLAGS=/fp:source /Qimf-precision:high /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt #/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check
+FPUFLAGS=/fp:strict /assume:ieee_fpe_flags /Qfp-stack-check /Qimf-precision:high /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
 LIBFLAGS=/I.. /libs:dll /threads /dbglibs
 LDFLAGS=/link /DEBUG /LIBPATH:.. $(LIBS)
 !ENDIF # ?NDEBUG
