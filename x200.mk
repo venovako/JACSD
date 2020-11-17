@@ -20,7 +20,7 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
 FC=ifort
-CPUFLAGS=-DUSE_INTEL -DUSE_X200 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopenmp -qopenmp-threadprivate=compat -rdynamic
+CPUFLAGS=-DUSE_INTEL -DUSE_X200 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopenmp -rdynamic
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE

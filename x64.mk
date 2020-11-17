@@ -24,8 +24,8 @@ CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE
-ifneq ($(ARCH),Darwin) # Linux
-CPUFLAGS += -qopenmp-threadprivate=compat -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
+ifneq ($(ARCH),Darwin)
+CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 endif # Linux
 FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
 C18FLAGS=$(CPUFLAGS) -std=c18
@@ -52,9 +52,9 @@ OPTFLAGS=-O0 -xHost -qopt-zmm-usage=high
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -traceback -diag-disable=10397
-ifneq ($(ARCH),Darwin) # Linux
+ifneq ($(ARCH),Darwin)
 DBGFLAGS += -debug parallel
-endif # ?Linux
+endif # Linux
 DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all
 DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -w3 -diag-disable=1572,2547
 endif # ?NDEBUG
