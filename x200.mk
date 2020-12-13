@@ -10,7 +10,7 @@ DEBUG=g
 endif # ?NDEBUG
 ifndef FP
 ifdef NDEBUG
-FP=source
+FP=precise
 else # DEBUG
 FP=strict
 endif # ?NDEBUG
@@ -27,9 +27,9 @@ endif # PROFILE
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
 C18FLAGS=$(CPUFLAGS) -std=c18
-FPUFLAGS=-fp-model $(FP) -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt -fimf-precision=high
+FPUFLAGS=-fp-model $(FP) -fprotect-parens -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 ifeq ($(FP),strict)
-FPUFLAGS += -fp-stack-check -fimf-arch-consistency=true
+FPUFLAGS += -fp-stack-check
 else # !strict
 FPUFLAGS += -fimf-use-svml=true
 endif # ?strict
