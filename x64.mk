@@ -63,7 +63,7 @@ LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG)
 ifeq ($(ARCH),Darwin)
 LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
 else # Linux
-LIBFLAGS += -D_GNU_SOURCE
+LIBFLAGS += -static-libgcc -D_GNU_SOURCE
 LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core
 endif # ?Darwin
 LDFLAGS += -lpthread -lm -ldl
