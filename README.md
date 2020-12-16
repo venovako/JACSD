@@ -14,7 +14,7 @@ Available here (for now):
 
 \[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper [doi:10.1137/19M1277813](https://doi.org/10.1137/19M1277813 "The LAPW Method with Eigendecomposition Based on the Hari–Zimmermann Generalized Hyperbolic SVD") with the preprint at arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
 
-\[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[1909.00101](https://arxiv.org/abs/1909.00101 "An implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") \[math.NA\].
+\[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper [doi:10.1177/1094342020972772](https://doi.org/10.1177/1094342020972772 "Implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") with the preprint at arXiv:[1909.00101](https://arxiv.org/abs/1909.00101 "An implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") \[math.NA\].
 
 \[3\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper arXiv:[2003.06701](https://arxiv.org/abs/2003.06701 "A Kogbetliantz-type algorithm for the hyperbolic SVD") \[math.NA\].
 
