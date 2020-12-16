@@ -37,9 +37,13 @@ vn_sort_f.F90      \
 vn_timer_f.F90     \
 vn_types_f.F90
 
+SRCFF=             \
+dfpenv.f           \
+sfpenv.f
+
 SRC=$(SRCC) $(SRCF)
 OBJSC=$(SRCC:.c=.o)
-OBJSF=$(SRCF:.F90=.o)
+OBJSF=$(SRCF:.F90=.o) #$(SRCFF:.f=.o)
 OBJS=$(OBJSC) $(OBJSF)
 HDRS=$(SRCC:.c=.h)
 MODS=$(SRCF:.F90=.mod)
@@ -200,6 +204,12 @@ vn_variant.o: vn_variant.c $(HDRS) $(MKFS)
 
 vn_variant.exe: vn_variant.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+sfpenv.o: sfpenv.f $(MKFS)
+	$(FC) $(FFLAGS) -c $<
+
+dfpenv.o: dfpenv.f $(MKFS)
+	$(FC) $(FFLAGS) -c $<
 
 clean:
 	-$(RM) ../libvn$(PROFILE)$(DEBUG).a
