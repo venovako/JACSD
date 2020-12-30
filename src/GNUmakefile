@@ -3,6 +3,9 @@ COMPILER=gnu
 endif # !COMPILER
 include ../$(COMPILER).mk
 MKFS=GNUmakefile ../$(COMPILER).mk
+ifneq ($(ABI),ilp64)
+$(error ABI=lp64 not supported)
+endif # !ilp64
 
 .PHONY: all help svd_test clean
 

@@ -1,5 +1,8 @@
 SHELL=/bin/bash
 ARCH=$(shell uname)
+ifndef ABI
+ABI=ilp64
+endif # !ABI
 ifndef WP
 WP=16
 endif # !WP
@@ -24,8 +27,14 @@ CPUFLAGS=-DUSE_INTEL -DUSE_X200 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE
+ifeq ($(ABI),lp64)
+CPUFLAGS += -DVN_INTEGER_KIND=4
+endif # lp64
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
-FORFLAGS=$(CPUFLAGS) -i8 -standard-semantics -threads
+FORFLAGS=$(CPUFLAGS) -standard-semantics -threads
+ifneq ($(ABI),lp64)
+FORFLAGS += -i8
+endif # ilp64
 C18FLAGS=$(CPUFLAGS) -std=c18
 FPUFLAGS=-fp-model $(FP) -fprotect-parens -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 ifeq ($(FP),strict)
@@ -53,7 +62,11 @@ DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -
 DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all
 DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -w3 -diag-disable=1572,2547
 endif # ?NDEBUG
-LIBFLAGS=-static-libgcc -D_GNU_SOURCE -DUSE_MKL -DMKL_ILP64 -I. -I../vn -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
-LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG) -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -lpthread -lm -ldl -lmemkind
+LIBFLAGS=-static-libgcc -D_GNU_SOURCE -DUSE_MKL
+ifneq ($(ABI),lp64)
+LIBFLAGS += -DMKL_ILP64
+endif # ilp64
+LIBFLAGS += -I. -I../vn -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
+LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG) -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core -lpthread -lm -ldl -lmemkind
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)

@@ -1,5 +1,8 @@
 SHELL=/bin/bash
 ARCH=$(shell uname)
+ifndef ABI
+ABI=ilp64
+endif # !ABI
 ifndef WP
 WP=10
 endif # !WP
@@ -15,10 +18,16 @@ CPUFLAGS=-DUSE_GNU -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-po
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE
+ifeq ($(ABI),lp64)
+CPUFLAGS += -DVN_INTEGER_KIND=4
+endif # lp64
 ifneq ($(ARCH),Darwin)
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 endif # Linux
-FORFLAGS=-cpp $(CPUFLAGS) -fdefault-integer-8 -ffree-line-length-none -fstack-arrays
+FORFLAGS=-cpp $(CPUFLAGS) -ffree-line-length-none -fstack-arrays
+ifneq ($(ABI),lp64)
+FORFLAGS += -fdefault-integer-8
+endif # ilp64
 C18FLAGS=$(CPUFLAGS) -std=gnu18
 ifeq ($(ARCH),Darwin)
 ifndef GNU
@@ -57,13 +66,17 @@ FPUFLAGS=-ffp-contract=fast
 FPUFFLAGS=$(FPUFLAGS) #-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
-LIBFLAGS=-DUSE_MKL -DMKL_ILP64 -I. -I../vn -I${MKLROOT}/include/intel64/ilp64 -I${MKLROOT}/include
+LIBFLAGS=-DUSE_MKL
+ifneq ($(ABI),lp64)
+LIBFLAGS += -DMKL_ILP64
+endif # ilp64
+LIBFLAGS += -I. -I../vn -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
 LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG)
 ifeq ($(ARCH),Darwin)
-LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5
+LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../compiler/lib -Wl,-rpath,${MKLROOT}/../compiler/lib -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core -liomp5
 else # Linux
 LIBFLAGS += -D_GNU_SOURCE
-LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_gf_ilp64 -lmkl_gnu_thread -lmkl_core -lgomp
+LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_gf_$(ABI) -lmkl_gnu_thread -lmkl_core -lgomp
 endif # ?Darwin
 ifndef NDEBUG
 LDFLAGS += -lubsan

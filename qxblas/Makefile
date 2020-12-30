@@ -1,3 +1,6 @@
+!IFNDEF ABI
+ABI=lp64
+!ENDIF # !ABI
 !IFNDEF WP
 WP=16
 !ENDIF # !WP
@@ -11,7 +14,10 @@ LIBS=qxblas$(WP)$(DEBUG).lib
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FC=ifort.exe
-FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-semantics #/4I8
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-semantics
+!IF "$(ABI)"=="ilp64"
+FORFLAGS=$(FORFLAGS) /4I8
+!ENDIF # ilp64
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive
 DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
@@ -242,7 +248,7 @@ xtrsv.obj
 all: ..\$(LIBS)
 
 help:
-	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [ABI=lp64|ilp64] [all|clean|help]"
 
 ..\$(LIBS): $(OBJS) Makefile
 	$(AR) $(ARFLAGS) /OUT:$@ $(OBJS)
