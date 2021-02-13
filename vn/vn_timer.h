@@ -36,15 +36,23 @@ static inline uint64_t VN_NO_PROF tsc_get_freq_hz(unsigned *const rem_den)
 #ifdef TSC_FREQ_HZ
 #if (TSC_FREQ_HZ == 0ull)
   unsigned eax = 0u, ebx = 0u, ecx = 0u, edx = 0u;
+#ifdef USE_GNU
   __cpuid(0x15u, eax, ebx, ecx, edx);
+#else /* Intel */
+  int abcd[4] = { 0, 0, 0, 0 };
+  __cpuid(abcd, 0x15);
+  eax = (unsigned)(abcd[0u]);
+  ebx = (unsigned)(abcd[1u]);
+  ecx = (unsigned)(abcd[2u]);
+  edx = (unsigned)(abcd[3u]);
+#endif /* ?USE_GNU */
   if (eax) {
     const uint64_t num = (uint64_t)ebx * ecx;
-    const uint64_t den = (uint64_t)eax;
     if (rem_den) {
-      rem_den[0u] = (unsigned)(num % den);
+      rem_den[0u] = (unsigned)(num % eax);
       rem_den[1u] = eax;
     }
-    return (num / den);
+    return (num / eax);
   }
   else {
     if (rem_den) {
