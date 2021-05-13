@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 ARCH=$(shell uname)
 ifndef ABI
-ABI=ilp64
+ABI=lp64
 endif # !ABI
 ifndef WP
 WP=8
