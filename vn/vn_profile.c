@@ -20,6 +20,14 @@ static __thread FILE *prof_file = (FILE*)NULL;
 #endif /* !VN_PROFILE_FLSIZE */
 static __thread char fl[VN_PROFILE_FLSIZE]; /* f:1023, l:11 */
 
+#ifndef VN_PROFILE_TIMEREF
+#ifdef CLOCK_MONOTONIC_RAW
+#define VN_PROFILE_TIMEREF CLOCK_MONOTONIC_RAW
+#else /* !CLOCK_MONOTONIC_RAW */
+#define VN_PROFILE_TIMEREF CLOCK_MONOTONIC
+#endif /* ?CLOCK_MONOTONIC_RAW */
+#endif /* !VN_PROFILE_TIMEREF */
+
 static void VN_NO_PROF pflerror(const char *const f, const int l)
 {
   const char *const e = strerror(errno);
@@ -40,7 +48,7 @@ static int VN_NO_PROF bt_comp(const void *a, const void *b)
   return 0;
 }
 
-static void VN_NO_PROF bt_action(const void *node, VISIT order, int level)
+static void VN_NO_PROF bt_action(const void *node, VISIT order, int level VN_VAR_UNUSED)
 {
   vn_addr_rec_t *const ar = *(vn_addr_rec_t**)node;
   if ((order == postorder) || (order == leaf)) {
@@ -188,7 +196,7 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_enter(void *const this_fn, void *
   pr.this_fn = this_fn;
   pr.call_site = call_site;
   struct timespec tv;
-  if (clock_gettime(CLOCK_MONOTONIC_RAW, (struct timespec*)memset(&tv, 0, sizeof(tv))))
+  if (clock_gettime(VN_PROFILE_TIMEREF, (struct timespec*)memset(&tv, 0, sizeof(tv))))
     pflerror(__FILE__, __LINE__);
   pr.tns = t2ns(&tv);
 
@@ -196,13 +204,13 @@ VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_enter(void *const this_fn, void *
     pflerror(__FILE__, __LINE__);
 }
 
-VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_exit(void *const this_fn, void *const call_site)
+VN_EXTERN_C void VN_NO_PROF __cyg_profile_func_exit(void *const this_fn, void *const call_site VN_VAR_UNUSED)
 {
   vn_prof_rec_t pr;
   pr.this_fn = this_fn;
   pr.call_site = NULL; /* a marker for func_exit */
   struct timespec tv;
-  if (clock_gettime(CLOCK_MONOTONIC_RAW, (struct timespec*)memset(&tv, 0, sizeof(tv))))
+  if (clock_gettime(VN_PROFILE_TIMEREF, (struct timespec*)memset(&tv, 0, sizeof(tv))))
     pflerror(__FILE__, __LINE__);
   pr.tns = t2ns(&tv);
 
