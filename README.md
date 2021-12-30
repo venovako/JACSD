@@ -5,6 +5,7 @@ Available here (for now):
 * a shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas),
 * an orthogonality checker (tortho),
+* an SVD test data generator (tgensvd),
 * a GSVD test data generator (tgengsvd) \[2\],
 * a HSVD test data generator (tgenhsvd) \[3\],
 * a skew-symmetric/Hermitian test data generator (tgenskew) \[4\],
