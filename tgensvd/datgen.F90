@@ -1,0 +1,137 @@
+MODULE DATGEN
+  USE SEED
+  IMPLICIT NONE
+
+  INTEGER, PARAMETER, PRIVATE :: WP = QX_WP
+  REAL(KIND=WP), PARAMETER, PRIVATE :: Q_ZERO = 0.0_WP, Q_ONE = 1.0_WP
+  COMPLEX(KIND=WP), PARAMETER, PRIVATE :: X_ZERO = (Q_ZERO, Q_ZERO), X_ONE = (Q_ONE, Q_ZERO)
+
+CONTAINS
+
+  SUBROUTINE DGENDAT(M, N, ISEED, DS, QG, DG, QWORK, INFO)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(IN) :: M, N, ISEED(4)
+    DOUBLE PRECISION, INTENT(IN) :: DS(N)
+    DOUBLE PRECISION, INTENT(OUT) :: DG(M,N)
+    REAL(KIND=WP), INTENT(OUT) :: QG(M,N), QWORK(3*M)
+    INTEGER, INTENT(OUT) :: INFO
+
+    INTEGER :: P, Q
+    EXTERNAL :: QLAROR
+
+    INFO = 0
+
+    IF (M .LT. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    IF ((N .LT. 0) .OR. (N .GT. M)) THEN
+       INFO = -2
+       RETURN
+    END IF
+    CALL SEEDOK(ISEED, INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+
+#ifdef USE_OPENMP
+    !$OMP PARALLEL DO DEFAULT(NONE) SHARED(M,N,QG,DS,Q_ZERO) PRIVATE(P,Q)
+#endif
+    DO Q = 1, N
+       DO P = 1, Q-1
+          QG(P,Q) = Q_ZERO
+       END DO
+       QG(Q,Q) = DS(Q)
+       DO P = Q+1, M
+          QG(P,Q) = Q_ZERO
+       END DO
+    END DO
+#ifdef USE_OPENMP
+    !$OMP END PARALLEL DO
+#endif
+
+    CALL QLAROR('L', 'N', M, N, QG, M, ISEED, QWORK, INFO)
+    IF (INFO .NE. 0) RETURN
+
+    CALL QLAROR('R', 'N', M, N, QG, M, ISEED, QWORK, INFO)
+    IF (INFO .NE. 0) RETURN
+
+#ifdef USE_OPENMP
+    !$OMP PARALLEL DO DEFAULT(NONE) SHARED(M,N,QG,DG) PRIVATE(P,Q)
+#endif
+    DO Q = 1, N
+       DO P = 1, M
+          DG(P,Q) = DBLE(QG(P,Q))
+       END DO
+    END DO
+#ifdef USE_OPENMP
+    !$OMP END PARALLEL DO
+#endif
+  END SUBROUTINE DGENDAT
+
+  SUBROUTINE ZGENDAT(M, N, ISEED, DS, XG, ZG, XWORK, INFO)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(IN) :: M, N, ISEED(4)
+    DOUBLE PRECISION, INTENT(IN) :: DS(N)
+    DOUBLE COMPLEX, INTENT(OUT) :: ZG(M,N)
+    COMPLEX(KIND=WP), INTENT(OUT) :: XG(M,N), XWORK(3*M)
+    INTEGER, INTENT(OUT) :: INFO
+
+    INTEGER :: P, Q
+    EXTERNAL :: XLAROR
+
+    INFO = 0
+
+    IF (M .LT. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    IF ((N .LT. 0) .OR. (N .GT. M)) THEN
+       INFO = -2
+       RETURN
+    END IF
+    CALL SEEDOK(ISEED, INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+
+#ifdef USE_OPENMP
+    !$OMP PARALLEL DO DEFAULT(NONE) SHARED(M,N,XG,DS,X_ZERO) PRIVATE(P,Q)
+#endif
+    DO Q = 1, N
+       DO P = 1, Q-1
+          XG(P,Q) = X_ZERO
+       END DO
+       XG(Q,Q) = DS(Q)
+       DO P = Q+1, M
+          XG(P,Q) = X_ZERO
+       END DO
+    END DO
+#ifdef USE_OPENMP
+    !$OMP END PARALLEL DO
+#endif
+
+    CALL XLAROR('L', 'N', M, N, XG, M, ISEED, XWORK, INFO)
+    IF (INFO .NE. 0) RETURN
+
+    CALL XLAROR('R', 'N', M, N, XG, M, ISEED, XWORK, INFO)
+    IF (INFO .NE. 0) RETURN
+
+#ifdef USE_OPENMP
+    !$OMP PARALLEL DO DEFAULT(NONE) SHARED(M,N,XG,ZG) PRIVATE(P,Q)
+#endif
+    DO Q = 1, N
+       DO P = 1, M
+          ZG(P,Q) = DCMPLX(DBLE(REAL(XG(P,Q))), DBLE(AIMAG(XG(P,Q))))
+       END DO
+    END DO
+#ifdef USE_OPENMP
+    !$OMP END PARALLEL DO
+#endif
+  END SUBROUTINE ZGENDAT
+
+END MODULE DATGEN

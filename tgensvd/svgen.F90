@@ -1,0 +1,89 @@
+MODULE SVGEN
+  USE SEED
+  IMPLICIT NONE
+
+  DOUBLE PRECISION, PARAMETER, PRIVATE :: ZERO = 0.0D0, ONE = 1.0D0
+
+CONTAINS
+
+  SUBROUTINE DGENSV(N, ISEED, IDIST, EPS, SCAL, SV, INFO)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(IN) :: N, IDIST
+    INTEGER, INTENT(INOUT) :: ISEED(4)
+    DOUBLE PRECISION, INTENT(IN) :: EPS, SCAL
+    DOUBLE PRECISION, INTENT(OUT) :: SV(N)
+    INTEGER, INTENT(OUT) :: INFO
+
+    INTEGER :: I
+
+    DOUBLE PRECISION, EXTERNAL :: DLARND
+
+    CALL SEEDOK(ISEED, I)
+
+    IF (N .LT. 0) THEN
+       INFO = -1
+    ELSE IF (I .NE. 0) THEN
+       INFO = -2
+    ELSE IF ((IDIST .NE. 1) .AND. (IDIST .NE. 3)) THEN
+       INFO = -3
+    ELSE IF (EPS .LT. ZERO) THEN
+       INFO = -4
+    ELSE IF (SCAL .LE. ZERO) THEN
+       INFO = -5
+    ELSE ! all OK
+       INFO = 0
+    END IF
+    IF (INFO .NE. 0) RETURN
+
+    I = 1
+
+    DO WHILE (I .LE. N)
+       SV(I) = DLARND(IDIST, ISEED)
+       IF (ABS(SV(I)) .GT. EPS) THEN
+          I = I + 1
+       END IF
+    END DO
+
+    IF (SCAL .NE. ONE) THEN
+       DO I = 1, N
+          SV(I) = SV(I) * SCAL
+       END DO
+    END IF
+  END SUBROUTINE DGENSV
+
+  SUBROUTINE DTXTSV(FN, N, SV, INFO)
+    IMPLICIT NONE
+
+    CHARACTER(LEN=*), INTENT(IN) :: FN
+    INTEGER, INTENT(IN) :: N
+    DOUBLE PRECISION, INTENT(OUT) :: SV(N)
+    INTEGER, INTENT(OUT) :: INFO
+
+    INTEGER :: I
+    LOGICAL :: FEX
+
+    INQUIRE(FILE=TRIM(FN), EXIST=FEX)
+    IF (.NOT. FEX) THEN
+       INFO = -1
+    ELSE IF (N .LT. 0) THEN
+       INFO = -2
+    ELSE ! all OK
+       INFO = 0
+    END IF
+    IF (INFO .NE. 0) RETURN
+
+    OPEN(UNIT=1, FILE=TRIM(FN), ACTION='READ', STATUS='OLD')
+
+    DO I = 1, N
+       READ (1,*) SV(I)
+       IF (.NOT. (SV(I) .GT. ZERO)) THEN
+          INFO = I
+          EXIT
+       END IF
+    END DO
+
+    CLOSE(UNIT=1)
+  END SUBROUTINE DTXTSV
+
+END MODULE SVGEN
