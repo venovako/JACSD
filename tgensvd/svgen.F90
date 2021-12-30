@@ -39,8 +39,8 @@ CONTAINS
     I = 1
 
     DO WHILE (I .LE. N)
-       SV(I) = DLARND(IDIST, ISEED)
-       IF (ABS(SV(I)) .GT. EPS) THEN
+       SV(I) = ABS(DLARND(IDIST, ISEED))
+       IF (SV(I) .GT. EPS) THEN
           I = I + 1
        END IF
     END DO

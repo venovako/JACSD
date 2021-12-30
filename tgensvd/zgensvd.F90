@@ -126,7 +126,7 @@ CONTAINS
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
        WRITE (OUTPUT_UNIT,*) 'zgensvd.exe SIGMA SEEDIX M N FILE [ EPS SCALE ]'
        WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-       WRITE (OUTPUT_UNIT,*) 'SIGMA : \Sigma; 1 [uniform (0,1)], 3 [normal(0,1)], or FNAME'
+       WRITE (OUTPUT_UNIT,*) 'SIGMA : \Sigma; 1=uniform(0,1), 3=abs(normal(0,1)), or FNAME'
        WRITE (OUTPUT_UNIT,*) ' FNAME: max 253 chars, >= N lines [each line = a positive value]'
        WRITE (OUTPUT_UNIT,*) 'SEEDIX: index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
        WRITE (OUTPUT_UNIT,*) 'M     : number of rows of the output matrix: >= N'
