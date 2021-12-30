@@ -156,19 +156,19 @@ CONTAINS
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
        WRITE (OUTPUT_UNIT,*) 'zgenhsvd.exe LAMBDA SEEDIX N FILE [ LAMBDA_PARAMS ]'
        WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda(A); 1, 2, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda_A; 1, 2, 3, or FILENAME'
        WRITE (OUTPUT_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
-       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 256 chars, >= N lines [each line = one real value]'
+       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 252 chars, >= N lines [each line = one real value]'
        WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
        WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
-       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 256 chars'
+       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 252 chars'
        WRITE (OUTPUT_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
        WRITE (OUTPUT_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
        WRITE (OUTPUT_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
        WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
        WRITE (OUTPUT_UNIT,*) 'FILE.Y  : double complex(N,N); a factor F (A = F^H J F)'
        WRITE (OUTPUT_UNIT,*) 'FILE.J  : integer*8(N); diagonal of the sign matrix J'
-       WRITE (OUTPUT_UNIT,*) 'FILE.LY : double precision(N); \Lambda(A) as read/generated'
+       WRITE (OUTPUT_UNIT,*) 'FILE.LY : double precision(N); \Lambda_A as read/generated'
        INFO = 1
        RETURN
     END IF

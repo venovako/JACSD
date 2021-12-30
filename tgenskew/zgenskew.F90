@@ -134,19 +134,19 @@ CONTAINS
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
        WRITE (OUTPUT_UNIT,*) 'zgenskew.exe LAMBDA SEEDIX N K FILE [ LAMBDA_PARAMS ]'
        WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda(S); 1, 2, 3, or FILENAME'
+       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda_S; 1, 2, 3, or FILENAME'
        WRITE (OUTPUT_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
-       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 256 chars [each line = one real value]'
+       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 253 chars [each line = one real value]'
        WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
        WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
        WRITE (OUTPUT_UNIT,*) 'K       : rank of the output matrix: 0 <= K <= N'
-       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 256 chars'
+       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 253 chars'
        WRITE (OUTPUT_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
        WRITE (OUTPUT_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
        WRITE (OUTPUT_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
        WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
        WRITE (OUTPUT_UNIT,*) 'FILE.S  : double complex(N,N); a skew-Hermitian matrix S'
-       WRITE (OUTPUT_UNIT,*) 'FILE.L  : double precision(N); \Lambda(S) as read/generated'
+       WRITE (OUTPUT_UNIT,*) 'FILE.L  : double precision(N); \Lambda_S as read/generated'
        INFO = 1
        RETURN
     END IF
