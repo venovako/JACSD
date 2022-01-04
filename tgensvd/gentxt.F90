@@ -14,8 +14,8 @@ PROGRAM GENTXT
 
   CALL READCL(N, A, B, INFO)
   IF (INFO .NE. 0) THEN
-     WRITE (ERROR_UNIT,*) INFO
-     ERROR STOP 'invalid command line'
+     WRITE (ERROR_UNIT,'(I2)',ADVANCE='NO') INFO
+     ERROR STOP ' invalid command line'
   END IF
 
   QA = A
