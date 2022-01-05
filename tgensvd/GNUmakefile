@@ -6,10 +6,13 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
-all: dgensvd.exe zgensvd.exe gentxt.exe svalserr.exe
+all: gentxt.exe dgensvd.exe zgensvd.exe derrsvd.exe zerrsvd.exe svalserr.exe
 
 help:
 	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+
+gentxt.exe: gentxt.F90 $(MKFS)
+	$(FC) $(FFLAGS) gentxt.F90 -o$@ $(LDFLAGS)
 
 dgensvd.exe: dgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) dgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
@@ -17,8 +20,11 @@ dgensvd.exe: dgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
 zgensvd.exe: zgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) zgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
 
-gentxt.exe: gentxt.F90 $(MKFS)
-	$(FC) $(FFLAGS) gentxt.F90 -o$@
+derrsvd.exe: derrsvd.F90 bio.mod $(MKFS)
+	$(FC) $(FFLAGS) derrsvd.F90 bio.o -o$@ $(LDFLAGS)
+
+zerrsvd.exe: zerrsvd.F90 bio.mod $(MKFS)
+	$(FC) $(FFLAGS) zerrsvd.F90 bio.o -o$@ $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
