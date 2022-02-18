@@ -3,23 +3,25 @@ Some utilities for the Jacobi-type (G/H)SVD algorithms and beyond, plus a Cosine
 
 Available here (for now):
 * a shared-memory vectorized Jacobi-type SVD,
-* a multi-precision BLAS library (qxblas),
-* an orthogonality checker (tortho),
-* an SVD test data generator (tgensvd),
+* a multi-precision BLAS library (qxblas) \[1,2,5\],
+* an orthogonality checker (tortho) \[1,2,5\],
+* an SVD test data generator (tgensvd) \[5\],
 * a GSVD test data generator (tgengsvd) \[2\],
 * a HSVD test data generator (tgenhsvd) \[3\],
 * a skew-symmetric/Hermitian test data generator (tgenskew) \[4\],
-* a Jacobi strategies library (jstrat) \[1,2\],
+* a Jacobi strategies library (jstrat) \[1,2,5\],
 * a utility library (vn) \[1,2,3\],
 * and some testing code for the LAPACK CS.
 
-\[1\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper doi:[10.1137/19M1277813](https://doi.org/10.1137/19M1277813 "The LAPW Method with Eigendecomposition Based on the Hari–Zimmermann Generalized Hyperbolic SVD") with the preprint at arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
+\[1\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1137/19M1277813](https://doi.org/10.1137/19M1277813 "The LAPW Method with Eigendecomposition Based on the Hari–Zimmermann Generalized Hyperbolic SVD") with the preprint at arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
 
-\[2\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper doi:[10.1177/1094342020972772](https://doi.org/10.1177/1094342020972772 "Implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") with the preprint at arXiv:[1909.00101](https://arxiv.org/abs/1909.00101 "An implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") \[math.NA\].
+\[2\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1177/1094342020972772](https://doi.org/10.1177/1094342020972772 "Implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") with the preprint at arXiv:[1909.00101](https://arxiv.org/abs/1909.00101 "An implicit Hari–Zimmermann algorithm for the generalized SVD on the GPUs") \[math.NA\].
 
-\[3\] These subdirectories are also a part of the supplementary material for or otherwise related to the paper doi:[10.1007/s11075-021-01197-4](https://doi.org/10.1007/s11075-021-01197-4 "A Kogbetliantz-type algorithm for the hyperbolic SVD") with the preprint at arXiv:[2003.06701](https://arxiv.org/abs/2003.06701 "A Kogbetliantz-type algorithm for the hyperbolic SVD") \[math.NA\].
+\[3\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1007/s11075-021-01197-4](https://doi.org/10.1007/s11075-021-01197-4 "A Kogbetliantz-type algorithm for the hyperbolic SVD") with the preprint at arXiv:[2003.06701](https://arxiv.org/abs/2003.06701 "A Kogbetliantz-type algorithm for the hyperbolic SVD") \[math.NA\].
 
 \[4\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1016/j.amc.2020.125263](https://doi.org/10.1016/j.amc.2020.125263 "The antitriangular factorization of skew-symmetric matrices") with the preprint at arXiv:[1909.00092](https://arxiv.org/abs/1909.00092 "The antitriangular factorization of skew-symmetric matrices") \[math.NA\].
+
+\[5\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper arXiv:[2202.08361](https://arxiv.org/abs/2202.08361 "Vectorization of the Jacobi-type singular value decomposition method") \[math.NA\].
 
 ## Building
 
