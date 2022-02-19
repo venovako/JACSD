@@ -5,30 +5,22 @@
 #error vn_timer.h not intended for direct inclusion
 #endif /* !VN_LIB_H */
 
-VN_EXTERN_C vn_integer_8 vn_get_thread_ns();
-VN_EXTERN_C vn_integer_8 vn_get_sys_us();
+VN_EXTERN_C long vn_get_thread_ns();
+VN_EXTERN_C long vn_get_sys_us();
 
 // see Intel(R) 64 and IA-32 Architectures Software Developer's Manual
 
 static inline uint64_t VN_NO_PROF rdtsc_beg(unsigned *const aux)
 {
-#ifdef USE_NVIDIA
-  return UINT64_C(0);
-#else /* !USE_NVIDIA */
   _mm_mfence();
   return __rdtscp(aux);
-#endif /* ?USE_NVIDIA */
 }
 
 static inline uint64_t VN_NO_PROF rdtsc_end(unsigned *const aux)
 {
-#ifdef USE_NVIDIA
-  return UINT64_C(0);
-#else /* !USE_NVIDIA */
   const uint64_t tsc = __rdtscp(aux);
   _mm_lfence();
   return tsc;
-#endif /* ?USE_NVIDIA */
 }
 
 static inline uint64_t VN_NO_PROF tsc_get_freq_hz(unsigned *const rem_den)
@@ -96,7 +88,7 @@ static inline uint64_t VN_NO_PROF tsc_get_freq_hz(unsigned *const rem_den)
 #endif /* ?TSC_FREQ_HZ */
 }
 
-static inline double VN_NO_PROF tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem)
+static inline long double VN_NO_PROF tsc_lap(const uint64_t freq_hz, const uint64_t beg, const uint64_t end, uint64_t *const sec, uint64_t *const rem)
 {
   if (freq_hz) {
     if (end >= beg) {
@@ -106,25 +98,20 @@ static inline double VN_NO_PROF tsc_lap(const uint64_t freq_hz, const uint64_t b
       if (rem)
         *rem = lap % freq_hz;
       if (lap >= freq_hz)
-        return (lap / (double)freq_hz);
-      else // lap < freq_hz
-        return ((double)lap / freq_hz);
+        return (lap / (long double)freq_hz);
+      return ((long double)lap / freq_hz);
     }
-    else {
-      if (sec)
-        *sec = UINT64_C(0);
-      if (rem)
-        *rem = UINT64_C(0);
-      return -0.0;
-    }
-  }
-  else {
     if (sec)
       *sec = UINT64_C(0);
     if (rem)
       *rem = UINT64_C(0);
-    return MqNaN(0);
+    return -0.0L;
   }
+  if (sec)
+    *sec = UINT64_C(0);
+  if (rem)
+    *rem = UINT64_C(0);
+  return HUGE_VALL;
 }
 
 static inline long VN_NO_PROF t2ns(const struct timespec tp[static 1])

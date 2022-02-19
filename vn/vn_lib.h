@@ -2,8 +2,6 @@
 #define VN_LIB_H
 
 // the latest language versions are assumed
-// if some parts of this library are compiled with `nvcc`, use
-// `--std=c++17` flag and an adequately recent GCC on the host
 
 #ifdef __ICC
 #include <mathimf.h>
@@ -57,9 +55,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef USE_NVIDIA
 #include <tgmath.h>
-#endif /* !USE_NVIDIA */
 #include <time.h>
 #include <wchar.h>
 #endif /* ?__cplusplus */

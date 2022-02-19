@@ -33,6 +33,7 @@ static void VN_NO_PROF pflerror(const char *const f, const int l)
   const char *const e = strerror(errno);
   (void)snprintf(fl, VN_PROFILE_FLSIZE, "%s:%d", f, l);
   (void)fprintf(stderr, "%s: %s\n", fl, e);
+  (void)fflush(stderr);
 }
 
 static int VN_NO_PROF bt_comp(const void *a, const void *b)

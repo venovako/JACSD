@@ -26,7 +26,7 @@ FORFLAGS=$(CPUFLAGS) -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
 ifneq ($(ABI),lp64)
 FORFLAGS += -i8
 endif # ilp64
-C11FLAGS=$(CPUFLAGS) -c11
+C11FLAGS=$(CPUFLAGS) -c18
 CC=nvc
 FC=nvfortran
 CXX=nvc++
