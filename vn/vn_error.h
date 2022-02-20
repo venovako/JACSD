@@ -6,7 +6,7 @@
 #endif /* !VN_LIB_H */
 
 #ifndef VN_BTRACE_BUFSIZ
-#define VN_BTRACE_BUFSIZ 128
+#define VN_BTRACE_BUFSIZ 512
 #else /* VN_BTRACE_BUFSIZ */
 #error VN_BTRACE_BUFSIZ already defined
 #endif /* ?VN_BTRACE_BUFSIZ */

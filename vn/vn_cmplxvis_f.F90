@@ -1,12 +1,11 @@
 MODULE VN_CMPLXVIS_F
-  USE, INTRINSIC :: ISO_C_BINDING
   IMPLICIT NONE
 
   ! Please read ALL the comments below for details about the routines.
 
   INTERFACE
      FUNCTION VN_CMPLXVIS_START(ctx, fname, act, mA, nA, sx, sy, fname_len) BIND(C,name='vn_cmplxvis_start')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_ptr, c_char
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(OUT), TARGET :: ctx
        INTEGER, INTENT(IN), VALUE :: act, mA, nA, sx, sy, fname_len
@@ -17,7 +16,7 @@ MODULE VN_CMPLXVIS_F
 
   INTERFACE
      FUNCTION VN_CMPLXVIS_FRAME(ctx, A, ldA) BIND(C,name='vn_cmplxvis_frame')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_ptr, c_double
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER, INTENT(IN), VALUE :: ldA
@@ -28,7 +27,7 @@ MODULE VN_CMPLXVIS_F
 
   INTERFACE
      FUNCTION VN_CMPLXVIS_STOP(ctx) BIND(C,name='vn_cmplxvis_stop')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_ptr
        IMPLICIT NONE
        TYPE(c_ptr), INTENT(IN), VALUE :: ctx
        INTEGER :: VN_CMPLXVIS_STOP

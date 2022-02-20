@@ -1,10 +1,9 @@
 MODULE VN_BINIO_F
-  USE, INTRINSIC :: ISO_C_BINDING
   IMPLICIT NONE
 
   INTERFACE
      FUNCTION VN_BOPEN_RO(FN, SZ) BIND(C,NAME='vn_bopen_ro')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_char, c_int, c_size_t
        IMPLICIT NONE
        CHARACTER(KIND=c_char), INTENT(IN), TARGET :: FN(*)
        INTEGER(KIND=c_size_t), INTENT(OUT), TARGET :: SZ
@@ -14,7 +13,7 @@ MODULE VN_BINIO_F
 
   INTERFACE
      FUNCTION VN_BOPEN_RW(FN, SZ) BIND(C,NAME='vn_bopen_rw')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_char, c_int, c_size_t
        IMPLICIT NONE
        CHARACTER(KIND=c_char), INTENT(IN), TARGET :: FN(*)
        INTEGER(KIND=c_size_t), INTENT(INOUT), TARGET :: SZ
@@ -24,7 +23,7 @@ MODULE VN_BINIO_F
 
   INTERFACE
      FUNCTION VN_BOPEN_WO(FN, SZ) BIND(C,NAME='vn_bopen_wo')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_char, c_int, c_size_t
        IMPLICIT NONE
        CHARACTER(KIND=c_char), INTENT(IN), TARGET :: FN(*)
        INTEGER(KIND=c_size_t), INTENT(INOUT), TARGET :: SZ
@@ -34,7 +33,7 @@ MODULE VN_BINIO_F
 
   INTERFACE
      FUNCTION VN_BCLOSE(FD) BIND(C,NAME='vn_bclose')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_int
        IMPLICIT NONE
        INTEGER(KIND=c_int), INTENT(IN), VALUE :: FD
        INTEGER(KIND=c_int) :: VN_BCLOSE
@@ -43,7 +42,7 @@ MODULE VN_BINIO_F
 
   INTERFACE
      FUNCTION VN_BWRITE(FD, BUF, nB, OFF) BIND(C,NAME='vn_bwrite')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_ptr, c_int, c_size_t
        IMPLICIT NONE
        INTEGER(KIND=c_int), INTENT(IN), VALUE :: FD
        TYPE(c_ptr), INTENT(IN), VALUE :: BUF
@@ -54,7 +53,7 @@ MODULE VN_BINIO_F
 
   INTERFACE
      FUNCTION VN_BREAD(FD, BUF, nB, OFF) BIND(C,NAME='vn_bread')
-       USE, INTRINSIC :: ISO_C_BINDING
+       USE, INTRINSIC :: ISO_C_BINDING, ONLY: c_ptr, c_int, c_size_t
        IMPLICIT NONE
        INTEGER(KIND=c_int), INTENT(IN), VALUE :: FD
        TYPE(c_ptr), INTENT(IN), VALUE :: BUF

@@ -47,17 +47,13 @@ static inline uint64_t VN_NO_PROF tsc_get_freq_hz(unsigned *const rem_den)
     return (num / eax);
   }
   else {
-    if (rem_den) {
-      rem_den[0u] = 0u;
-      rem_den[1u] = 0u;
-    }
+    if (rem_den)
+      rem_den[1u] = rem_den[0u] = 0u;
     return UINT64_C(0);
   }
 #else /* TSC_FREQ_HZ > 0 */
-  if (rem_den) {
-    rem_den[0u] = 0u;
-    rem_den[1u] = 0u;
-  }
+  if (rem_den)
+    rem_den[1u] = rem_den[0u] = 0u;
   return (TSC_FREQ_HZ);
 #endif /* ?TSC_FREQ_HZ */
 #else /* !TSC_FREQ_HZ */
@@ -67,23 +63,14 @@ static inline uint64_t VN_NO_PROF tsc_get_freq_hz(unsigned *const rem_den)
   if (sysctlbyname("machdep.tsc.frequency", &hz, &hzl, NULL, (size_t)0u))
     perror("tsc_get_freq_hz:sysctlbyname");
 #else /* Linux */
-  // see https://github.com/trailofbits/tsc_freq_khz
-  FILE *const f = fopen("/sys/devices/system/cpu/cpu0/tsc_freq_hz", "r");
-  if (f) {
-    if (fscanf(f, "%llu", &hz) != 1)
-      perror("tsc_get_freq_hz:fscanf");
-    else // successful read
-      hz *= UINT64_C(1000);
-    if (fclose(f))
-      perror("tsc_get_freq_hz:fclose");
-  }
-  else
-    perror("tsc_get_freq_hz:fopen");
+  const char *const ev = getenv("TSC_FREQ_HZ");
+  char *ep = (char*)NULL;
+  hz = (ev ? (*ev ? strtoul(ev, &ep, 0) : UINT64_C(0)) : UINT64_C(0));
+  if (ep && *ep)
+    hz = UINT64_C(0);
 #endif /* ?__APPLE__ */
-  if (rem_den) {
-    rem_den[0u] = 0u;
-    rem_den[1u] = 0u;
-  }
+  if (rem_den)
+    rem_den[1u] = rem_den[0u] = 0u;
   return hz;
 #endif /* ?TSC_FREQ_HZ */
 }
