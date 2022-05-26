@@ -84,7 +84,9 @@
 #include <x86intrin.h>
 #ifdef TSC_FREQ_HZ
 #if (TSC_FREQ_HZ == 0ull)
+#ifndef __ICC
 #include <cpuid.h>
+#endif /* !__ICC */
 #endif /* ?TSC_FREQ_HZ */
 #endif /* TSC_FREQ_HZ */
 
