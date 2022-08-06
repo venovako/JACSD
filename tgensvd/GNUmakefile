@@ -6,13 +6,16 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
-all: gentxt.exe dgensvd.exe zgensvd.exe derrsvd.exe zerrsvd.exe svalserr.exe
+all: dgentxt.exe sgentxt.exe dgensvd.exe zgensvd.exe derrsvd.exe zerrsvd.exe svalserr.exe
 
 help:
 	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
-gentxt.exe: gentxt.F90 $(MKFS)
-	$(FC) $(FFLAGS) gentxt.F90 -o$@ $(LDFLAGS)
+dgentxt.exe: dgentxt.F90 $(MKFS)
+	$(FC) $(FFLAGS) dgentxt.F90 -o$@ $(LDFLAGS)
+
+sgentxt.exe: sgentxt.F90 $(MKFS)
+	$(FC) $(FFLAGS) sgentxt.F90 -o$@ $(LDFLAGS)
 
 dgensvd.exe: dgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) dgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)

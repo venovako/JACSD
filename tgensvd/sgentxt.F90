@@ -2,12 +2,12 @@
 ! lg(s) uniformly spread in [A,B]
 ! condition = 2**(MAX(A,B)-MIN(A,B))
 ! see `man shuf` for a random permutation
-PROGRAM GENTXT
+PROGRAM SGENTXT
   USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT
   IMPLICIT NONE
 
   INTEGER, PARAMETER :: WP = QX_WP
-  DOUBLE PRECISION, PARAMETER :: ONE = 1.0D0
+  REAL, PARAMETER :: ONE = 1.0
 
   INTEGER :: N, A, B, INFO, I
   REAL(KIND=WP) :: QA, QB, QC, QD, QS
@@ -27,11 +27,11 @@ PROGRAM GENTXT
   DO I = 1, N-2
      QC = QC + QD
      QS = 2**QC
-     WRITE (*,1) DBLE(QS)
+     WRITE (*,1) REAL(QS)
   END DO
   WRITE (*,1) SCALE(ONE, B)
 
-1 FORMAT(ES24.17E3)
+1 FORMAT(ES15.9E2)
 
 CONTAINS
 
@@ -42,7 +42,7 @@ CONTAINS
     CHARACTER(LEN=11) :: CAS
 
     IF (COMMAND_ARGUMENT_COUNT() .NE. 3) THEN
-       WRITE (ERROR_UNIT,*) 'gentxt.exe N A B'
+       WRITE (ERROR_UNIT,*) 'sgentxt.exe N A B'
        INFO = 1
        RETURN
     END IF
@@ -75,4 +75,4 @@ CONTAINS
     INFO = 0
   END SUBROUTINE READCL
 
-END PROGRAM GENTXT
+END PROGRAM SGENTXT
