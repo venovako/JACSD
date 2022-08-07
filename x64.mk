@@ -50,12 +50,12 @@ ifeq ($(FP),strict)
 FPUFFLAGS += -assume ieee_fpe_flags
 endif # strict
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xHost -qopt-multi-version-aggressive
+OPTFLAGS=-O$(NDEBUG) -xHost -qopt-multi-version-aggressive -vec-threshold0
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
-DBGFFLAGS=$(DBGFLAGS)
-DBGCFLAGS=$(DBGFLAGS) -w3 -diag-disable=1572,2547
+DBGFFLAGS=$(DBGFLAGS) -diag-disable=8293
+DBGCFLAGS=$(DBGFLAGS) -diag-disable=161
 else # DEBUG
 OPTFLAGS=-O0 -xHost -qopt-multi-version-aggressive
 OPTFFLAGS=$(OPTFLAGS)
@@ -64,8 +64,8 @@ DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -
 ifneq ($(ARCH),Darwin)
 DBGFLAGS += -debug parallel
 endif # Linux
-DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all
-DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -w3 -diag-disable=1572,2547
+DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all -diag-disable=7712,8293
+DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -diag-disable=161
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL
 ifneq ($(ABI),lp64)
