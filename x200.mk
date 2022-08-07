@@ -53,14 +53,14 @@ OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
 DBGFFLAGS=$(DBGFLAGS) -diag-disable=8293
-DBGCFLAGS=$(DBGFLAGS) -diag-disable=161
+DBGCFLAGS=$(DBGFLAGS) -diag-disable=161,167
 else # DEBUG
 OPTFLAGS=-O0 -xHost -qopt-multi-version-aggressive -qopt-zmm-usage=high
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -traceback -diag-disable=10397
 DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all -diag-disable=7712,8293
-DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -diag-disable=161
+DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -diag-disable=161,167
 endif # ?NDEBUG
 LIBFLAGS=-static-libgcc -D_GNU_SOURCE -DUSE_MKL
 ifneq ($(ABI),lp64)
