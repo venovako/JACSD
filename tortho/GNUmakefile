@@ -6,7 +6,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
-all: dortho.exe zortho.exe
+all: dortho.exe zortho.exe sortho.exe cortho.exe
 
 help:
 	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
@@ -16,6 +16,12 @@ dortho.exe: dortho.F90 bio.mod $(MKFS)
 
 zortho.exe: zortho.F90 bio.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) zortho.F90 bio.o -o$@ $(LDFLAGS)
+
+sortho.exe: sortho.F90 bio.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) sortho.F90 bio.o -o$@ $(LDFLAGS)
+
+cortho.exe: cortho.F90 bio.mod $(MKFS)
+	$(FC) -I.. $(FFLAGS) cortho.F90 bio.o -o$@ $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
