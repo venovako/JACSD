@@ -23,13 +23,13 @@ LIBFLAGS=$(LIBFLAGS) /DMKL_ILP64
 !ENDIF # ilp64
 LIBS=/LIBPATH:.. qxblas$(WP)$(DEBUG).lib /LIBPATH:"$(MKLROOT)\lib\intel64_win" mkl_intel_$(ABI)_dll.lib mkl_intel_thread_dll.lib mkl_core_dll.lib
 !IFDEF NDEBUG
-OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive
-DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback
+OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive /Qvec-threshold:0
+DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback /Qdiag-disable:10397
 FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt /Qimf-use-svml:true
 LDFLAGS=/link /RELEASE $(LIBS)
 !ELSE # DEBUG
 OPTFLAGS=/O$(DEBUG) /QxHost /Qopt-multi-version-aggressive
-DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
+DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback /Qdiag-disable:10397
 FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt /Qfp-stack-check /assume:ieee_fpe_flags
 LIBFLAGS=$(LIBFLAGS) /dbglibs
 LDFLAGS=/link /DEBUG $(LIBS)
