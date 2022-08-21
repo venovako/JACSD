@@ -2,7 +2,6 @@
 Some utilities for the Jacobi-type (G/H)SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
 
 Available here (for now):
-* a shared-memory vectorized Jacobi-type SVD,
 * a multi-precision BLAS library (qxblas) \[1,2,5\],
 * an orthogonality checker (tortho) \[1,2,5\],
 * an SVD test data generator (tgensvd) \[5\],
@@ -11,7 +10,8 @@ Available here (for now):
 * a skew-symmetric/Hermitian test data generator (tgenskew) \[4\],
 * a Jacobi strategies library (jstrat) \[1,2,5\],
 * a utility library (vn) \[1,2,3\],
-* and some testing code for the LAPACK CS.
+* the first attempt of a shared-memory vectorized Jacobi-type SVD (see [VecJac](https://github.com/venovako/VecJac) repository for a better version),
+* and some testing code for the LAPACK CS (src).
 
 \[1\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1137/19M1277813](https://doi.org/10.1137/19M1277813 "The LAPW Method with Eigendecomposition Based on the Hari–Zimmermann Generalized Hyperbolic SVD") with the preprint at arXiv:[1907.08560](https://arxiv.org/abs/1907.08560 "The LAPW method with eigendecomposition based on the Hari–Zimmermann generalized hyperbolic SVD") \[math.NA\].
 
