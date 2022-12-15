@@ -35,9 +35,9 @@ Have the Intel MKL (Math Kernel Library) installed.
 
 Run ``make`` as follows:
 ```bash
-make [COMPILER=gnu|x64|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]
+make [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]
 ```
-where ``COMPILER`` should be set for the Intel C/C++ and Fortran compilers (version 19.1+/2020+ recommended) to ``x64`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
+where ``COMPILER`` should be set for the Intel C/C++ and Fortran compilers (version 19.1+/2020+ recommended) to ``x64`` (deprecated) or ``x64x`` for Xeons, or to ``x200`` for Xeon Phi KNLs, respectively.
 If ``COMPILER`` is not set, GNU C/C++/Fortran compilers will be used by default.
 
 GNU Fortran versions 9 and above are *not* supported (though they might work)!

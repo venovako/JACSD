@@ -12,7 +12,7 @@ MODS=jstrat_f.mod
 all: ../libjstrat$(PROFILE)$(DEBUG).a
 
 help:
-	@echo "gmake [COMPILER=gnu|x64|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 ../libjstrat$(PROFILE)$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
@@ -26,6 +26,7 @@ jstrat_f.o jstrat_f.mod: jstrat_f.F90 jstrat.h $(MKFS)
 clean:
 	-$(RM) ../libjstrat$(PROFILE)$(DEBUG).a
 	-$(RM) *.optrpt
+	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
 	-$(RM) $(MODS)
 	-$(RM) *.dSYM

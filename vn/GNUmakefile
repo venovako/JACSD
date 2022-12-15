@@ -52,7 +52,7 @@ all: ../libvn$(PROFILE)$(DEBUG).a
 test: ../libvn$(PROFILE)$(DEBUG).a $(EXES)
 
 help:
-	@echo "gmake [COMPILER=gnu|x64|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 ../libvn$(PROFILE)$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
@@ -204,6 +204,7 @@ vn_variant.exe: vn_variant.c $(HDRS) $(MKFS)
 clean:
 	-$(RM) ../libvn$(PROFILE)$(DEBUG).a
 	-$(RM) *.optrpt
+	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
 	-$(RM) $(EXES)
 	-$(RM) $(MODS)

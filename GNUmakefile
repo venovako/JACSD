@@ -9,7 +9,7 @@ MKFS=GNUmakefile $(COMPILER).mk
 all: libjstrat$(PROFILE)$(DEBUG).a libqxblas$(WP)$(PROFILE)$(DEBUG).a libvn$(PROFILE)$(DEBUG).a # libl0c$(PROFILE)$(DEBUG).a
 
 help:
-	@echo "gmake [WP=4|8|10|16] [COMPILER=gnu|x64|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [WP=4|8|10|16] [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 libl0c$(PROFILE)$(DEBUG).a: libjstrat$(PROFILE)$(DEBUG).a libqxblas$(WP)$(PROFILE)$(DEBUG).a libvn$(PROFILE)$(DEBUG).a $(MKFS)
 ifneq ($(ABI),lp64)
@@ -111,6 +111,7 @@ endif # ?NDEBUG
 	-$(RM) *.mod
 	-$(RM) *.o
 	-$(RM) *.optrpt
+	-$(RM) *.opt.yaml
 	-$(RM) *__genmod.f90
 	-$(RM) *__genmod.mod
 	-$(RM) *.dSYM

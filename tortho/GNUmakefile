@@ -9,7 +9,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 all: dortho.exe zortho.exe sortho.exe cortho.exe
 
 help:
-	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 dortho.exe: dortho.F90 bio.mod $(MKFS)
 	$(FC) -I.. $(FFLAGS) dortho.F90 bio.o -o$@ $(LDFLAGS)
@@ -31,5 +31,6 @@ clean:
 	-$(RM) *.mod
 	-$(RM) *.o
 	-$(RM) *.optrpt
+	-$(RM) *.opt.yaml
 	-$(RM) *__genmod.*
 	-$(RM) *.dSYM

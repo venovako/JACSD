@@ -12,7 +12,7 @@ endif # !ilp64
 all: ../libl0c$(PROFILE)$(DEBUG).a xCSGEN.exe xLACSD.exe xL0.exe svd_test
 
 help:
-	@echo "gmake [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ifeq ($(COMPILER),x200)
 AVX512_DJACV.o: AVX512_DJACV.c AVX512_DJACV.h $(MKFS)
@@ -73,6 +73,7 @@ clean:
 	-$(RM) *.o
 	-$(RM) *.a
 	-$(RM) *.optrpt
+	-$(RM) *.opt.yaml
 	-$(RM) *__genmod.f90
 	-$(RM) *__genmod.mod
 	-$(RM) *.dSYM

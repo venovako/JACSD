@@ -116,7 +116,7 @@ OBJS=$(SOURCES:.F90=.o)
 all: ../libqxblas$(WP)$(PROFILE)$(DEBUG).a
 
 help:
-	@echo "gmake [WP=4|8|10|16] [COMPILER=gnu|x64|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [WP=4|8|10|16] [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 ../libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
@@ -127,6 +127,7 @@ help:
 clean:
 	-$(RM) ../libqxblas$(WP)$(PROFILE)$(DEBUG).a
 	-$(RM) *.optrpt
+	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
 	-$(RM) *__genmod.mod
 	-$(RM) *__genmod.f90
