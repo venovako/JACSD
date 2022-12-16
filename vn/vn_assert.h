@@ -6,7 +6,7 @@
 #endif /* !VN_LIB_H */
 
 #ifndef VN_ASSERT
-#ifdef __ICC
+#if (defined(__ICC) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
 #ifdef NDEBUG
 #define VN_ASSERT(cond) __assume(cond)
 #else /* !NDEBUG */

@@ -17,7 +17,7 @@
 
 #ifndef VN_DEAD_CODE
 #if (defined(__GNUC__) || defined(__clang__))
-#ifdef __ICC
+#if (defined(__ICC) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
 #define VN_DEAD_CODE __assume(0)
 #else /* !__ICC */
 #define VN_DEAD_CODE __builtin_unreachable()

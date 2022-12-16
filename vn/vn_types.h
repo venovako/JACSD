@@ -160,7 +160,7 @@ typedef vn_logical_8 vn_logical;
 #endif /* ?VN_FALSE */
 
 #ifndef VN_TRUE
-#if (defined(__ICC) || defined(USE_NVIDIA))
+#if (defined(__ICC) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER) || defined(USE_NVIDIA))
 #define VN_TRUE MkBool(-1)
 #else /* GNU */
 #define VN_TRUE MkBool(1)
