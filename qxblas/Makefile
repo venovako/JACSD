@@ -13,21 +13,35 @@ RM=del /F
 LIBS=qxblas$(WP)$(DEBUG).lib
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
-FC=ifort.exe
+!IFNDEF FORT
+FORT=ifort
+!ENDIF # !FORT
+FC=$(FORT).exe
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-semantics
 !IF "$(ABI)"=="ilp64"
 FORFLAGS=$(FORFLAGS) /4I8
 !ENDIF # ilp64
 !IFDEF NDEBUG
-OPTFLAGS=/O$(NDEBUG) /QxHost /Qopt-multi-version-aggressive /Qvec-threshold:0
-DBGFLAGS=/DNDEBUG /Qopt-report:5 /traceback /Qdiag-disable:10397
-FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt /Qimf-use-svml:true
+OPTFLAGS=/O$(NDEBUG) /QxHost /Qvec-threshold:0
+DBGFLAGS=/DNDEBUG /traceback
+FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz- /Qimf-use-svml:true
+!IF "$(FORT)"=="ifort"
+OPTFLAGS=$(OPTFLAGS) /Qopt-multi-version-aggressive
+DBGFLAGS=$(DBGFLAGS) /Qopt-report:5
+FPUFLAGS=$(FPUFLAGS) /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt
+!ELSE # ifx
+DBGFLAGS=$(DBGFLAGS) /Qopt-report:3
+!ENDIF # ?FORT
 LIBFLAGS=/I.. /libs:dll /threads
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
-OPTFLAGS=/O$(DEBUG) /QxHost /Qopt-multi-version-aggressive
-DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback /Qdiag-disable:10397
-FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt /Qfp-stack-check /assume:ieee_fpe_flags
+OPTFLAGS=/O$(DEBUG) /QxHost
+DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
+FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /assume:ieee_fpe_flags
+!IF "$(FORT)"=="ifort"
+OPTFLAGS=$(OPTFLAGS) /Qopt-multi-version-aggressive
+FPUFLAGS=$(FPUFLAGS) /Qcomplex-limited-range- /Qfast-transcendentals- /Qprec-div /Qprec-sqrt /Qfp-stack-check
+!ENDIF # ifort
 LIBFLAGS=/I.. /libs:dll /threads /dbglibs
 LDFLAGS=/link /DEBUG /LIBPATH:.. $(LIBS)
 !ENDIF # ?NDEBUG
@@ -248,7 +262,7 @@ xtrsv.obj
 all: ..\$(LIBS)
 
 help:
-	@echo "nmake.exe [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [ABI=lp64|ilp64] [all|clean|help]"
+	@echo "nmake.exe [FORT=ifort|ifx] [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [ABI=lp64|ilp64] [all|clean|help]"
 
 ..\$(LIBS): $(OBJS) Makefile
 	$(AR) $(ARFLAGS) /OUT:$@ $(OBJS)
