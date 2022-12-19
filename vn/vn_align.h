@@ -10,7 +10,7 @@
 #endif /* !VN_ALIGN_BYTES */
 
 #ifndef VN_ASSUME_ALIGNED
-#if (defined(__ICC) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
+#if (defined(__ICC) || defined(__INTEL_COMPILER) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
 #define VN_ASSUME_ALIGNED(a) __assume_aligned((a), (VN_ALIGN_BYTES))
 #else /* !__ICC */
 #if (defined(__GNUC__) || defined(__clang__))

@@ -3,7 +3,7 @@
 
 // the latest language versions are assumed
 
-#if (defined(__ICC) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
+#if (defined(__ICC) || defined(__INTEL_COMPILER) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
 #include <mathimf.h>
 #else /* !__ICC */
 #ifdef __cplusplus
@@ -84,7 +84,7 @@
 #include <x86intrin.h>
 #ifdef TSC_FREQ_HZ
 #if (TSC_FREQ_HZ == 0ull)
-#if !(defined(__ICC) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
+#if !(defined(__ICC) || defined(__INTEL_COMPILER) || defined(__INTEL_CLANG_COMPILER) || defined(__INTEL_LLVM_COMPILER))
 #include <cpuid.h>
 #endif /* !__ICC */
 #endif /* ?TSC_FREQ_HZ */
