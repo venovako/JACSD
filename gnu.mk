@@ -37,11 +37,16 @@ endif # Darwin
 CC=gcc$(GNU)
 FC=gfortran$(GNU)
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -march=native -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
+OPTFLAGS=-O$(NDEBUG) -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
 DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra
 ifeq ($(ARCH),Darwin)
 OPTFLAGS += -Wa,-q
 endif # Darwin
+ifeq ($(shell uname -m),ppc64le)
+OPTFLAGS += -mcpu=native
+else # x86_64
+OPTFLAGS += -march=native
+endif # ?ppc64le
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
@@ -51,13 +56,18 @@ FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS) #-fno-math-errno
 OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
-OPTFLAGS=-O$(DEBUG) -march=native
+OPTFLAGS=-O$(DEBUG)
 DBGFLAGS=-$(DEBUG) -fsanitize=address -pedantic -Wall -Wextra
 ifeq ($(ARCH),Darwin)
 OPTFLAGS += -Wa,-q
 else # Linux
 DBGFLAGS += -fsanitize=leak
 endif # ?Darwin
+ifeq ($(shell uname -m),ppc64le)
+OPTFLAGS += -mcpu=native
+else # x86_64
+OPTFLAGS += -march=native
+endif # ?ppc64le
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all #-fcheck=all
