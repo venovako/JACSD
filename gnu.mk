@@ -62,11 +62,11 @@ ifeq ($(shell uname -m),ppc64le)
 OPTFLAGS += -mcpu=native
 else # x86_64
 OPTFLAGS += -march=native
-DBGFLAGS += -fsanitize=address
+#DBGFLAGS += -fsanitize=address
 ifeq ($(ARCH),Darwin)
 OPTFLAGS += -Wa,-q
 else # Linux
-DBGFLAGS += -fsanitize=leak
+#DBGFLAGS += -fsanitize=leak
 endif # ?Darwin
 endif # ?ppc64le
 OPTFFLAGS=$(OPTFLAGS)
@@ -90,7 +90,7 @@ LIBFLAGS += -D_GNU_SOURCE
 LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_gf_$(ABI) -lmkl_gnu_thread -lmkl_core -lgomp
 endif # ?Darwin
 ifndef NDEBUG
-LDFLAGS += -lubsan
+#LDFLAGS += -lubsan
 endif # DEBUG
 LDFLAGS += -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
