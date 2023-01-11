@@ -53,7 +53,7 @@ DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncat
 DBGCFLAGS=$(DBGFLAGS)
 FPUFLAGS=-ffp-contract=fast
 FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS) #-fno-math-errno
+FPUCFLAGS=$(FPUFLAGS) -fno-math-errno
 OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
 OPTFLAGS=-O$(DEBUG)
@@ -62,17 +62,14 @@ ifeq ($(shell uname -m),ppc64le)
 OPTFLAGS += -mcpu=native
 else # x86_64
 OPTFLAGS += -march=native
-#DBGFLAGS += -fsanitize=address
 ifeq ($(ARCH),Darwin)
 OPTFLAGS += -Wa,-q
-else # Linux
-#DBGFLAGS += -fsanitize=leak
 endif # ?Darwin
 endif # ?ppc64le
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all #-fcheck=array-temps #-fcheck=all
-DBGCFLAGS=$(DBGFLAGS) #-fsanitize=undefined #-ftrapv
+DBGFFLAGS=$(DBGFLAGS) -fcheck=all -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
+DBGCFLAGS=$(DBGFLAGS) #-ftrapv
 FPUFLAGS=-ffp-contract=fast
 FPUFFLAGS=$(FPUFLAGS) #-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=$(FPUFLAGS)
@@ -89,9 +86,6 @@ else # Linux
 LIBFLAGS += -D_GNU_SOURCE
 LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_gf_$(ABI) -lmkl_gnu_thread -lmkl_core -lgomp
 endif # ?Darwin
-ifndef NDEBUG
-#LDFLAGS += -lubsan
-endif # DEBUG
 LDFLAGS += -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)
