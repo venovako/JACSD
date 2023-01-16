@@ -27,6 +27,7 @@ vn_variant.c
 
 SRCF=              \
 vn_alloc_f.F90     \
+vn_aux_f.F90       \
 vn_binio_f.F90     \
 vn_blas_f.F90      \
 vn_cmplxvis_f.F90  \
@@ -83,6 +84,9 @@ vn_attrs.o: vn_attrs.c $(HDRS) $(MKFS)
 
 vn_attrs.exe: vn_attrs.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
+
+vn_aux_f.o vn_aux_f.mod: vn_aux_f.F90 $(HDRS) $(MKFS)
+	$(FC) $(FFLAGS) -c $<
 
 vn_binio.o: vn_binio.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -c $<
