@@ -52,7 +52,7 @@ else # DEBUG
 OPTFLAGS=-O0 -xHost
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -traceback
+DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel -traceback
 DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all
 DBGCFLAGS=$(DBGFLAGS)
 endif # ?NDEBUG
