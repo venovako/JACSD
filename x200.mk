@@ -39,8 +39,6 @@ C18FLAGS=$(CPUFLAGS) -std=c18
 FPUFLAGS=-fp-model $(FP) -fprotect-parens -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
 ifeq ($(FP),strict)
 FPUFLAGS += -fp-stack-check
-else # !strict
-FPUFLAGS += -fimf-use-svml=true
 endif # ?strict
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
