@@ -32,10 +32,7 @@ ifneq ($(ABI),lp64)
 FORFLAGS += -i8
 endif # ilp64
 C18FLAGS=$(CPUFLAGS) -std=c18
-FPUFLAGS=-fp-model $(FP) -fprotect-parens -no-ftz
-ifneq ($(FP),strict)
-FPUFLAGS += -fma -fimf-use-svml=true
-endif # !strict
+FPUFLAGS=-fp-model $(FP) -fma -fprotect-parens -no-ftz
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 ifeq ($(FP),strict)
