@@ -16,6 +16,9 @@ int main(int argc, char *argv[])
 
   uint32_t nc = 0u;
   switch (bpp) {
+  case 1u:
+    nc = 2u;
+    break;
   case 4u:
     nc = 16u;
     break;
@@ -154,7 +157,7 @@ static void bmp_set_pixel_01(const vn_bmp_t bmp, const uint32_t x, const uint32_
 {
   uint8_t *const row = bmp->image + y * bmp->i_ldaB;
   const uint32_t ix = x >> 3u;
-  const uint32_t bit_ix = 7u - (x & 3u);
+  const uint32_t bit_ix = 7u - (x & 7u);
   const uint32_t mask = 1u << bit_ix;
   const uint32_t byte = (uint32_t)(row[ix]);
   row[ix] = (uint8_t)(c ? (byte | mask) : (byte & ~mask));
