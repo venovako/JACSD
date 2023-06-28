@@ -233,7 +233,7 @@ static uint32_t bmp_get_pixel_01(const vn_bmp_t bmp, const uint32_t x, const uin
 {
   const uint8_t *const row = bmp->image + y * bmp->i_ldaB;
   const uint32_t ix = x >> 3u;
-  const uint32_t bit_ix = 7u - (x & 3u);
+  const uint32_t bit_ix = 7u - (x & 7u);
   const uint32_t mask = 1u << bit_ix;
   const uint32_t byte = (uint32_t)(row[ix]);
   return ((byte & mask) >> bit_ix);
