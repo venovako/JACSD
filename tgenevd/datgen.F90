@@ -76,7 +76,11 @@ CONTAINS
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,XA,ZA) PRIVATE(P,Q)
 #endif
     DO Q = 1, N
-       DO P = 1, N
+       DO P = 1, Q-1
+          ZA(P,Q) = DCMPLX(DBLE(REAL(XA(P,Q))), DBLE(AIMAG(XA(P,Q))))
+       END DO
+       ZA(Q,Q) = DCMPLX(DBLE(REAL(XA(Q,Q))), 0.0D0)
+       DO P = Q+1, N
           ZA(P,Q) = DCMPLX(DBLE(REAL(XA(P,Q))), DBLE(AIMAG(XA(P,Q))))
        END DO
     END DO
