@@ -104,7 +104,12 @@ PROGRAM ZGENEVD
      WRITE (ERROR_UNIT,*) INFO
      ERROR STOP 'BIO_CLOSE(L)'
   END IF
+
+  DO P = 1, N
+     WRITE (OUTPUT_UNIT,9) DLAMBDA(P)
+  END DO
   DEALLOCATE(DLAMBDA)
+9 FORMAT(ES25.17E3)
 
 CONTAINS
 
@@ -134,20 +139,20 @@ CONTAINS
     CAS = ''
 
     IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
-       WRITE (OUTPUT_UNIT,*) 'zgenevd.exe LAMBDA SEEDIX N FILE [ LAMBDA_PARAMS ]'
-       WRITE (OUTPUT_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
-       WRITE (OUTPUT_UNIT,*) 'LAMBDA  : \Lambda_A; 1, 2, 3, or FILENAME'
-       WRITE (OUTPUT_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
-       WRITE (OUTPUT_UNIT,*) 'FILENAME: LAMBDA.txt: max 252 chars, >= N lines [each line = one real value]'
-       WRITE (OUTPUT_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
-       WRITE (OUTPUT_UNIT,*) 'N       : order of the output matrix: > 0'
-       WRITE (OUTPUT_UNIT,*) 'FILE    : output file name prefix: max 252 chars'
-       WRITE (OUTPUT_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
-       WRITE (OUTPUT_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
-       WRITE (OUTPUT_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
-       WRITE (OUTPUT_UNIT,*) '<< OUTPUT DATASETS >>'
-       WRITE (OUTPUT_UNIT,*) 'FILE.A  : double complex(N,N); a Hermitian matrix A'
-       WRITE (OUTPUT_UNIT,*) 'FILE.L  : double precision(N); \Lambda_A as read/generated'
+       WRITE (ERROR_UNIT,*) 'zgenevd.exe LAMBDA SEEDIX N FILE [ LAMBDA_PARAMS ]'
+       WRITE (ERROR_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
+       WRITE (ERROR_UNIT,*) 'LAMBDA  : \Lambda_A; 1, 2, 3, or FILENAME'
+       WRITE (ERROR_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
+       WRITE (ERROR_UNIT,*) 'FILENAME: LAMBDA.txt: max 252 chars, >= N lines [each line = one real value]'
+       WRITE (ERROR_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
+       WRITE (ERROR_UNIT,*) 'N       : order of the output matrix: > 0'
+       WRITE (ERROR_UNIT,*) 'FILE    : output file name prefix: max 252 chars'
+       WRITE (ERROR_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
+       WRITE (ERROR_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
+       WRITE (ERROR_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
+       WRITE (ERROR_UNIT,*) '<< OUTPUT DATASETS >>'
+       WRITE (ERROR_UNIT,*) 'FILE.A  : double complex(N,N); a Hermitian matrix A'
+       WRITE (ERROR_UNIT,*) 'FILE.L  : double precision(N); \Lambda_A as read/generated'
        INFO = 1
        RETURN
     END IF
