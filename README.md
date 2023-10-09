@@ -9,6 +9,7 @@ Available here (for now):
 * a HSVD test data generator (tgenhsvd) \[3\],
 * a skew-symmetric/Hermitian test data generator (tgenskew) \[4\],
 * a Jacobi strategies library (jstrat) \[1,2,5\],
+* a symmetric/Hermitian EVD test data generator (tgenevd) \[6\],
 * a utility library (vn) \[1,2,3\],
 * the first attempt of a shared-memory vectorized Jacobi-type SVD (see [VecJac](https://github.com/venovako/VecJac) repository for a better version),
 * and some testing code for the LAPACK CS (src).
@@ -22,6 +23,8 @@ Available here (for now):
 \[4\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1016/j.amc.2020.125263](https://doi.org/10.1016/j.amc.2020.125263 "The antitriangular factorization of skew-symmetric matrices") with the preprint at arXiv:[1909.00092](https://arxiv.org/abs/1909.00092 "The antitriangular factorization of skew-symmetric matrices") \[math.NA\].
 
 \[5\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1137/22M1478847](https://doi.org/10.1137/22M1478847 "Vectorization of a thread-parallel Jacobi singular value decomposition method") with the preprint at arXiv:[2202.08361](https://arxiv.org/abs/2202.08361 "Vectorization of the Jacobi-type singular value decomposition method") \[math.NA\].
+
+\[6\] This subdirectory is also related to the preprint doi:[10.48550/arXiv.2308.14222](https://doi.org/10.48550/arXiv.2308.14222 "Accurate complex Jacobi rotations").
 
 ## Building
 
