@@ -2,9 +2,55 @@ MODULE LAMGEN
   USE SEED
   IMPLICIT NONE
 
-  DOUBLE PRECISION, PARAMETER, PRIVATE :: ZERO = 0.0D0, ONE = 1.0D0
-
 CONTAINS
+
+  SUBROUTINE SGENLAM(N, ISEED, IDIST, EPS, SCAL, LAM, NPOS, INFO)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(IN) :: N, IDIST
+    INTEGER, INTENT(INOUT) :: ISEED(4)
+    REAL, INTENT(IN) :: EPS, SCAL
+    REAL, INTENT(OUT) :: LAM(N)
+    INTEGER, INTENT(OUT) :: NPOS, INFO
+
+    INTEGER :: I
+
+    REAL, EXTERNAL :: SLARND
+
+    CALL SEEDOK(ISEED, I)
+
+    IF (N .LT. 0) THEN
+       INFO = -1
+    ELSE IF (I .NE. 0) THEN
+       INFO = -2
+    ELSE IF ((IDIST .LT. 1) .OR. (IDIST .GT. 3)) THEN
+       INFO = -3
+    ELSE IF (EPS .LT. 0.0) THEN
+       INFO = -4
+    ELSE IF (SCAL .EQ. 0.0) THEN
+       INFO = -5
+    ELSE
+       INFO = 0
+    END IF
+    IF (INFO .NE. 0) RETURN
+
+    NPOS = 0
+    I = 1
+
+    DO WHILE (I .LE. N)
+       LAM(I) = SLARND(IDIST, ISEED)
+       IF (ABS(LAM(I)) .GT. EPS) THEN
+          IF (LAM(I) .GT. 0.0) NPOS = NPOS + 1
+          I = I + 1
+       END IF
+    END DO
+
+    IF (SCAL .NE. 1.0) THEN
+       DO I = 1, N
+          LAM(I) = LAM(I) * SCAL
+       END DO
+    END IF
+  END SUBROUTINE SGENLAM
 
   SUBROUTINE DGENLAM(N, ISEED, IDIST, EPS, SCAL, LAM, NPOS, INFO)
     IMPLICIT NONE
@@ -27,9 +73,9 @@ CONTAINS
        INFO = -2
     ELSE IF ((IDIST .LT. 1) .OR. (IDIST .GT. 3)) THEN
        INFO = -3
-    ELSE IF (EPS .LT. ZERO) THEN
+    ELSE IF (EPS .LT. 0.0D0) THEN
        INFO = -4
-    ELSE IF (SCAL .EQ. ZERO) THEN
+    ELSE IF (SCAL .EQ. 0.0D0) THEN
        INFO = -5
     ELSE
        INFO = 0
@@ -42,17 +88,49 @@ CONTAINS
     DO WHILE (I .LE. N)
        LAM(I) = DLARND(IDIST, ISEED)
        IF (ABS(LAM(I)) .GT. EPS) THEN
-          IF (LAM(I) .GT. ZERO) NPOS = NPOS + 1
+          IF (LAM(I) .GT. 0.0D0) NPOS = NPOS + 1
           I = I + 1
        END IF
     END DO
 
-    IF (SCAL .NE. ONE) THEN
+    IF (SCAL .NE. 1.0D0) THEN
        DO I = 1, N
           LAM(I) = LAM(I) * SCAL
        END DO
     END IF
   END SUBROUTINE DGENLAM
+
+  SUBROUTINE STXTLAM(FN, N, LAM, NPOS, INFO)
+    IMPLICIT NONE
+
+    CHARACTER(LEN=*), INTENT(IN) :: FN
+    INTEGER, INTENT(IN) :: N
+    REAL, INTENT(OUT) :: LAM(N)
+    INTEGER, INTENT(OUT) :: NPOS, INFO
+
+    INTEGER :: I
+    LOGICAL :: FEX
+
+    INQUIRE(FILE=TRIM(FN), EXIST=FEX)
+    IF (.NOT. FEX) THEN
+       INFO = -1
+    ELSE IF (N .LT. 0) THEN
+       INFO = -2
+    ELSE
+       INFO = 0
+    END IF
+    IF (INFO .NE. 0) RETURN
+
+    OPEN(UNIT=1, FILE=TRIM(FN), ACTION='READ', STATUS='OLD')
+
+    NPOS = 0
+    DO I = 1, N
+       READ (1,*) LAM(I)
+       IF (LAM(I) .GT. 0.0) NPOS = NPOS + 1
+    END DO
+
+    CLOSE(UNIT=1)
+  END SUBROUTINE STXTLAM
 
   SUBROUTINE DTXTLAM(FN, N, LAM, NPOS, INFO)
     IMPLICIT NONE
@@ -80,7 +158,7 @@ CONTAINS
     NPOS = 0
     DO I = 1, N
        READ (1,*) LAM(I)
-       IF (LAM(I) .GT. ZERO) NPOS = NPOS + 1
+       IF (LAM(I) .GT. 0.0D0) NPOS = NPOS + 1
     END DO
 
     CLOSE(UNIT=1)

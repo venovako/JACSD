@@ -1,0 +1,226 @@
+PROGRAM SGENEVD
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: OUTPUT_UNIT, ERROR_UNIT
+  USE BIO
+  USE SEED
+  USE LAMGEN
+  USE DATGEN
+  IMPLICIT NONE
+
+  INTEGER, PARAMETER :: WP = QX_WP
+  INTEGER, PARAMETER :: FNL = 252
+  REAL, PARAMETER :: ZERO = 0.0
+
+  ! command-line parameters
+  INTEGER :: SEEDI, N, IDIST, INFO
+  REAL :: EPS, SCAL
+  CHARACTER(LEN=FNL) :: LAMBDA, FIL
+
+  INTEGER :: ISEED(4), P
+
+  INTEGER, ALLOCATABLE :: IWORK(:)
+  REAL, ALLOCATABLE :: SLAMBDA(:)
+  REAL(KIND=WP), ALLOCATABLE :: QLAMBDA(:), QWORK(:)
+
+  REAL, ALLOCATABLE :: SA(:,:)
+  REAL(KIND=WP), ALLOCATABLE :: QA(:,:)
+
+  CALL READCL(LAMBDA, SEEDI, N, FIL, IDIST, EPS, SCAL, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'READCL'
+  END IF
+
+  CALL SEEDIX(SEEDI, ISEED, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SEEDIX'
+  END IF
+
+  ALLOCATE(SLAMBDA(N))
+  IF (IDIST .NE. 0) THEN
+     CALL SGENLAM(N, ISEED, IDIST, EPS, SCAL, SLAMBDA, P, INFO)
+  ELSE
+     CALL STXTLAM(LAMBDA, N, SLAMBDA, P, INFO)
+  END IF
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'LAMBDA'
+  END IF
+
+  ALLOCATE(SA(N,N))
+  ALLOCATE(QA(N,N))
+  ALLOCATE(QLAMBDA(N))
+  DO P = 1, N
+     QLAMBDA(P) = REAL(SLAMBDA(P),WP)
+  END DO
+  P = 3 * N
+  ALLOCATE(IWORK(P))
+  P = 2 * N
+  ALLOCATE(QWORK(P))
+
+  CALL SGENDAT(N, ISEED, QLAMBDA, QA, SA, QWORK, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'SGENDAT'
+  END IF
+
+  DEALLOCATE(QWORK)
+  DEALLOCATE(IWORK)
+  DEALLOCATE(QLAMBDA)
+  DEALLOCATE(QA)
+
+  P = -1
+  CALL BIO_OPEN(P, TRIM(FIL)//'.a', 'WO', INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(A)'
+  END IF
+  CALL BIO_WRITE_S2(P, N, N, SA, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_S2(A)'
+  END IF
+  CALL BIO_CLOSE(P, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(A)'
+  END IF
+  DEALLOCATE(SA)
+
+  P = -1
+  CALL BIO_OPEN(P, TRIM(FIL)//'.l', 'WO', INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_OPEN(L)'
+  END IF
+  CALL BIO_WRITE_S1(P, N, SLAMBDA, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_WRITE_S1(L)'
+  END IF
+  CALL BIO_CLOSE(P, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'BIO_CLOSE(L)'
+  END IF
+
+  DO P = 1, N
+     WRITE (OUTPUT_UNIT,9) SLAMBDA(P)
+  END DO
+  DEALLOCATE(SLAMBDA)
+9 FORMAT(ES16.9E2)
+
+CONTAINS
+
+  SUBROUTINE READCL(LAMBDA, SEEDI, N, FIL, IDIST, EPS, SCAL, INFO)
+    IMPLICIT NONE
+
+    INTEGER, INTENT(OUT) :: SEEDI, N, IDIST, INFO
+    REAL, INTENT(OUT) :: EPS, SCAL
+    CHARACTER(LEN=*), INTENT(OUT) :: LAMBDA, FIL
+
+    INTEGER, PARAMETER :: NRQP = 4
+    INTEGER :: NXTA
+    CHARACTER(LEN=FNL) :: CAS
+
+    SEEDI = 0
+    N = 0
+    IDIST = 0
+    INFO = 0
+
+    EPS = ZERO
+    SCAL = ZERO
+
+    LAMBDA = ''
+    FIL = ''
+
+    NXTA = NRQP
+    CAS = ''
+
+    IF (COMMAND_ARGUMENT_COUNT() .LT. NRQP) THEN
+       WRITE (ERROR_UNIT,*) 'sgenevd.exe LAMBDA SEEDIX N FILE [ LAMBDA_PARAMS ]'
+       WRITE (ERROR_UNIT,*) '>> COMMAND LINE (INPUT) ARGUMENTS <<'
+       WRITE (ERROR_UNIT,*) 'LAMBDA  : \Lambda_A; 1, 2, 3, or FILENAME'
+       WRITE (ERROR_UNIT,*) 'IDIST123: 1 [uniform (0,1)], 2 [uniform(-1,1)], or 3 [normal(0,1)]'
+       WRITE (ERROR_UNIT,*) 'FILENAME: LAMBDA.txt: max 252 chars, >= N lines [each line = one real value]'
+       WRITE (ERROR_UNIT,*) 'SEEDIX  : index of hard-coded pRNG seed (see seedix.F90); 1 or 2'
+       WRITE (ERROR_UNIT,*) 'N       : order of the output matrix: > 0'
+       WRITE (ERROR_UNIT,*) 'FILE    : output file name prefix: max 252 chars'
+       WRITE (ERROR_UNIT,*) 'LAMBDA  ; LAMBDA_PARAMS if LAMBDA is IDIST123'
+       WRITE (ERROR_UNIT,*) ' EPS    : \lambda''_i survives iff |\lambda''_i| > EPS'
+       WRITE (ERROR_UNIT,*) ' SCALE  : final \lambda_i = \lambda''_i * SCALE'
+       WRITE (ERROR_UNIT,*) '<< OUTPUT DATASETS >>'
+       WRITE (ERROR_UNIT,*) 'FILE.a  : real(N,N); a symmetric matrix A'
+       WRITE (ERROR_UNIT,*) 'FILE.l  : real(N); \Lambda_A as read/generated'
+       INFO = 1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(1, LAMBDA, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    IF (TRIM(LAMBDA) .EQ. '1') THEN
+       IDIST = 1
+    ELSE IF (TRIM(LAMBDA) .EQ. '2') THEN
+       IDIST = 2
+    ELSE IF (TRIM(LAMBDA) .EQ. '3') THEN
+       IDIST = 3
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(2, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+    READ (CAS,*) SEEDI
+    IF (SEEDI .LE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(3, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+    READ (CAS,*) N
+    IF (N .LE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(4, FIL, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -4
+       RETURN
+    END IF
+
+    IF (IDIST .NE. 0) THEN
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) EPS
+       IF (EPS .LT. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       NXTA = NXTA + 1
+       CALL GET_COMMAND_ARGUMENT(NXTA, CAS, STATUS=INFO)
+       IF (INFO .NE. 0) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+       READ (CAS,*) SCAL
+       IF (SCAL .EQ. ZERO) THEN
+          INFO = -NXTA
+          RETURN
+       END IF
+    END IF
+  END SUBROUTINE READCL
+
+END PROGRAM SGENEVD

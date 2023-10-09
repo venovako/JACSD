@@ -1,0 +1,97 @@
+PROGRAM SGENTXT
+  USE, INTRINSIC :: ISO_FORTRAN_ENV, ONLY: ERROR_UNIT, REAL128
+  IMPLICIT NONE
+
+  CHARACTER(LEN=5), PARAMETER :: FN = 'f.txt'
+  INTEGER, PARAMETER :: FU = 1
+
+  INTEGER :: N, INFO, I
+  REAL :: MIN_F, MAX_F
+  REAL(KIND=REAL128) :: FV, FD
+
+  CALL READCL(N, MIN_F, MAX_F, INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'invalid command line'
+  END IF
+  IF (MIN_F .GT. MAX_F) ERROR STOP 'MIN_F > MAX_F'
+
+  OPEN(UNIT=FU, FILE=FN, IOSTAT=INFO, STATUS='REPLACE')
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error opening f.txt'
+  END IF
+
+  FV = REAL(MAX_F, REAL128)
+  FD = (FV - REAL(MIN_F, REAL128)) / (N - 1)
+
+  DO I = 1, N
+     WRITE (FU,1) FV
+     FV = FV - FD
+  END DO
+
+  CLOSE(UNIT=FU, IOSTAT=INFO)
+  IF (INFO .NE. 0) THEN
+     WRITE (ERROR_UNIT,*) INFO
+     ERROR STOP 'error closing f.txt'
+  END IF
+
+1 FORMAT(ES16.9E2)
+CONTAINS
+  SUBROUTINE READCL(N, MIN_F, MAX_F, INFO)
+    IMPLICIT NONE
+    INTEGER, INTENT(OUT) :: N, INFO
+    REAL, INTENT(OUT) :: MIN_F, MAX_F
+
+    CHARACTER(LEN=25) :: CAS
+
+    IF (COMMAND_ARGUMENT_COUNT() .NE. 3) THEN
+       WRITE (ERROR_UNIT,*) 'sgentxt.exe N MIN_F MAX_F'
+       INFO = 1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(1, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+    READ (CAS,*) N
+    IF (N .LE. 0) THEN
+       INFO = -1
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(2, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -2
+       RETURN
+    END IF
+    READ (CAS,*) MIN_F
+    IF (.NOT. (ABS(MIN_F) .GT. 0.0)) THEN
+       INFO = -2
+       RETURN
+    END IF
+    IF (.NOT. (ABS(MIN_F) .LE. HUGE(MIN_F))) THEN
+       INFO = -2
+       RETURN
+    END IF
+
+    CALL GET_COMMAND_ARGUMENT(3, CAS, STATUS=INFO)
+    IF (INFO .NE. 0) THEN
+       INFO = -3
+       RETURN
+    END IF
+    READ (CAS,*) MAX_F
+    IF (.NOT. (ABS(MAX_F) .GT. 0.0)) THEN
+       INFO = -3
+       RETURN
+    END IF
+    IF (.NOT. (ABS(MAX_F) .LE. HUGE(MAX_F))) THEN
+       INFO = -3
+       RETURN
+    END IF
+
+    INFO = 0
+  END SUBROUTINE READCL
+END PROGRAM SGENTXT
