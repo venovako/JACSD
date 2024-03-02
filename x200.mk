@@ -12,18 +12,14 @@ else # DEBUG
 DEBUG=g
 endif # ?NDEBUG
 ifndef FP
-ifdef NDEBUG
 FP=precise
-else # DEBUG
-FP=strict
-endif # ?NDEBUG
 endif # !FP
 RM=rm -rfv
 AR=xiar
 ARFLAGS=-qnoipo -lib rsv
-CC=icc
-FC=ifort
-CPUFLAGS=-DUSE_INTEL -DUSE_X200 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopenmp -rdynamic
+CC=icx
+FC=ifx
+CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopenmp -rdynamic
 ifdef PROFILE
 CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
 endif # PROFILE
@@ -36,35 +32,34 @@ ifneq ($(ABI),lp64)
 FORFLAGS += -i8
 endif # ilp64
 C18FLAGS=$(CPUFLAGS) -std=c18
-FPUFLAGS=-fp-model $(FP) -fprotect-parens -fma -no-ftz -no-complex-limited-range -no-fast-transcendentals -prec-div -prec-sqrt
-ifeq ($(FP),strict)
-FPUFLAGS += -fp-stack-check
-endif # ?strict
+FPUFLAGS=-fp-model $(FP) -fma -fprotect-parens -no-ftz
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 ifeq ($(FP),strict)
 FPUFFLAGS += -assume ieee_fpe_flags
 endif # strict
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xHost -qopt-multi-version-aggressive -qopt-zmm-usage=high -vec-threshold0
+OPTFLAGS=-O$(NDEBUG) -xcommon-avx512 -mprefer-vector-width=512 -vec-threshold0
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
-DBGFFLAGS=$(DBGFLAGS) -diag-disable=8293
-DBGCFLAGS=$(DBGFLAGS) -diag-disable=161,167
+DBGFLAGS=-DNDEBUG -qopt-report=3 -traceback
+DBGFFLAGS=$(DBGFLAGS)
+DBGCFLAGS=$(DBGFLAGS)
 else # DEBUG
-OPTFLAGS=-O0 -xHost -qopt-multi-version-aggressive -qopt-zmm-usage=high
+OPTFLAGS=-O0 -xcommon-avx512 -mprefer-vector-width=512
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel -debug pubnames -traceback -diag-disable=10397
-DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all -diag-disable=7712,8293
-DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -diag-disable=161,167
+DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel -traceback
+DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all
+DBGCFLAGS=$(DBGFLAGS)
 endif # ?NDEBUG
-LIBFLAGS=-static-libgcc -D_GNU_SOURCE -DUSE_MKL
+LIBFLAGS=-DUSE_MKL
 ifneq ($(ABI),lp64)
 LIBFLAGS += -DMKL_ILP64
 endif # ilp64
 LIBFLAGS += -I. -I../vn -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
-LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG) -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi) -lpthread -lm -ldl
+LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG)
+LIBFLAGS += -static-libgcc -D_GNU_SOURCE
+LDFLAGS += -L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi) -lpthread -lm -ldl
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)
