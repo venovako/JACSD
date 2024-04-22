@@ -16,11 +16,12 @@ nmake.exe [FORT=ifort|ifx] [WP=4|8|16] [NDEBUG=0|1|2|3|4|5] [ABI=lp64|ilp64] [al
 ### Precision
 
 `WP` can be set to:
-- ``WP=4``: single
-- ``WP=8``: double
-- ``WP=10``: Intel 80-bit extended (only with GNU Fortran)
-- ``WP=16``: quad
-or any other `KIND` parameter available.
+- `4`: single
+- `8`: double
+- `10`: Intel 80-bit extended (only with GNU Fortran)
+- `16`: quad
+
+or to any other `KIND` parameter available.
 
 ## Output
 
