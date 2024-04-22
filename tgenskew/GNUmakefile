@@ -12,10 +12,10 @@ help:
 	@echo "gmake [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [WP=4|8|16] [ABI=ilp64|lp64] [all|clean|help]"
 
 dgenskew.exe: dgenskew.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) dgenskew.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) dgenskew.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 zgenskew.exe: zgenskew.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) zgenskew.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) zgenskew.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90

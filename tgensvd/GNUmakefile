@@ -18,16 +18,16 @@ sgentxt.exe: sgentxt.F90 $(MKFS)
 	$(FC) $(FFLAGS) sgentxt.F90 -o$@ $(LDFLAGS)
 
 dgensvd.exe: dgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) dgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) dgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 sgensvd.exe: sgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) sgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) sgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 zgensvd.exe: zgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) zgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) zgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 cgensvd.exe: cgensvd.F90 bio.mod seed.mod svgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) cgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) cgensvd.F90 bio.o seed.o svgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 derrsvd.exe: derrsvd.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) derrsvd.F90 bio.o -o$@ $(LDFLAGS)

@@ -12,16 +12,16 @@ help:
 	@echo "gmake [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 sgenevd.exe: sgenevd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) sgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) sgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 dgenevd.exe: dgenevd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) dgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) dgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 cgenevd.exe: cgenevd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) cgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) cgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 zgenevd.exe: zgenevd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
-	$(FC) $(FFLAGS) zgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(PROFILE)$(DEBUG) $(LDFLAGS)
+	$(FC) $(FFLAGS) zgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)

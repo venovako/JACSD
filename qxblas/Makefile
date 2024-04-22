@@ -10,7 +10,7 @@ DEBUG=
 DEBUG=d
 !ENDIF # ?NDEBUG
 RM=del /F
-LIBS=qxblas$(WP)$(DEBUG).lib
+LIBS=qxblas$(WP)$(ABI)$(DEBUG).lib
 AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 !IFNDEF FORT

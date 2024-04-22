@@ -24,7 +24,7 @@ LIBFLAGS=/I"$(MKLROOT)\include\intel64\$(ABI)" /I"$(MKLROOT)\include" /libs:dll 
 FORFLAGS=$(FORFLAGS) /4I8
 LIBFLAGS=$(LIBFLAGS) /DMKL_ILP64
 !ENDIF # ilp64
-LIBS=/LIBPATH:.. qxblas$(WP)$(DEBUG).lib /LIBPATH:"$(MKLROOT)\lib\intel64_win" mkl_intel_$(ABI)_dll.lib mkl_intel_thread_dll.lib mkl_core_dll.lib
+LIBS=/LIBPATH:.. qxblas$(WP)$(ABI)$(DEBUG).lib /LIBPATH:"$(MKLROOT)\lib\intel64_win" mkl_intel_$(ABI)_dll.lib mkl_intel_thread_dll.lib mkl_core_dll.lib
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /QxHost /Qvec-threshold:0
 DBGFLAGS=/DNDEBUG /traceback

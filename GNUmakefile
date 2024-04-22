@@ -6,106 +6,56 @@ MKFS=GNUmakefile $(COMPILER).mk
 
 .PHONY: all help clean
 
-all: libjstrat$(PROFILE)$(DEBUG).a libqxblas$(WP)$(PROFILE)$(DEBUG).a libvn$(PROFILE)$(DEBUG).a # libl0c$(PROFILE)$(DEBUG).a
+all: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a # libl0c$(DEBUG).a
 
 help:
 	@echo "gmake [WP=4|8|10|16] [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
-libl0c$(PROFILE)$(DEBUG).a: libjstrat$(PROFILE)$(DEBUG).a libqxblas$(WP)$(PROFILE)$(DEBUG).a libvn$(PROFILE)$(DEBUG).a $(MKFS)
+libl0c$(DEBUG).a: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a $(MKFS)
 ifneq ($(ABI),lp64)
 ifdef NDEBUG
-ifdef PROFILE
-	pushd src && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd src && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) && popd
-endif # ?PROFILE
 else # DEBUG
-ifdef PROFILE
-	pushd src && $(MAKE) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd src && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) && popd
-endif # ?PROFILE
 endif # ?NDEBUG
-endif # !NVIDIA
+endif # !lp64
 
-libjstrat$(PROFILE)$(DEBUG).a: $(MKFS)
+libjstrat$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
-ifdef PROFILE
-	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) && popd
-endif # ?PROFILE
 else # DEBUG
-ifdef PROFILE
-	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) && popd
-endif # ?PROFILE
 endif # ?NDEBUG
 
-libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(MKFS)
+libqxblas$(WP)$(ABI)$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
-ifdef PROFILE
-	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) && popd
-endif # ?PROFILE
 else # DEBUG
-ifdef PROFILE
-	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) ABI=$(ABI) && popd
-endif # ?PROFILE
 endif # ?NDEBUG
 
-libvn$(PROFILE)$(DEBUG).a: $(MKFS)
+libvn$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
-ifdef PROFILE
-	pushd vn && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd vn && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) && popd
-endif # ?PROFILE
 else # DEBUG
-ifdef PROFILE
-	pushd vn && $(MAKE) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) && popd
-else # !PROFILE
 	pushd vn && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) && popd
-endif # ?PROFILE
 endif # ?NDEBUG
 
 clean:
 ifdef NDEBUG
-ifdef PROFILE
-	pushd vn && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-ifneq ($(ABI),lp64)
-	pushd src && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-endif # !NVIDIA
-else # !PROFILE
 	pushd vn && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
 	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
 ifneq ($(ABI),lp64)
 	pushd src && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
-endif # !NVIDIA
-endif # ?PROFILE
+endif # !lp64
 else # DEBUG
-ifdef PROFILE
-	pushd vn && $(MAKE) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-ifneq ($(ABI),lp64)
-	pushd src && $(MAKE) COMPILER=$(COMPILER) PROFILE=$(PROFILE) ABI=$(ABI) clean && popd
-endif # !NVIDIA
-else # !PROFILE
 	pushd vn && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
 	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
 ifneq ($(ABI),lp64)
 	pushd src && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
-endif # !NVIDIA
-endif # ?PROFILE
+endif # !lp64
 endif # ?NDEBUG
 	-$(RM) *.exe
 	-$(RM) *.mod

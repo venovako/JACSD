@@ -113,19 +113,19 @@ OBJS=$(SOURCES:.F90=.o)
 
 .PHONY: all help prepare clean
 
-all: ../libqxblas$(WP)$(PROFILE)$(DEBUG).a
+all: ../libqxblas$(WP)$(ABI)$(DEBUG).a
 
 help:
 	@echo "gmake [WP=4|8|10|16] [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
-../libqxblas$(WP)$(PROFILE)$(DEBUG).a: $(OBJS) $(MKFS)
+../libqxblas$(WP)$(ABI)$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 %.o: %.F90 $(MKFS)
 	$(FC) -I.. $(FFLAGS) -c $< -o $@
 
 clean:
-	-$(RM) ../libqxblas$(WP)$(PROFILE)$(DEBUG).a
+	-$(RM) ../libqxblas$(WP)$(ABI)$(DEBUG).a
 	-$(RM) *.optrpt
 	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)

@@ -48,14 +48,14 @@ EXES=$(SRCC:.c=.exe)
 
 .PHONY: all test help clean
 
-all: ../libvn$(PROFILE)$(DEBUG).a
+all: ../libvn$(DEBUG).a
 
-test: ../libvn$(PROFILE)$(DEBUG).a $(EXES)
+test: ../libvn$(DEBUG).a $(EXES)
 
 help:
 	@echo "gmake [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
-../libvn$(PROFILE)$(DEBUG).a: $(OBJS) $(MKFS)
+../libvn$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 vn_align.o: vn_align.c $(HDRS) $(MKFS)
@@ -206,7 +206,7 @@ vn_variant.exe: vn_variant.c $(HDRS) $(MKFS)
 	$(CC) $(CFLAGS) -DVN_TEST $< -o $@ $(LDFLAGS)
 
 clean:
-	-$(RM) ../libvn$(PROFILE)$(DEBUG).a
+	-$(RM) ../libvn$(DEBUG).a
 	-$(RM) *.optrpt
 	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
