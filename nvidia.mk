@@ -15,9 +15,6 @@ RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
 CPUFLAGS=-DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -KPIC -Mframe -Meh_frame -Minfo
-ifdef PROFILE
-CPUFLAGS += -DVN_PROFILE=$(PROFILE) -Mnoinline -Minstrument=functions
-endif # PROFILE
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -59,6 +56,6 @@ ifneq ($(ABI),lp64)
 LIBFLAGS += -DMKL_ILP64
 endif # ilp64
 LIBFLAGS += -I. -I../vn -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
-LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG) -L${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_$(MKL) -lmkl_core -pgf90libs -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
+LDFLAGS=-L.. -lvn$(DEBUG) -L${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_$(MKL) -lmkl_core -pgf90libs -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C11FLAGS) $(FPUCFLAGS)

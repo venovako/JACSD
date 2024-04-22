@@ -24,9 +24,6 @@ ARFLAGS=-qnoipo -lib rsv
 CC=icc
 FC=ifort
 CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopenmp -rdynamic
-ifdef PROFILE
-CPUFLAGS += -DVN_PROFILE=$(PROFILE) -fno-inline -finstrument-functions
-endif # PROFILE
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -70,7 +67,7 @@ ifneq ($(ABI),lp64)
 LIBFLAGS += -DMKL_ILP64
 endif # ilp64
 LIBFLAGS += -I. -I../vn -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
-LDFLAGS=-L.. -lvn$(PROFILE)$(DEBUG)
+LDFLAGS=-L.. -lvn$(DEBUG)
 ifeq ($(ARCH),Darwin)
 LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core
 else # Linux
