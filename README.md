@@ -24,7 +24,7 @@ Available here (for now):
 
 \[5\] This subdirectory is also a part of the supplementary material for or otherwise related to the paper doi:[10.1137/22M1478847](https://doi.org/10.1137/22M1478847 "Vectorization of a thread-parallel Jacobi singular value decomposition method") with the preprint at arXiv:[2202.08361](https://arxiv.org/abs/2202.08361 "Vectorization of the Jacobi-type singular value decomposition method") \[math.NA\].
 
-\[6\] This subdirectory is also related to the preprint doi:[10.48550/arXiv.2308.14222](https://doi.org/10.48550/arXiv.2308.14222 "Accurate complex Jacobi rotations").
+\[6\] This subdirectory is also related to the paper doi:[10.1016/j.cam.2024.116003](https://doi.org/10.1016/j.cam.2024.116003 "Accurate complex Jacobi rotations").
 
 ## Building
 
