@@ -1,5 +1,5 @@
 ifndef COMPILER
-COMPILER=gnu
+COMPILER=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
 MKFS=GNUmakefile ../$(COMPILER).mk
@@ -12,7 +12,7 @@ endif # !ilp64
 all: ../libl0c$(DEBUG).a xCSGEN.exe xLACSD.exe xL0.exe svd_test
 
 help:
-	@echo "gmake [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [all|clean|help]"
 
 ifeq ($(COMPILER),x200)
 AVX512_DJACV.o: AVX512_DJACV.c AVX512_DJACV.h $(MKFS)

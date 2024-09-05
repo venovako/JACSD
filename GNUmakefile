@@ -1,5 +1,5 @@
 ifndef COMPILER
-COMPILER=gnu
+COMPILER=x64x
 endif # !COMPILER
 include $(COMPILER).mk
 MKFS=GNUmakefile $(COMPILER).mk
@@ -9,7 +9,7 @@ MKFS=GNUmakefile $(COMPILER).mk
 all: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a # libl0c$(DEBUG).a
 
 help:
-	@echo "gmake [WP=10|16] [COMPILER=gnu|x64|x64x|x200|nvidia] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 libl0c$(DEBUG).a: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a $(MKFS)
 ifneq ($(ABI),lp64)

@@ -1,5 +1,5 @@
 ifndef COMPILER
-COMPILER=gnu
+COMPILER=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
 MKFS=GNUmakefile ../$(COMPILER).mk
@@ -9,7 +9,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 all: sgenevd.exe dgenevd.exe cgenevd.exe zgenevd.exe svalserr.exe dvalserr.exe sgentxt.exe dgentxt.exe
 
 help:
-	@echo "gmake [COMPILER=gnu|x64|x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 sgenevd.exe: sgenevd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) sgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
