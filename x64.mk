@@ -23,7 +23,7 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icc
 FC=ifort
-CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopenmp -rdynamic
+CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -qopt-multi-version-aggressive -qopt-zmm-usage=high -vec-threshold0 -qopenmp -rdynamic
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -44,18 +44,19 @@ FPUCFLAGS=$(FPUFLAGS)
 ifeq ($(FP),strict)
 FPUFFLAGS += -assume ieee_fpe_flags
 endif # strict
+DBGFLAGS=-traceback -diag-disable=10397
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xHost -qopt-multi-version-aggressive -qopt-zmm-usage=high -vec-threshold0
+OPTFLAGS=-O$(NDEBUG) -xHost
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-DNDEBUG -qopt-report=5 -traceback -diag-disable=10397
+DBGFLAGS += -DNDEBUG -qopt-report=5
 DBGFFLAGS=$(DBGFLAGS) -diag-disable=8293
 DBGCFLAGS=$(DBGFLAGS) -diag-disable=161,167,10441
 else # DEBUG
-OPTFLAGS=-O0 -xHost -qopt-multi-version-aggressive -qopt-zmm-usage=high
+OPTFLAGS=-O0 -xHost
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug pubnames -traceback -diag-disable=10397
+DBGFLAGS += -$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug pubnames
 ifneq ($(ARCH),Darwin)
 DBGFLAGS += -debug parallel
 endif # Linux

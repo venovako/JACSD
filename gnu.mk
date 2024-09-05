@@ -14,7 +14,7 @@ endif # ?NDEBUG
 RM=rm -rfv
 AR=ar
 ARFLAGS=rsv
-CPUFLAGS=-DUSE_GNU -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fno-omit-frame-pointer -fopenmp -rdynamic
+CPUFLAGS=-DUSE_GNU -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unwind-tables -fno-omit-frame-pointer -fvect-cost-model=unlimited -fopenmp -rdynamic
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -33,41 +33,34 @@ endif # !GNU
 endif # Darwin
 CC=gcc$(GNU)
 FC=gfortran$(GNU)
-ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -fgcse-las -fgcse-sm -fipa-pta -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model=unlimited -fvariable-expansion-in-unroller
-DBGFLAGS=-DNDEBUG -fopt-info-optimized-vec -pedantic -Wall -Wextra
+DBGFLAGS=-Wall -Wextra
+FPUFLAGS=-ffp-contract=fast
 ifeq ($(shell uname -m),ppc64le)
-OPTFLAGS += -mcpu=native
+OPTFLAGS=-mcpu=native
 else # x86_64
-OPTFLAGS += -march=native
+OPTFLAGS=-march=native
 ifeq ($(ARCH),Darwin)
 OPTFLAGS += -Wa,-q
 endif # Darwin
 endif # ?ppc64le
+ifdef NDEBUG
+OPTFLAGS += -O$(NDEBUG)
+DBGFLAGS += -DNDEBUG
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
 DBGCFLAGS=$(DBGFLAGS)
-FPUFLAGS=-ffp-contract=fast
+FPUFLAGS += -fno-math-errno
 FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS) -fno-math-errno
+FPUCFLAGS=$(FPUFLAGS)
 OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
-OPTFLAGS=-O$(DEBUG)
-DBGFLAGS=-$(DEBUG) -pedantic -Wall -Wextra
-ifeq ($(shell uname -m),ppc64le)
-OPTFLAGS += -mcpu=native
-else # x86_64
-OPTFLAGS += -march=native
-ifeq ($(ARCH),Darwin)
-OPTFLAGS += -Wa,-q
-endif # ?Darwin
-endif # ?ppc64le
+OPTFLAGS += -O$(DEBUG)
+DBGFLAGS += -$(DEBUG)
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all #-fcheck=all
 DBGCFLAGS=$(DBGFLAGS) #-ftrapv
-FPUFLAGS=-ffp-contract=fast
 FPUFFLAGS=$(FPUFLAGS) #-ffpe-trap=invalid,zero,overflow
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
