@@ -36,7 +36,7 @@ FC=gfortran$(GNU)
 DBGFLAGS=-Wall -Wextra
 FPUFLAGS=-ffp-contract=fast
 ifeq ($(shell uname -m),ppc64le)
-OPTFLAGS=-mcpu=native
+OPTFLAGS=-mcpu=native -mpower8-fusion -mtraceback=full
 else # x86_64
 OPTFLAGS=-march=native
 ifeq ($(ARCH),Darwin)
@@ -61,7 +61,7 @@ OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all #-fcheck=all
 DBGCFLAGS=$(DBGFLAGS) #-ftrapv
-FPUFFLAGS=$(FPUFLAGS) #-ffpe-trap=invalid,zero,overflow
+FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL
