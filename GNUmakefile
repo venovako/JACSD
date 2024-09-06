@@ -6,19 +6,10 @@ MKFS=GNUmakefile $(COMPILER).mk
 
 .PHONY: all help clean
 
-all: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a # libl0c$(DEBUG).a
+all: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a
 
 help:
 	@echo "gmake [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
-
-libl0c$(DEBUG).a: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a $(MKFS)
-ifneq ($(ABI),lp64)
-ifdef NDEBUG
-	pushd src && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) && popd
-else # DEBUG
-	pushd src && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) && popd
-endif # ?NDEBUG
-endif # !lp64
 
 libjstrat$(DEBUG).a: $(MKFS)
 ifdef NDEBUG
@@ -46,16 +37,10 @@ ifdef NDEBUG
 	pushd vn && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
 	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
-ifneq ($(ABI),lp64)
-	pushd src && $(MAKE) COMPILER=$(COMPILER) NDEBUG=$(NDEBUG) ABI=$(ABI) clean && popd
-endif # !lp64
 else # DEBUG
 	pushd vn && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
 	pushd jstrat && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
 	pushd qxblas && $(MAKE) WP=$(WP) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
-ifneq ($(ABI),lp64)
-	pushd src && $(MAKE) COMPILER=$(COMPILER) ABI=$(ABI) clean && popd
-endif # !lp64
 endif # ?NDEBUG
 	-$(RM) *.exe
 	-$(RM) *.mod
