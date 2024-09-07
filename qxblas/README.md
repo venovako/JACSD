@@ -6,7 +6,7 @@ BLAS and more in extra precisions.
 
 GNU make on Unices:
 ```
-gmake [WP=10|16] [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]
+gmake [WP=16|10] [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]
 ```
 MS make on Windows:
 ```

@@ -4,7 +4,7 @@ ifndef ABI
 ABI=ilp64
 endif # !ABI
 ifndef WP
-WP=10
+WP=16
 endif # !WP
 ifdef NDEBUG
 DEBUG=

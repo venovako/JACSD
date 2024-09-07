@@ -12,7 +12,7 @@ MODS=jstrat_f.mod
 all: ../libjstrat$(DEBUG).a
 
 help:
-	@echo "gmake [COMPILER=x64x|x200] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|gnu] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
 
 ../libjstrat$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
