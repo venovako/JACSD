@@ -33,7 +33,7 @@ endif # !GNU
 endif # Darwin
 CC=gcc$(GNU)
 FC=gfortran$(GNU)
-DBGFLAGS=-Wall -Wextra
+DBGFLAGS=-Wall -Wextra -Wno-deprecated
 FPUFLAGS=-ffp-contract=fast
 ifeq ($(shell uname -m),ppc64le)
 OPTFLAGS=-mcpu=native -mpower8-fusion -mtraceback=full
@@ -48,8 +48,8 @@ OPTFLAGS += -O$(NDEBUG)
 DBGFLAGS += -DNDEBUG
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all
-DBGCFLAGS=$(DBGFLAGS)
+DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wrealloc-lhs-all
+DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types
 FPUFLAGS += -fno-math-errno
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
@@ -59,8 +59,8 @@ OPTFLAGS += -O$(DEBUG)
 DBGFLAGS += -$(DEBUG)
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wfunction-elimination -Wrealloc-lhs-all #-fcheck=all
-DBGCFLAGS=$(DBGFLAGS) #-ftrapv
+DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wrealloc-lhs-all #-fcheck=all
+DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types #-ftrapv
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 endif # ?NDEBUG
