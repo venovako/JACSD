@@ -41,11 +41,11 @@ zerrsvd.exe: zerrsvd.F90 bio.mod $(MKFS)
 cerrsvd.exe: cerrsvd.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) cerrsvd.F90 bio.o -o$@ $(LDFLAGS)
 
-dsverr.exe: dsverr.F90 bio.mod $(MKFS)
-	$(FC) $(FFLAGS) dsverr.F90 bio.o -o$@ $(LDFLAGS)
+dsverr.exe: dsverr.F90 bio.mod qccmp.o $(MKFS)
+	$(FC) $(FFLAGS) dsverr.F90 bio.o qccmp.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
 
-ssverr.exe: ssverr.F90 bio.mod $(MKFS)
-	$(FC) $(FFLAGS) ssverr.F90 bio.o -o$@ $(LDFLAGS)
+ssverr.exe: ssverr.F90 bio.mod qccmp.o $(MKFS)
+	$(FC) $(FFLAGS) ssverr.F90 bio.o qccmp.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
@@ -58,6 +58,9 @@ svgen.o svgen.mod: svgen.F90 seed.mod $(MKFS)
 
 datgen.o datgen.mod: datgen.F90 seed.mod $(MKFS)
 	$(FC) $(FFLAGS) -c datgen.F90
+
+qccmp.o: qccmp.F90 $(MKFS)
+	$(FC) $(FFLAGS) -c qccmp.F90
 
 clean:
 	-$(RM) *.exe
