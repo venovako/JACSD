@@ -48,7 +48,7 @@ OPTFLAGS += -O$(NDEBUG)
 DBGFLAGS += -DNDEBUG
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wrealloc-lhs-all
+DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wno-c-binding-type -Wcharacter-truncation -Wno-function-elimination -Wimplicit-procedure -Wrealloc-lhs-all
 DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types
 FPUFLAGS += -fno-math-errno
 FPUFFLAGS=$(FPUFLAGS)
@@ -59,7 +59,7 @@ OPTFLAGS += -O$(DEBUG)
 DBGFLAGS += -$(DEBUG)
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wcharacter-truncation -Wimplicit-procedure -Wrealloc-lhs-all #-fcheck=all
+DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wno-c-binding-type -Wcharacter-truncation -Wno-function-elimination -Wimplicit-procedure -Wrealloc-lhs-all #-fcheck=all
 DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types #-ftrapv
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
