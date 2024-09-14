@@ -52,26 +52,6 @@ CONTAINS
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-  INTEGER FUNCTION BWRITE(FD, BUF, nB, OFF)
-    IMPLICIT NONE
-    INTEGER, INTENT(IN) :: FD, nB, OFF
-    TYPE(c_ptr), INTENT(IN), VALUE :: BUF
-    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BWRITE
-    BWRITE = INT(PVN_BWRITE(INT(FD,c_int), BUF, INT(nB,c_size_t), INT(OFF,c_size_t)))
-  END FUNCTION BWRITE
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-  INTEGER FUNCTION BREAD(FD, BUF, nB, OFF)
-    IMPLICIT NONE
-    INTEGER, INTENT(IN) :: FD, nB, OFF
-    TYPE(c_ptr), INTENT(IN), VALUE :: BUF
-    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BREAD
-    BREAD = INT(PVN_BREAD(INT(FD,c_int), BUF, INT(nB,c_size_t), INT(OFF,c_size_t)))
-  END FUNCTION BREAD
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
   SUBROUTINE BCLOSE(FD)
     IMPLICIT NONE
     INTEGER, INTENT(INOUT) :: FD
