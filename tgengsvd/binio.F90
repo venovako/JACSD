@@ -2,6 +2,39 @@ MODULE BINIO
   USE, INTRINSIC :: ISO_C_BINDING
   IMPLICIT NONE
 
+  INTERFACE
+     FUNCTION BREADD(FD, BUF, SZ, OFF) BIND(C,NAME='pvn_bread_')
+       USE, INTRINSIC :: ISO_C_BINDING
+       IMPLICIT NONE
+       INTEGER(KIND=c_int), INTENT(IN) :: FD
+       REAL(KIND=c_double), INTENT(OUT) :: BUF(*)
+       INTEGER(KIND=c_size_t), INTENT(IN) :: SZ, OFF
+       INTEGER(KIND=c_size_t) :: BREADD
+     END FUNCTION BREADD
+  END INTERFACE
+
+  INTERFACE
+     FUNCTION BREADZ(FD, BUF, SZ, OFF) BIND(C,NAME='pvn_bread_')
+       USE, INTRINSIC :: ISO_C_BINDING
+       IMPLICIT NONE
+       INTEGER(KIND=c_int), INTENT(IN) :: FD
+       COMPLEX(KIND=c_double), INTENT(OUT) :: BUF(*)
+       INTEGER(KIND=c_size_t), INTENT(IN) :: SZ, OFF
+       INTEGER(KIND=c_size_t) :: BREADZ
+     END FUNCTION BREADZ
+  END INTERFACE
+
+  INTERFACE
+     FUNCTION BWRITED(FD, BUF, SZ, OFF) BIND(C,NAME='pvn_bwrite_')
+       USE, INTRINSIC :: ISO_C_BINDING
+       IMPLICIT NONE
+       INTEGER(KIND=c_int), INTENT(IN) :: FD
+       REAL(KIND=c_double), INTENT(IN) :: BUF(*)
+       INTEGER(KIND=c_size_t), INTENT(IN) :: SZ, OFF
+       INTEGER(KIND=c_size_t) :: BWRITED
+     END FUNCTION BWRITED
+  END INTERFACE
+
 CONTAINS
   ! _RO: read-only, _RW: read-write, _WO: overwrite
 
