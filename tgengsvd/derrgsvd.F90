@@ -12,7 +12,7 @@ PROGRAM DERRGSVD
   REAL(KIND=c_double), PARAMETER :: D_ZERO = 0.0_c_double
   REAL(KIND=WP), PARAMETER :: Q_ZERO = 0.0_WP
 
-  REAL(KIND=c_double), ALLOCATABLE, TARGET :: YW(:,:), S(:)
+  REAL(KIND=c_double), ALLOCATABLE :: YW(:,:), S(:)
   REAL(KIND=WP), ALLOCATABLE :: xY(:,:), xW(:,:), xU(:,:), xV(:,:), xZ(:,:), xA(:)
 
   CHARACTER(LEN=FNL,KIND=c_char) :: FN
@@ -265,21 +265,23 @@ CONTAINS
   END SUBROUTINE READCL
 
   SUBROUTINE BREAD_YW(FD, YW, M, N, SZ, INFO)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     INTEGER, INTENT(IN) :: FD, M, N
-    REAL(KIND=c_double), INTENT(OUT), TARGET :: YW(M,N)
+    REAL(KIND=c_double), INTENT(OUT) :: YW(M,N)
     INTEGER, INTENT(OUT) :: SZ, INFO
 
     INTEGER :: I, J
+    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BREAD
 
-    SZ = M * C_SIZEOF(D_ZERO)
+    SZ = INT(M * C_SIZEOF(D_ZERO))
     INFO = 0
 
     !$OMP PARALLEL DEFAULT(NONE) PRIVATE(I,J) SHARED(YW,N,FD,SZ) REDUCTION(MAX:INFO)
     INFO = 0
     !$OMP DO
     DO J = 1, N
-       I = BREAD(FD, C_LOC(YW(1,J)), SZ, (J-1) * SZ)
+       I = INT(PVN_BREAD(INT(FD,c_size_t), YW(1,J), INT(SZ,c_size_t), INT((J-1) * SZ,c_size_t)))
        IF (I .NE. SZ) INFO = MAX(INFO,J)
     END DO
     !$OMP END DO
@@ -289,14 +291,16 @@ CONTAINS
   END SUBROUTINE BREAD_YW
 
   SUBROUTINE BREAD_S(FD, S, N, SZ, INFO)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     INTEGER, INTENT(IN) :: FD, N
-    REAL(KIND=c_double), INTENT(OUT), TARGET :: S(N)
+    REAL(KIND=c_double), INTENT(OUT) :: S(N)
     INTEGER, INTENT(OUT) :: SZ, INFO
 
     INTEGER :: I, J, TN, NT
+    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BREAD
 
-    SZ = C_SIZEOF(D_ZERO)
+    SZ = INT(C_SIZEOF(D_ZERO))
     INFO = 0
 
     !$OMP PARALLEL DEFAULT(NONE) PRIVATE(I,J,TN,NT) SHARED(S,N,FD,SZ) REDUCTION(MAX:INFO)
@@ -312,7 +316,7 @@ CONTAINS
     END IF
     IF (I .GT. 0) THEN
        I = I * SZ
-       J = BREAD(FD, C_LOC(S(J+1)), I, J * SZ)
+       J = INT(PVN_BREAD(INT(FD,c_size_t), S(J+1), INT(I,c_size_t), INT(J * SZ,c_size_t)))
        IF (J .NE. I) INFO = MAX(INFO,(TN+1))
     END IF
     !$OMP END PARALLEL
@@ -321,21 +325,23 @@ CONTAINS
   END SUBROUTINE BREAD_S
 
   SUBROUTINE BREAD_ZZ(FD, ZZ, N, SZ, INFO)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     INTEGER, INTENT(IN) :: FD, N
-    REAL(KIND=c_double), INTENT(OUT), TARGET :: ZZ(N,N)
+    REAL(KIND=c_double), INTENT(OUT) :: ZZ(N,N)
     INTEGER, INTENT(OUT) :: SZ, INFO
 
     INTEGER :: I, J
+    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BREAD
 
-    SZ = N * C_SIZEOF(D_ZERO)
+    SZ = INT(N * C_SIZEOF(D_ZERO))
     INFO = 0
 
     !$OMP PARALLEL DEFAULT(NONE) PRIVATE(I,J) SHARED(ZZ,N,FD,SZ) REDUCTION(MAX:INFO)
     INFO = 0
     !$OMP DO
     DO J = 1, N
-       I = BREAD(FD, C_LOC(ZZ(1,J)), SZ, (J-1) * SZ)
+       I = INT(PVN_BREAD(INT(FD,c_size_t), ZZ(1,J), INT(SZ,c_size_t), INT((J-1) * SZ,c_size_t)))
        IF (I .NE. SZ) INFO = MAX(INFO,J)
     END DO
     !$OMP END DO
