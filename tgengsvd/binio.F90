@@ -1,6 +1,5 @@
 MODULE BINIO
   USE, INTRINSIC :: ISO_C_BINDING
-  USE VN_BINIO_F
   IMPLICIT NONE
 
 CONTAINS
@@ -14,8 +13,9 @@ CONTAINS
     INTEGER, INTENT(OUT) :: SZ, FD
 
     INTEGER(KIND=c_size_t) :: C_SZ
+    INTEGER(KIND=c_int), EXTERNAL :: PVN_BOPEN_RO
 
-    FD = INT(VN_BOPEN_RO((TRIM(FN)//c_null_char), C_SZ))
+    FD = INT(PVN_BOPEN_RO(C_SZ, (TRIM(FN)//c_null_char)))
     SZ = INT(C_SZ)
   END SUBROUTINE BOPEN_RO
 
@@ -28,9 +28,10 @@ CONTAINS
     INTEGER, INTENT(OUT) :: FD
 
     INTEGER(KIND=c_size_t) :: C_SZ
+    INTEGER(KIND=c_int), EXTERNAL :: PVN_BOPEN_RW
 
     C_SZ = INT(SZ, c_size_t)
-    FD = INT(VN_BOPEN_RW((TRIM(FN)//c_null_char), C_SZ))
+    FD = INT(PVN_BOPEN_RW(C_SZ, (TRIM(FN)//c_null_char)))
     SZ = INT(C_SZ)
   END SUBROUTINE BOPEN_RW
 
@@ -42,9 +43,10 @@ CONTAINS
     INTEGER, INTENT(OUT) :: SZ, FD
 
     INTEGER(KIND=c_size_t) :: C_SZ
+    INTEGER(KIND=c_int), EXTERNAL :: PVN_BOPEN_WO
 
     C_SZ = -1_c_size_t
-    FD = INT(VN_BOPEN_WO((TRIM(FN)//c_null_char), C_SZ))
+    FD = INT(PVN_BOPEN_WO(C_SZ, (TRIM(FN)//c_null_char)))
     SZ = INT(C_SZ)
   END SUBROUTINE BOPEN_WO
 
@@ -54,7 +56,8 @@ CONTAINS
     IMPLICIT NONE
     INTEGER, INTENT(IN) :: FD, nB, OFF
     TYPE(c_ptr), INTENT(IN) :: BUF
-    BWRITE = INT(VN_BWRITE(INT(FD,c_int), BUF, INT(nB,c_size_t), INT(OFF,c_size_t)))
+    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BWRITE
+    BWRITE = INT(PVN_BWRITE(INT(FD,c_int), BUF, INT(nB,c_size_t), INT(OFF,c_size_t)))
   END FUNCTION BWRITE
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -63,7 +66,8 @@ CONTAINS
     IMPLICIT NONE
     INTEGER, INTENT(IN) :: FD, nB, OFF
     TYPE(c_ptr), INTENT(IN) :: BUF
-    BREAD = INT(VN_BREAD(INT(FD,c_int), BUF, INT(nB,c_size_t), INT(OFF,c_size_t)))
+    INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BREAD
+    BREAD = INT(PVN_BREAD(INT(FD,c_int), BUF, INT(nB,c_size_t), INT(OFF,c_size_t)))
   END FUNCTION BREAD
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -71,7 +75,8 @@ CONTAINS
   SUBROUTINE BCLOSE(FD)
     IMPLICIT NONE
     INTEGER, INTENT(INOUT) :: FD
-    IF (FD .GE. 0) FD = INT(VN_BCLOSE(INT(FD,c_int)))
+    INTEGER(KIND=c_int), EXTERNAL :: PVN_BCLOSE
+    FD = INT(PVN_BCLOSE(INT(FD,c_int)))
   END SUBROUTINE BCLOSE
 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -18,10 +18,10 @@ zgenhsvd.exe: zgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod $(M
 	$(FC) $(FFLAGS) zgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 derrhsvd.exe: derrhsvd.F90 binio.mod $(MKFS)
-	$(FC) $(FFLAGS) derrhsvd.F90 binio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) derrhsvd.F90 binio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
 
 zerrhsvd.exe: zerrhsvd.F90 binio.mod $(MKFS)
-	$(FC) $(FFLAGS) zerrhsvd.F90 binio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) zerrhsvd.F90 binio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
@@ -44,7 +44,7 @@ indeff.o indeff.mod: indeff.F90 $(MKFS)
 datgen.o datgen.mod: datgen.F90 seed.mod indeff.mod $(MKFS)
 	$(FC) $(FFLAGS) -c datgen.F90
 
-binio.o binio.mod: binio.F90 ../vn/vn_binio_f.mod $(MKFS)
+binio.o binio.mod: binio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c binio.F90
 
 clean:
