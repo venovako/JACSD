@@ -281,7 +281,7 @@ CONTAINS
     INFO = 0
     !$OMP DO
     DO J = 1, N
-       I = INT(PVN_BREAD(INT(FD,c_int), YW(1,J), INT(SZ,c_size_t), INT((J-1) * SZ,c_size_t)))
+       I = INT(PVN_BREAD(INT(FD,c_int), YW(1,J), INT(SZ,c_size_t), INT(((J-1) * SZ),c_size_t)))
        IF (I .NE. SZ) INFO = MAX(INFO,J)
     END DO
     !$OMP END DO
@@ -316,7 +316,7 @@ CONTAINS
     END IF
     IF (I .GT. 0) THEN
        I = I * SZ
-       J = INT(PVN_BREAD(INT(FD,c_int), S(J+1), INT(I,c_size_t), INT(J * SZ,c_size_t)))
+       J = INT(PVN_BREAD(INT(FD,c_int), S(J+1), INT(I,c_size_t), INT((J * SZ),c_size_t)))
        IF (J .NE. I) INFO = MAX(INFO,(TN+1))
     END IF
     !$OMP END PARALLEL
@@ -341,7 +341,7 @@ CONTAINS
     INFO = 0
     !$OMP DO
     DO J = 1, N
-       I = INT(PVN_BREAD(INT(FD,c_int), ZZ(1,J), INT(SZ,c_size_t), INT((J-1) * SZ,c_size_t)))
+       I = INT(PVN_BREAD(INT(FD,c_int), ZZ(1,J), INT(SZ,c_size_t), INT(((J-1) * SZ),c_size_t)))
        IF (I .NE. SZ) INFO = MAX(INFO,J)
     END DO
     !$OMP END DO

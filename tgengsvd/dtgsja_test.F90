@@ -91,7 +91,7 @@ PROGRAM DTGSJA_TEST
   CALL DLASRT('D', N, WORK, INFO)
   IF (INFO .NE. 0) ERROR STOP 'DLASRT'
 
-  SZ = N * C_SIZEOF(D_ZERO); FD = -1
+  SZ = INT(N * C_SIZEOF(D_ZERO)); FD = -1
   CALL BOPEN_RW((TRIM(FN)//c_char_'.SS'), SZ, FD)
   IF (FD .LT. 0) ERROR STOP 'BOPEN_SS_RW'
   CALL BWRITE_SS(FD, WORK, N, INFO)
@@ -167,7 +167,7 @@ CONTAINS
 
     INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BREAD
 
-    SZ = INT(M * N * C_SIZEOF(D_ZERO))
+    SZ = INT(M * (N * C_SIZEOF(D_ZERO)))
     IF (INT(PVN_BREAD(INT(FD,c_int), YW, INT(SZ,c_size_t), 0_c_size_t)) .EQ. SZ) THEN
        INFO = 0
     ELSE ! error
@@ -181,6 +181,7 @@ CONTAINS
     INTEGER, INTENT(IN) :: FD, N
     DOUBLE PRECISION, INTENT(IN) :: SS(N)
     INTEGER, INTENT(OUT) :: INFO
+
     INTEGER(KIND=c_size_t), EXTERNAL :: PVN_BWRITE
  
     INFO = INT(PVN_BWRITE(INT(FD,c_int), SS, C_SIZEOF(SS), 0_c_size_t))
