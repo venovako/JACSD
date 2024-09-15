@@ -36,15 +36,18 @@ ifeq ($(FP),strict)
 FPUFFLAGS += -assume ieee_fpe_flags
 endif # strict
 DBGFLAGS=-traceback
+ifndef CPU
+CPU=common-avx512
+endif # !CPU
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -xcommon-avx512
+OPTFLAGS=-O$(NDEBUG) -x$(CPU)
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS += -DNDEBUG -qopt-report=3
 DBGFFLAGS=$(DBGFLAGS)
 DBGCFLAGS=$(DBGFLAGS)
 else # DEBUG
-OPTFLAGS=-O0 -xcommon-avx512
+OPTFLAGS=-O0 -x$(CPU)
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS += -$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel

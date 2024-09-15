@@ -38,7 +38,7 @@ Have the Intel MKL (Math Kernel Library) installed.
 
 Run ``make`` as follows:
 ```bash
-make [COMPILER=x64x|x200|gnu] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]
+make [COMPILER=x64x|x200|gnu] [CPU=...] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]
 ```
 
 GNU Fortran versions 9 and above are *not* supported (though they might work)!
