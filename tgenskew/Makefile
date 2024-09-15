@@ -23,14 +23,17 @@ FORFLAGS=$(FORFLAGS) /4I8
 LIBFLAGS=$(LIBFLAGS) /DMKL_ILP64
 !ENDIF # ilp64
 LIBS=/LIBPATH:.. qxblas$(WP)$(ABI)$(DEBUG).lib /LIBPATH:"$(MKLROOT)\lib\intel64_win" mkl_intel_$(ABI)_dll.lib mkl_intel_thread_dll.lib mkl_core_dll.lib
+!IFNDEF CPU
+CPU=Host
+!ENDIF # !CPU
 !IFDEF NDEBUG
-OPTFLAGS=/O$(NDEBUG) /QxHost /Qvec-threshold:0
+OPTFLAGS=/O$(NDEBUG) /Qx$(CPU) /Qvec-threshold:0
 DBGFLAGS=/DNDEBUG /traceback
 FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz-
 DBGFLAGS=$(DBGFLAGS) /Qopt-report:3
 LDFLAGS=/link /RELEASE $(LIBS)
 !ELSE # DEBUG
-OPTFLAGS=/O$(DEBUG) /QxHost
+OPTFLAGS=/O$(DEBUG) /Qx$(CPU)
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
 FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /assume:ieee_fpe_flags
 LIBFLAGS=$(LIBFLAGS) /dbglibs
