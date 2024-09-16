@@ -253,7 +253,7 @@ xtrsv.obj
 all: ..\$(LIBS)
 
 help:
-	@echo "nmake.exe [NDEBUG=0|1|2|3|4|5] [ABI=lp64|ilp64] [all|clean|help]"
+	@echo "nmake.exe [NDEBUG=optimization_level] [ABI=lp64|ilp64] [WP=...] [all|clean|help]"
 
 ..\$(LIBS): $(OBJS) Makefile
 	$(AR) $(ARFLAGS) /OUT:$@ $(OBJS)
