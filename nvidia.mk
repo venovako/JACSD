@@ -17,7 +17,7 @@ ARFLAGS=rsv
 ifndef CPU
 CPU=native
 endif # !CPU
-CPUFLAGS=--diag_suppress set_but_not_used -DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -tp=$(CPU) -nvmalloc -traceback
+CPUFLAGS=-DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -tp=$(CPU) -nvmalloc -traceback
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -37,7 +37,7 @@ OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS=-DNDEBUG
 DBGFFLAGS=$(DBGFLAGS)
-DBGCFLAGS=$(DBGFLAGS)
+DBGCFLAGS=$(DBGFLAGS) --diag_suppress set_but_not_used
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
 else # DEBUG
