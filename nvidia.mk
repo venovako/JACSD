@@ -1,7 +1,7 @@
 SHELL=/bin/bash
 ARCH=$(shell uname)
 ifndef ABI
-ABI=lp64
+ABI=ilp64
 endif # !ABI
 ifndef WP
 WP=8
@@ -23,7 +23,7 @@ CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
 CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 FORFLAGS=$(CPUFLAGS) -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
-ifneq ($(ABI),lp64)
+ifeq ($(ABI),ilp64)
 FORFLAGS += -i8
 endif # ilp64
 C11FLAGS=$(CPUFLAGS) -c18
