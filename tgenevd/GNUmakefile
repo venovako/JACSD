@@ -9,7 +9,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 all: sgenevd.exe dgenevd.exe cgenevd.exe zgenevd.exe svalserr.exe dvalserr.exe sgentxt.exe dgentxt.exe
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|gnu] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|x64|gnu] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
 
 sgenevd.exe: sgenevd.F90 bio.mod seed.mod lamgen.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) sgenevd.F90 bio.o seed.o lamgen.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)

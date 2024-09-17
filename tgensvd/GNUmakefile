@@ -9,7 +9,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 all: dgentxt.exe sgentxt.exe dgensvd.exe sgensvd.exe zgensvd.exe cgensvd.exe derrsvd.exe serrsvd.exe zerrsvd.exe cerrsvd.exe dsverr.exe ssverr.exe
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|gnu] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|x64|gnu] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
 
 dgentxt.exe: dgentxt.F90 $(MKFS)
 	$(FC) $(FFLAGS) dgentxt.F90 -o$@ $(LDFLAGS)

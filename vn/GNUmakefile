@@ -53,7 +53,7 @@ all: ../libvn$(DEBUG).a
 test: ../libvn$(DEBUG).a $(EXES)
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|gnu] [NDEBUG=0|1|2|3|4|5] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|x64|gnu] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [all|clean|help]"
 
 ../libvn$(DEBUG).a: $(OBJS) $(MKFS)
 	$(AR) $(ARFLAGS) $@ $(OBJS)
