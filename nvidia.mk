@@ -17,7 +17,7 @@ ARFLAGS=rsv
 ifndef CPU
 CPU=native
 endif # !CPU
-CPUFLAGS=-DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -tp=$(CPU) -nvmalloc -traceback
+CPUFLAGS=--diag_suppress set_but_not_used -DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -KPIC -Mframe -Meh_frame -Minfo -tp=$(CPU) -nvmalloc -traceback
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
