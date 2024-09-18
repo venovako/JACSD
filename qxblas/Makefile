@@ -15,23 +15,23 @@ AR=xilib.exe
 ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
 FORT=ifx
 FC=$(FORT).exe
-FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /standard-semantics
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /Qvec-threshold:0 /standard-semantics /traceback
 !IF "$(ABI)"=="ilp64"
 FORFLAGS=$(FORFLAGS) /4I8
 !ENDIF # ilp64
-!IFNDEF CPU
-CPU=Host
-!ENDIF # !CPU
+!IFNDEF MARCH
+MARCH=Host
+!ENDIF # !MARCH
 !IFDEF NDEBUG
-OPTFLAGS=/O$(NDEBUG) /Qx$(CPU) /Qvec-threshold:0
-DBGFLAGS=/DNDEBUG /traceback
+OPTFLAGS=/O$(NDEBUG) /Qx$(MARCH)
+DBGFLAGS=/DNDEBUG
 FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz-
 DBGFLAGS=$(DBGFLAGS) /Qopt-report:3
 LIBFLAGS=/I.. /libs:dll /threads
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
-OPTFLAGS=/O$(DEBUG) /Qx$(CPU)
-DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all /traceback
+OPTFLAGS=/O$(DEBUG) /Qx$(MARCH)
+DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all
 FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /assume:ieee_fpe_flags
 LIBFLAGS=/I.. /libs:dll /threads /dbglibs
 LDFLAGS=/link /DEBUG /LIBPATH:.. $(LIBS)
