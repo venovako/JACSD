@@ -19,11 +19,11 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icx
 FC=ifx
-ifndef CPU
-CPU=Host
+ifndef MARCH
+MARCH=Host
 # common-avx512 for KNLs
-endif # !CPU
-CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unwind-tables -fno-omit-frame-pointer -mprefer-vector-width=512 -vec-threshold0 -qopenmp -x$(CPU)
+endif # !MARCH
+CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unwind-tables -fno-omit-frame-pointer -mprefer-vector-width=512 -vec-threshold0 -qopenmp -x$(MARCH)
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -41,7 +41,7 @@ FPUFFLAGS += -assume ieee_fpe_flags
 endif # strict
 DBGFLAGS=-traceback
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG)
+OPTFLAGS=-O$(NDEBUG) -fno-math-errno -inline-level=2
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS += -DNDEBUG -qopt-report=3

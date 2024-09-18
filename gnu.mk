@@ -35,13 +35,13 @@ CC=gcc$(GNU)
 FC=gfortran$(GNU)
 DBGFLAGS=-Wall -Wextra -Wno-deprecated
 FPUFLAGS=-ffp-contract=fast
-ifndef CPU
-CPU=native
-endif # !CPU
+ifndef MARCH
+MARCH=native
+endif # !MARCH
 ifeq ($(shell uname -m),ppc64le)
-OPTFLAGS=-mcpu=$(CPU) -mpower8-fusion -mtraceback=full
+OPTFLAGS=-mcpu=$(MARCH) -mpower8-fusion -mtraceback=full
 else # x86_64
-OPTFLAGS=-march=$(CPU)
+OPTFLAGS=-march=$(MARCH)
 ifeq ($(ARCH),Darwin)
 OPTFLAGS += -Wa,-q
 endif # Darwin

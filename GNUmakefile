@@ -9,7 +9,7 @@ MKFS=GNUmakefile $(COMPILER).mk
 all: libjstrat$(DEBUG).a libqxblas$(WP)$(ABI)$(DEBUG).a libvn$(DEBUG).a
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [CPU=...] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [MARCH=...] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
 
 libjstrat$(DEBUG).a: $(MKFS)
 ifdef NDEBUG

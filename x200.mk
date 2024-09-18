@@ -19,7 +19,10 @@ AR=xiar
 ARFLAGS=-qnoipo -lib rsv
 CC=icx
 FC=ifx
-CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unwind-tables -fno-omit-frame-pointer -mprefer-vector-width=512 -vec-threshold0 -qopenmp
+ifndef MARCH
+MARCH=common-avx512
+endif # !MARCH
+CPUFLAGS=-DUSE_INTEL -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unwind-tables -fno-omit-frame-pointer -mprefer-vector-width=512 -vec-threshold0 -qopenmp -x$(MARCH)
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
@@ -36,18 +39,15 @@ ifeq ($(FP),strict)
 FPUFFLAGS += -assume ieee_fpe_flags
 endif # strict
 DBGFLAGS=-traceback
-ifndef CPU
-CPU=common-avx512
-endif # !CPU
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG) -x$(CPU)
+OPTFLAGS=-O$(NDEBUG) -fno-math-errno -inline-level=2
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS += -DNDEBUG -qopt-report=3
 DBGFFLAGS=$(DBGFLAGS)
 DBGCFLAGS=$(DBGFLAGS)
 else # DEBUG
-OPTFLAGS=-O0 -x$(CPU)
+OPTFLAGS=-O0
 OPTFFLAGS=$(OPTFLAGS)
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS += -$(DEBUG) -debug emit_column -debug extended -debug inline-debug-info -debug parallel
