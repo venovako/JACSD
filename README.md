@@ -32,8 +32,6 @@ Available here (for now):
 
 A recent 64-bit Linux (e.g., CentOS 7.9 with devtoolset-8) or macOS (e.g., Big Sur) is needed.
 
-Have the Intel MKL (Math Kernel Library) installed.
-
 ### Make options
 
 Run ``make`` as follows:
@@ -44,9 +42,9 @@ make [COMPILER=x64x|x200|x64|gnu] [MARCH=...] [NDEBUG=optimization_level] [ABI=i
 GNU Fortran versions 9 and above are *not* supported (though they might work)!
 Please take a look [here](https://gcc.gnu.org/gcc-9/changes.html) for the explanation regarding the MAX and MIN intrinsics.
 Currently, only GNU Fortran *8* is fully supported with ``COMPILER=gnu``.
-On RHEL/CentOS it is provided by, e.g., devtoolset-8.
+On RHEL/CentOS 7 it is provided by, e.g., devtoolset-8.
 
-By default, ``ABI=ilp64``, meaning that for Fortran and MKL it is assumed that ``INTEGER`` type is 8-byte-wide.
+By default, ``ABI=ilp64``, meaning that for Fortran it is assumed that ``INTEGER`` type is 8-byte-wide.
 The more common ``ABI=lp64`` is *not* tested and may not work.
 
 Here, ``NDEBUG`` should be set to the desired optimization level (``3`` is a sensible choice).
