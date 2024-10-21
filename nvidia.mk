@@ -54,7 +54,7 @@ LIBFLAGS=-I. -I../vn -D_GNU_SOURCE
 ifneq ($(ABI),lp64)
 LIBFLAGS += -DMKL_ILP64
 endif # ilp64
-LDFLAGS=-Wl,-E
+LDFLAGS=-Wl,-E -static-nvidia
 ifdef MKLROOT
 LIBFLAGS += -DUSE_MKL -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
 # define MKL=pgi_thread for a threaded MKL
