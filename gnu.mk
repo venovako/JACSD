@@ -56,7 +56,6 @@ DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types
 FPUFLAGS += -fno-math-errno
 FPUFFLAGS=$(FPUFLAGS)
 FPUCFLAGS=$(FPUFLAGS)
-OPTFFLAGS += -DMKL_DIRECT_CALL
 else # DEBUG
 OPTFLAGS += -O$(DEBUG)
 DBGFLAGS += -$(DEBUG)
@@ -77,6 +76,9 @@ endif # ilp64
 LDFLAGS=-rdynamic -static-libgcc -static-libgfortran -static-libquadmath
 ifdef MKLROOT
 LIBFLAGS += -DUSE_MKL -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
+ifdef NDEBUG
+LIBFLAGS += -DMKL_DIRECT_CALL
+endif # NDEBUG
 ifeq ($(ARCH),Darwin)
 LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../../compiler/latest/mac/compiler/lib -Wl,-rpath,${MKLROOT}/../../compiler/latest/mac/compiler/lib -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core -liomp5
 else # Linux
