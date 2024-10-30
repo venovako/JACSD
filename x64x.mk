@@ -15,8 +15,8 @@ ifndef FP
 FP=precise
 endif # !FP
 RM=rm -rfv
-AR=xiar
-ARFLAGS=-qnoipo -lib rsv
+AR=ar
+ARFLAGS=rsv
 CC=icx
 FC=ifx
 ifndef MARCH
