@@ -11,8 +11,8 @@ DEBUG=d
 !ENDIF # ?NDEBUG
 RM=del /F
 LIBS=qxblas$(WP)$(ABI)$(DEBUG).lib
-AR=xilib.exe
-ARFLAGS=-qnoipo -lib /NOLOGO /VERBOSE
+AR=lib.exe
+ARFLAGS=/NOLOGO /VERBOSE
 FORT=ifx
 FC=$(FORT).exe
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /Qvec-threshold:0 /standard-semantics /traceback
