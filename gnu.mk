@@ -73,7 +73,7 @@ endif # Linux
 ifneq ($(ABI),lp64)
 LIBFLAGS += -DMKL_ILP64
 endif # ilp64
-LDFLAGS=-rdynamic -static-libgcc -static-libgfortran -static-libquadmath
+LDFLAGS=-rdynamic -static-libgcc -static-libgfortran -static-libquadmath # -static
 ifdef MKLROOT
 LIBFLAGS += -DUSE_MKL -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
 ifeq ($(ARCH),Darwin)
