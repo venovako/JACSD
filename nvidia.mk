@@ -61,13 +61,15 @@ LIBFLAGS += -DUSE_MKL -I${MKLROOT}/include/intel64/$(ABI) -I${MKLROOT}/include
 ifndef MKL
 MKL=sequential
 endif # !MKL
-LDFLAGS += -L${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_$(MKL) -lmkl_core
+#-L${MKLROOT}/lib/intel64 -lmkl_intel_$(ABI) -lmkl_$(MKL) -lmkl_core
+LDFLAGS += -Wl,--start-group ${MKLROOT}/lib/libmkl_intel_$(ABI).a ${MKLROOT}/lib/libmkl_$(MKL).a ${MKLROOT}/lib/libmkl_core.a -Wl,--end-group
+LDFLAGS += $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 else # !MKLROOT
 ifndef LAPACK
 LAPACK=$(HOME)/lapack_$(ABI)
 endif # !LAPACK
 LDFLAGS += -L$(LAPACK) -ltmglib -llapack -lrefblas
 endif # ?MKLROOT
-LDFLAGS += -pgf90libs -lpthread -lm -ldl $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
+LDFLAGS += -pgf90libs -lpthread -lm -ldl
 FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
 CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)
