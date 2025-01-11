@@ -46,7 +46,7 @@ PROGRAM DERRSVD
   END IF
   ALLOCATE(xG(M,N))
 #ifndef NDEBUG
-  WRITE (OUTPUT_UNIT,'(3A)',ADVANCE='NO') '|| ', TRIM(FNG), ' ||_F = '
+  WRITE (OUTPUT_UNIT,'(3A)',ADVANCE='NO') '|| ', TRIM(FNG), ' ||_F ='
   FLUSH(OUTPUT_UNIT)
 #endif
   GNF = Q_ZERO
@@ -155,7 +155,7 @@ PROGRAM DERRSVD
   DEALLOCATE(xS)
 
 #ifndef NDEBUG
-  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| G - (U * S) * V^T ||_F / || G ||_F = '
+  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| G - (U * S) * V^T ||_F / || G ||_F ='
   FLUSH(OUTPUT_UNIT)
 #endif
   RNF = PQGEMM(M, N, N, xU, M, xV, N, xG, M)
@@ -172,7 +172,7 @@ PROGRAM DERRSVD
   DEALLOCATE(xU)
   DEALLOCATE(xG)
 
-1 FORMAT(ES24.17E3)
+1 FORMAT(ES25.17E3)
 
 CONTAINS
 

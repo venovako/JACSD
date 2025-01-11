@@ -49,7 +49,7 @@ PROGRAM DORTHO
 
   ! Compute || U^T U - I ||_F
 #ifndef NDEBUG
-  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| U^T U - I ||_F = '
+  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| U^T U - I ||_F ='
   FLUSH(OUTPUT_UNIT)
 #endif
   CNF = SQRT(PQGEMM(M, N, xU, M, xC, N))
@@ -59,7 +59,7 @@ PROGRAM DORTHO
   DEALLOCATE(xC)
   DEALLOCATE(xU)
 
-1 FORMAT(ES24.17E3)
+1 FORMAT(ES25.17E3)
 
 CONTAINS
 

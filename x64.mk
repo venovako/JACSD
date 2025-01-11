@@ -54,7 +54,7 @@ OPTFLAGS=-O$(NDEBUG) -fno-math-errno -inline-level=2
 OPTFFLAGS=$(OPTFLAGS) -DMKL_DIRECT_CALL
 OPTCFLAGS=$(OPTFLAGS)
 DBGFLAGS += -DNDEBUG -qopt-report=5
-DBGFFLAGS=$(DBGFLAGS) -diag-disable=8293
+DBGFFLAGS=$(DBGFLAGS)
 DBGCFLAGS=$(DBGFLAGS) -diag-disable=161,167
 else # DEBUG
 OPTFLAGS=-O0
@@ -64,7 +64,7 @@ DBGFLAGS += -$(DEBUG) -debug emit_column -debug extended -debug inline-debug-inf
 ifneq ($(ARCH),Darwin)
 DBGFLAGS += -debug parallel
 endif # Linux
-DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all -diag-disable=7712,8293
+DBGFFLAGS=$(DBGFLAGS) -debug-parameters all -check all -warn all -diag-disable=7712
 DBGCFLAGS=$(DBGFLAGS) -check=stack,uninit -diag-disable=161,167
 endif # ?NDEBUG
 LIBFLAGS=-DUSE_MKL

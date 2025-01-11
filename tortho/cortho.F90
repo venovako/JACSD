@@ -50,7 +50,7 @@ PROGRAM CORTHO
 
   ! Compute || U^H U - I ||_F
 #ifndef NDEBUG
-  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| U^H U - I ||_F = '
+  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| U^H U - I ||_F ='
   FLUSH(OUTPUT_UNIT)
 #endif
   CNF = SQRT(PXGEMM(M, N, xU, M, xC, N))
@@ -60,7 +60,7 @@ PROGRAM CORTHO
   DEALLOCATE(xC)
   DEALLOCATE(xU)
 
-1 FORMAT(ES15.9E2)
+1 FORMAT(ES16.9E2)
 
 CONTAINS
 

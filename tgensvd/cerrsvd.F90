@@ -47,7 +47,7 @@ PROGRAM CERRSVD
   END IF
   ALLOCATE(xG(M,N))
 #ifndef NDEBUG
-  WRITE (OUTPUT_UNIT,'(3A)',ADVANCE='NO') '|| ', TRIM(FNG), ' ||_F = '
+  WRITE (OUTPUT_UNIT,'(3A)',ADVANCE='NO') '|| ', TRIM(FNG), ' ||_F ='
   FLUSH(OUTPUT_UNIT)
 #endif
   GNF = Q_ZERO
@@ -156,7 +156,7 @@ PROGRAM CERRSVD
   DEALLOCATE(xS)
 
 #ifndef NDEBUG
-  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| G - (U * S) * V^H ||_F / || G ||_F = '
+  WRITE (OUTPUT_UNIT,'(A)',ADVANCE='NO') '|| G - (U * S) * V^H ||_F / || G ||_F ='
   FLUSH(OUTPUT_UNIT)
 #endif
   RNF = PXGEMM(M, N, N, xU, M, xV, N, xG, M)
@@ -173,7 +173,7 @@ PROGRAM CERRSVD
   DEALLOCATE(xU)
   DEALLOCATE(xG)
 
-1 FORMAT(ES15.9E2)
+1 FORMAT(ES16.9E2)
 
 CONTAINS
 
