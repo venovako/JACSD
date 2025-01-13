@@ -21,7 +21,7 @@ CPUFLAGS=-DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -KPIC -Mframe -Meh_frame 
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
-CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
+CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ -r /etc/redhat-release ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
 FORFLAGS=$(CPUFLAGS) -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
 ifeq ($(ABI),ilp64)
 FORFLAGS += -i8

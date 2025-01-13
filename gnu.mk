@@ -18,9 +18,11 @@ CPUFLAGS=-DUSE_GNU -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unw
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
 endif # lp64
-ifneq ($(ARCH),Darwin)
-CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ `if [ -r /etc/redhat-release ]; then grep -c 'release 7' /etc/redhat-release; else echo 0; fi` = 1 ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
-endif # Linux
+ifeq ($(ARCH),Darwin)
+#CPUFLAGS += -DTSC_FREQ_HZ=$(shell sysctl -n machdep.tsc.frequency)
+else # Linux
+CPUFLAGS += -DTSC_FREQ_HZ=$(shell if [ -r /etc/redhat-release ]; then echo `dmesg | grep 'TSC clocksource calibration' | cut -d':' -f3 | cut -d' ' -f2 | sed 's/\.//g'`000; else echo 0; fi)ull
+endif # ?Darwin
 FORFLAGS=-cpp $(CPUFLAGS) -ffree-line-length-none -fstack-arrays
 ifneq ($(ABI),lp64)
 FORFLAGS += -fdefault-integer-8
