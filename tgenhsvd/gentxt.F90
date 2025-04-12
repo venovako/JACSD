@@ -23,7 +23,11 @@ PROGRAM GENTXT
   END IF
 
   FV = REAL(MAX_F,16)
-  FD = (FV - REAL(MIN_F,16)) / (N - 1)
+  IF (N .LE. 1) THEN
+     FD = 0.0_16
+  ELSE ! N > 1
+     FD = (FV - REAL(MIN_F,16)) / (N - 1)
+  END IF
 
   DO I = 1, N
      WRITE (FU,1) FV
