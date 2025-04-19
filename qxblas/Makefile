@@ -1,5 +1,5 @@
 !IFNDEF ABI
-ABI=lp64
+ABI=ilp64
 !ENDIF # !ABI
 !IFNDEF WP
 WP=16
@@ -253,7 +253,7 @@ xtrsv.obj
 all: ..\$(LIBS)
 
 help:
-	@echo "nmake.exe [NDEBUG=optimization_level] [ABI=lp64|ilp64] [WP=...] [all|clean|help]"
+	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
 
 ..\$(LIBS): $(OBJS) Makefile
 	$(AR) $(ARFLAGS) /OUT:$@ $(OBJS)

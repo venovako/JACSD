@@ -7,8 +7,14 @@ MARCH=Host
 !ENDIF # !MARCH
 !IFNDEF NDEBUG
 NDEBUG=d
-!ENDIF # NDEBUG
-FCFLAGS=/nologo /fpp /recursive /standard-semantics /traceback /DNDEBUG=$(NDEBUG) /I. /MT /O$(NDEBUG) /Qx$(MARCH) /fp:precise /Qfma /Qftz- /Qprec-div /Qprotect-parens /Qopt-report:3 /Qvec-threshold:0
+!ENDIF # !NDEBUG
+!IFNDEF WP
+WP=16
+!ENDIF # !WP
+!IFNDEF ABI
+ABI=ilp64
+!ENDIF # !ABI
+FCFLAGS=/nologo /fpp /recursive /standard-semantics /traceback /DNDEBUG=$(NDEBUG) /DQX_WP=$(WP) /I. /MT /O$(NDEBUG) /Qx$(MARCH) /fp:precise /Qfma /Qftz- /Qprec-div /Qprotect-parens /Qopt-report:3 /Qvec-threshold:0
 !IF "$(ABI)"=="ilp64"
 FCFLAGS=$(FCFLAGS) /4I8
 !ENDIF # ilp64
@@ -17,7 +23,7 @@ LDFLAGS=/link /RELEASE /LIBPATH:.. qxblas$(WP)$(ABI).lib /LIBPATH:..\..\libpvn\s
 all: dgenhsvd.exe zgenhsvd.exe svalserr.exe gentxt.exe
 
 help:
-	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3...] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
+	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
 
 dgenhsvd.exe: dgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod Makefile
 	$(FC) $(FCFLAGS) dgenhsvd.F90 bio.obj seed.obj lamgen.obj indeff.obj datgen.obj /Fe$@ $(LDFLAGS)
