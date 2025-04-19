@@ -16,7 +16,9 @@ ABI=ilp64
 !ENDIF # !ABI
 FCFLAGS=/nologo /fpp /recursive /standard-semantics /traceback /DNDEBUG=$(NDEBUG) /DQX_WP=$(WP) /I. /MT /O$(NDEBUG) /Qx$(MARCH) /fp:precise /Qfma /Qftz- /Qprec-div /Qprotect-parens /Qopt-report:3 /Qvec-threshold:0
 !IF "$(ABI)"=="ilp64"
-FCFLAGS=$(FCFLAGS) /4I8
+FCFLAGS=$(FCFLAGS) /4I8 /DMKL_ILP64 /Qmkl-ilp64:sequential
+!ELSE # lp64
+FCFLAGS=$(FCFLAGS) /Qmkl:sequential
 !ENDIF # ilp64
 LDFLAGS=/link /RELEASE /LIBPATH:.. qxblas$(WP)$(ABI).lib /LIBPATH:..\..\libpvn\src pvn.lib
 
