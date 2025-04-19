@@ -15,7 +15,7 @@ AR=lib.exe
 ARFLAGS=/NOLOGO /VERBOSE
 FORT=ifx
 FC=$(FORT).exe
-FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /Qopenmp /Qvec-threshold:0 /standard-semantics /traceback
+FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /recursive /standard-semantics /traceback /Qvec-threshold:0
 !IF "$(ABI)"=="ilp64"
 FORFLAGS=$(FORFLAGS) /4I8
 !ENDIF # ilp64
@@ -25,15 +25,15 @@ MARCH=Host
 !IFDEF NDEBUG
 OPTFLAGS=/O$(NDEBUG) /Qx$(MARCH)
 DBGFLAGS=/DNDEBUG
-FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz-
+FPUFLAGS=/fp:precise /Qprotect-parens /Qfma /Qftz- /Qprec-div
 DBGFLAGS=$(DBGFLAGS) /Qopt-report:3
-LIBFLAGS=/I.. /libs:dll /threads
+LIBFLAGS=/I.. /MT
 LDFLAGS=/link /RELEASE /LIBPATH:.. $(LIBS)
 !ELSE # DEBUG
 OPTFLAGS=/O$(DEBUG) /Qx$(MARCH)
 DBGFLAGS=/debug:full /debug:inline-debug-info /debug-parameters:all /check:all /warn:all
-FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /assume:ieee_fpe_flags
-LIBFLAGS=/I.. /libs:dll /threads /dbglibs
+FPUFLAGS=/fp:strict /Qprotect-parens /Qfma /Qftz- /Qprec-div /assume:ieee_fpe_flags
+LIBFLAGS=/I.. /MTd
 LDFLAGS=/link /DEBUG /LIBPATH:.. $(LIBS)
 !ENDIF # ?NDEBUG
 FFLAGS=$(OPTFLAGS) $(DBGFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFLAGS)
