@@ -16,9 +16,6 @@ ARFLAGS=/NOLOGO /VERBOSE
 FORT=ifx
 FC=$(FORT).exe
 FORFLAGS=/nologo /fpp /DUSE_INTEL /DUSE_X64 /DQX_WP=$(WP) /recursive /standard-semantics /traceback /Qvec-threshold:0
-!IF "$(ABI)"=="ilp64"
-FORFLAGS=$(FORFLAGS) /4I8
-!ENDIF # ilp64
 !IFNDEF MARCH
 MARCH=Host
 !ENDIF # !MARCH
@@ -249,6 +246,12 @@ xtrmm.obj    \
 xtrmv.obj    \
 xtrsm.obj    \
 xtrsv.obj
+
+!IF "$(ABI)"=="ilp64"
+FORFLAGS=$(FORFLAGS) /4I8
+SOURCES=$(SOURCES) lsame.F90 xerbla.F90
+OBJS=$(OBJS) lsame.obj xerbla.obj
+!ENDIF # ilp64
 
 all: ..\$(LIBS)
 
