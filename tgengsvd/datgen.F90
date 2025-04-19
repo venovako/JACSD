@@ -34,21 +34,15 @@ CONTAINS
 
     CALL QLAGSY(N, N-1, QL_X, QX, N, ISEED, QWORK, INFO)
     IF (INFO .NE. 0) RETURN
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,QX,DX) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, N
           DX(P,Q) = DBLE(QX(P,Q))
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,QF,QS_F) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, Q-1
           QF(P,Q) = D_ZERO
@@ -58,29 +52,21 @@ CONTAINS
           QF(P,Q) = D_ZERO
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
     CALL QLAROR('L', 'N', N, N, QF, N, ISEED, QWORK, INFO)
     IF (INFO .NE. 0) RETURN
 
     CALL QGEMM('N', 'N', N, N, N, D_ONE, QF, N, QX, N, D_ZERO, QG, N)
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,QG,DF) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, N
           DF(P,Q) = DBLE(QG(P,Q))
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,QG,QS_G) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, Q-1
           QG(P,Q) = D_ZERO
@@ -90,25 +76,19 @@ CONTAINS
           QG(P,Q) = D_ZERO
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
     CALL QLAROR('L', 'N', N, N, QG, N, ISEED, QWORK, INFO)
     IF (INFO .NE. 0) RETURN
 
     CALL QGEMM('N', 'N', N, N, N, D_ONE, QG, N, QX, N, D_ZERO, QF, N)
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,QF,DG) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, N
           DG(P,Q) = DBLE(QF(P,Q))
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
   END SUBROUTINE DGENDAT
 
   SUBROUTINE ZGENDAT(N, ISEED, QS_F, QS_G, QL_X, XF, ZF, XG, ZG, XX, ZX, XWORK, INFO)
@@ -137,21 +117,15 @@ CONTAINS
 
     CALL XLAGHE(N, N-1, QL_X, XX, N, ISEED, XWORK, INFO)
     IF (INFO .NE. 0) RETURN
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,XX,ZX) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, N
           ZX(P,Q) = DCMPLX(DBLE(REAL(XX(P,Q))), DBLE(AIMAG(XX(P,Q))))
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,XF,QS_F) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, Q-1
           XF(P,Q) = Z_ZERO
@@ -161,29 +135,21 @@ CONTAINS
           XF(P,Q) = Z_ZERO
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
     CALL XLAROR('L', 'N', N, N, XF, N, ISEED, XWORK, INFO)
     IF (INFO .NE. 0) RETURN
 
     CALL XGEMM('N', 'N', N, N, N, Z_ONE, XF, N, XX, N, Z_ZERO, XG, N)
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,XG,ZF) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, N
           ZF(P,Q) = DCMPLX(DBLE(REAL(XG(P,Q))), DBLE(AIMAG(XG(P,Q))))
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,XG,QS_G) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, Q-1
           XG(P,Q) = Z_ZERO
@@ -193,25 +159,19 @@ CONTAINS
           XG(P,Q) = Z_ZERO
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
 
     CALL XLAROR('L', 'N', N, N, XG, N, ISEED, XWORK, INFO)
     IF (INFO .NE. 0) RETURN
 
     CALL XGEMM('N', 'N', N, N, N, Z_ONE, XG, N, XX, N, Z_ZERO, XF, N)
-#ifdef USE_OPENMP
     !$OMP PARALLEL DO DEFAULT(NONE) SHARED(N,XF,ZG) PRIVATE(P,Q)
-#endif
     DO Q = 1, N
        DO P = 1, N
           ZG(P,Q) = DCMPLX(DBLE(REAL(XF(P,Q))), DBLE(AIMAG(XF(P,Q))))
        END DO
     END DO
-#ifdef USE_OPENMP
     !$OMP END PARALLEL DO
-#endif
   END SUBROUTINE ZGENDAT
 
 END MODULE DATGEN

@@ -26,11 +26,11 @@ zerrgsvd.exe: zerrgsvd.F90 binio.mod $(MKFS)
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)
 
-gentxt.exe: gentxt.F90 $(MKFS)
-	$(FC) $(FFLAGS) gentxt.F90 -o$@ $(LDFLAGS)
-
 dtgsja_test.exe: dtgsja_test.F90 binio.mod $(MKFS)
 	$(FC) $(FFLAGS) dtgsja_test.F90 binio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+
+gentxt.exe: gentxt.F90 $(MKFS)
+	$(FC) $(FFLAGS) gentxt.F90 -o$@ $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90

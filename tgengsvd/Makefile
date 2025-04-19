@@ -22,16 +22,16 @@ FCFLAGS=$(FCFLAGS) /Qmkl:sequential
 !ENDIF # ilp64
 LDFLAGS=/link /RELEASE /LIBPATH:.. qxblas$(WP)$(ABI).lib /LIBPATH:..\..\libpvn\src pvn.lib
 
-all: dgenhsvd.exe zgenhsvd.exe svalserr.exe gentxt.exe
+all: dgengsvd.exe zgengsvd.exe svalserr.exe gentxt.exe
 
 help:
 	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
 
-dgenhsvd.exe: dgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod Makefile
-	$(FC) $(FCFLAGS) dgenhsvd.F90 bio.obj seed.obj lamgen.obj indeff.obj datgen.obj /Fe$@ $(LDFLAGS)
+dgengsvd.exe: dgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod Makefile
+	$(FC) $(FCFLAGS) dgengsvd.F90 bio.obj seed.obj lamgen.obj datgen.obj /Fe$@ $(LDFLAGS)
 
-zgenhsvd.exe: zgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod Makefile
-	$(FC) $(FCFLAGS) zgenhsvd.F90 bio.obj seed.obj lamgen.obj indeff.obj datgen.obj /Fe$@ $(LDFLAGS)
+zgengsvd.exe: zgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod Makefile
+	$(FC) $(FCFLAGS) zgenhsvd.F90 bio.obj seed.obj lamgen.obj datgen.obj /Fe$@ $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod Makefile
 	$(FC) $(FCFLAGS) svalserr.F90 bio.obj /Fe$@ $(LDFLAGS)
@@ -47,9 +47,6 @@ seed.obj seed.mod: seed.F90 Makefile
 
 lamgen.obj lamgen.mod: lamgen.F90 seed.mod Makefile
 	$(FC) $(FCFLAGS) /c lamgen.F90
-
-indeff.obj indeff.mod: indeff.F90 Makefile
-	$(FC) $(FCFLAGS) /c indeff.F90
 
 datgen.obj datgen.mod: datgen.F90 seed.mod indeff.mod Makefile
 	$(FC) $(FCFLAGS) /c datgen.F90
