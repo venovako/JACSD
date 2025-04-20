@@ -49,7 +49,5 @@ clean:
 	-$(RM) *.exe
 	-$(RM) *.mod
 	-$(RM) *.obj
-	-$(RM) *.pdb
 	-$(RM) *.optrpt
-	-$(RM) *__genmod.f90
-	-$(RM) *__genmod.mod
+	-$(RM) *.pdb

@@ -262,9 +262,7 @@ help:
 	$(FC) $(FFLAGS) /c $<
 
 clean:
-	-$(RM) *.pdb
 	-$(RM) *.optrpt
-	-$(RM) *__genmod.f90
-	-$(RM) *__genmod.mod
+	-$(RM) *.pdb
 	-$(RM) $(OBJS)
 	-$(RM) ..\$(LIBS)

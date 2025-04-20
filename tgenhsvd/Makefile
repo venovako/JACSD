@@ -59,3 +59,4 @@ clean:
 	-$(RM) *.mod
 	-$(RM) *.obj
 	-$(RM) *.optrpt
+	-$(RM) *.pdb
