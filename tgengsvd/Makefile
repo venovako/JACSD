@@ -48,7 +48,7 @@ seed.obj seed.mod: seed.F90 Makefile
 lamgen.obj lamgen.mod: lamgen.F90 seed.mod Makefile
 	$(FC) $(FCFLAGS) /c lamgen.F90
 
-datgen.obj datgen.mod: datgen.F90 seed.mod indeff.mod Makefile
+datgen.obj datgen.mod: datgen.F90 seed.mod Makefile
 	$(FC) $(FCFLAGS) /c datgen.F90
 
 clean:
