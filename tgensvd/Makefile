@@ -75,7 +75,7 @@ svgen.obj svgen.mod: svgen.F90 seed.mod Makefile
 datgen.obj datgen.mod: datgen.F90 seed.mod Makefile
 	$(FC) $(FCFLAGS) /c datgen.F90
 
-qccmp.o: qccmp.F90 Makefile
+qccmp.obj: qccmp.F90 Makefile
 	$(FC) $(FCFLAGS) /c qccmp.F90
 
 clean:

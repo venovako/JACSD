@@ -12,16 +12,16 @@ help:
 	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [all|clean|help]"
 
 dortho.exe: dortho.F90 bio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) dortho.F90 bio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) dortho.F90 bio.o -o$@ $(LDFLAGS)
 
 zortho.exe: zortho.F90 bio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) zortho.F90 bio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) zortho.F90 bio.o -o$@ $(LDFLAGS)
 
 sortho.exe: sortho.F90 bio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) sortho.F90 bio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) sortho.F90 bio.o -o$@ $(LDFLAGS)
 
 cortho.exe: cortho.F90 bio.mod $(MKFS)
-	$(FC) -I.. $(FFLAGS) cortho.F90 bio.o -o$@ $(LDFLAGS)
+	$(FC) $(FFLAGS) cortho.F90 bio.o -o$@ $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
