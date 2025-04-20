@@ -8,10 +8,13 @@ MARCH=Host
 !IFNDEF NDEBUG
 NDEBUG=d
 !ENDIF # !NDEBUG
+!IFNDEF WP
+WP=16
+!ENDIF # !WP
 !IFNDEF ABI
 ABI=ilp64
 !ENDIF # !ABI
-FCFLAGS=/nologo /fpp /recursive /standard-semantics /traceback /DNDEBUG=$(NDEBUG) /I. /MT /O$(NDEBUG) /Qx$(MARCH) /fp:precise /Qfma /Qftz- /Qprec-div /Qprotect-parens /Qopt-report:3 /Qvec-threshold:0
+FCFLAGS=/nologo /fpp /recursive /standard-semantics /traceback /DNDEBUG=$(NDEBUG) /DQX_WP=$(WP) /I. /MT /O$(NDEBUG) /Qx$(MARCH) /fp:precise /Qfma /Qftz- /Qprec-div /Qprotect-parens /Qopt-report:3 /Qvec-threshold:0
 !IF "$(ABI)"=="ilp64"
 FCFLAGS=$(FCFLAGS) /4I8
 !ENDIF # ilp64
@@ -20,7 +23,7 @@ LDFLAGS=/link /RELEASE
 all: dortho.exe zortho.exe sortho.exe cortho.exe
 
 help:
-	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3|...] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3|...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
 
 dortho.exe: dortho.F90 bio.mod $(MKFS)
 	$(FC) $(FCFLAGS) dortho.F90 bio.o /Fe$@ $(LDFLAGS)
