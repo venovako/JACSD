@@ -31,7 +31,7 @@ dgengsvd.exe: dgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod Makefile
 	$(FC) $(FCFLAGS) dgengsvd.F90 bio.obj seed.obj lamgen.obj datgen.obj /Fe$@ $(LDFLAGS)
 
 zgengsvd.exe: zgengsvd.F90 bio.mod seed.mod lamgen.mod datgen.mod Makefile
-	$(FC) $(FCFLAGS) zgenhsvd.F90 bio.obj seed.obj lamgen.obj datgen.obj /Fe$@ $(LDFLAGS)
+	$(FC) $(FCFLAGS) zgengsvd.F90 bio.obj seed.obj lamgen.obj datgen.obj /Fe$@ $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod Makefile
 	$(FC) $(FCFLAGS) svalserr.F90 bio.obj /Fe$@ $(LDFLAGS)
