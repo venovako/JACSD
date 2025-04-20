@@ -26,18 +26,18 @@ help:
 	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3|...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
 
 dortho.exe: dortho.F90 bio.mod $(MKFS)
-	$(FC) $(FCFLAGS) dortho.F90 bio.o /Fe$@ $(LDFLAGS)
+	$(FC) $(FCFLAGS) dortho.F90 bio.obj /Fe$@ $(LDFLAGS)
 
 zortho.exe: zortho.F90 bio.mod $(MKFS)
-	$(FC) $(FCFLAGS) zortho.F90 bio.o /Fe$@ $(LDFLAGS)
+	$(FC) $(FCFLAGS) zortho.F90 bio.obj /Fe$@ $(LDFLAGS)
 
 sortho.exe: sortho.F90 bio.mod $(MKFS)
-	$(FC) $(FCFLAGS) sortho.F90 bio.o /Fe$@ $(LDFLAGS)
+	$(FC) $(FCFLAGS) sortho.F90 bio.obj /Fe$@ $(LDFLAGS)
 
 cortho.exe: cortho.F90 bio.mod $(MKFS)
-	$(FC) $(FCFLAGS) cortho.F90 bio.o /Fe$@ $(LDFLAGS)
+	$(FC) $(FCFLAGS) cortho.F90 bio.obj /Fe$@ $(LDFLAGS)
 
-bio.o bio.mod: bio.F90 $(MKFS)
+bio.obj bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FCFLAGS) /c bio.F90
 
 clean:
