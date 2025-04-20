@@ -12,7 +12,7 @@ NDEBUG=d
 WP=16
 !ENDIF # !WP
 !IFNDEF ABI
-ABI=ilp64
+ABI=lp64
 !ENDIF # !ABI
 FCFLAGS=/nologo /fpp /recursive /standard-semantics /traceback /DNDEBUG=$(NDEBUG) /DQX_WP=$(WP) /I. /MT /O$(NDEBUG) /Qx$(MARCH) /fp:precise /Qfma /Qftz- /Qprec-div /Qprotect-parens /Qopt-report:3 /Qvec-threshold:0
 !IF "$(ABI)"=="ilp64"
