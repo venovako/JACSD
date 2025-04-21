@@ -22,7 +22,7 @@ FCFLAGS=$(FCFLAGS) /Qmkl:sequential
 !ENDIF # ilp64
 LDFLAGS=/link /RELEASE /LIBPATH:.. qxblas$(WP)$(ABI).lib /LIBPATH:..\..\libpvn\src pvn.lib
 
-all: dgenhsvd.exe zgenhsvd.exe svalserr.exe gentxt.exe
+all: dgenhsvd.exe zgenhsvd.exe derrhsvd.exe zerrhsvd.exe svalserr.exe gentxt.exe
 
 help:
 	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
@@ -32,6 +32,12 @@ dgenhsvd.exe: dgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod Mak
 
 zgenhsvd.exe: zgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod Makefile
 	$(FC) $(FCFLAGS) zgenhsvd.F90 bio.obj seed.obj lamgen.obj indeff.obj datgen.obj /Fe$@ $(LDFLAGS)
+
+derrhsvd.exe: derrhsvd.F90 binio.mod Makefile
+	$(FC) $(FCFLAGS) derrhsvd.F90 binio.obj /Fe$@ $(LDFLAGS)
+
+zerrhsvd.exe: zerrhsvd.F90 binio.mod Makefile
+	$(FC) $(FCFLAGS) zerrhsvd.F90 binio.obj /Fe$@ $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod Makefile
 	$(FC) $(FCFLAGS) svalserr.F90 bio.obj /Fe$@ $(LDFLAGS)
@@ -53,6 +59,9 @@ indeff.obj indeff.mod: indeff.F90 Makefile
 
 datgen.obj datgen.mod: datgen.F90 seed.mod indeff.mod Makefile
 	$(FC) $(FCFLAGS) /c datgen.F90
+
+binio.obj binio.mod: binio.F90 Makefile
+	$(FC) $(FCFLAGS) /c binio.F90
 
 clean:
 	-$(RM) *.exe
