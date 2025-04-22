@@ -19,7 +19,7 @@ help:
 jstrat.lib: Makefile
 	pushd jstrat && $(MAKE) /NOLOGO MARCH=$(MARCH) NDEBUG=$(NDEBUG) ABI=$(ABI) WP=$(WP) && popd
 
-qxblas$(WP)$(ABI).a: Makefile
+qxblas$(WP)$(ABI).lib: Makefile
 	pushd qxblas && $(MAKE) /NOLOGO MARCH=$(MARCH) NDEBUG=$(NDEBUG) ABI=$(ABI) WP=$(WP) && popd	
 
 tests: qxblas$(WP)$(ABI).lib Makefile
