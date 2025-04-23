@@ -6,7 +6,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 
-all: dgentxt.exe sgentxt.exe dgensvd.exe sgensvd.exe zgensvd.exe cgensvd.exe derrsvd.exe serrsvd.exe zerrsvd.exe cerrsvd.exe dsverr.exe ssverr.exe
+all: dgentxt.exe sgentxt.exe dgensvd.exe sgensvd.exe zgensvd.exe cgensvd.exe derrsvd.exe serrsvd.exe zerrsvd.exe cerrsvd.exe dsverr.exe ssverr.exe dgesvj_test.exe
 
 help:
 	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
@@ -46,6 +46,9 @@ dsverr.exe: dsverr.F90 bio.mod qccmp.o $(MKFS)
 
 ssverr.exe: ssverr.F90 bio.mod qccmp.o $(MKFS)
 	$(FC) $(FFLAGS) ssverr.F90 bio.o qccmp.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+
+dgesvj_test.exe: dgesvj_test.F90 bio.mod $(MKFS)
+	$(FC) $(FFLAGS) dgesvj_test.F90 bio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90

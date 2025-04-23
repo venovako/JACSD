@@ -22,7 +22,7 @@ FCFLAGS=$(FCFLAGS) /Qmkl:sequential
 !ENDIF # ilp64
 LDFLAGS=/link /RELEASE /LIBPATH:.. qxblas$(WP)$(ABI).lib /LIBPATH:..\..\libpvn\src pvn.lib
 
-all: dgentxt.exe sgentxt.exe dgensvd.exe sgensvd.exe zgensvd.exe cgensvd.exe derrsvd.exe serrsvd.exe zerrsvd.exe cerrsvd.exe dsverr.exe ssverr.exe
+all: dgentxt.exe sgentxt.exe dgensvd.exe sgensvd.exe zgensvd.exe cgensvd.exe derrsvd.exe serrsvd.exe zerrsvd.exe cerrsvd.exe dsverr.exe ssverr.exe dgesvj_test.exe
 
 help:
 	@echo "nmake.exe [MARCH=Host|...] [NDEBUG=d|1|2|3|...] [ABI=ilp64|lp64] [WP=16|...] [all|clean|help]"
@@ -62,6 +62,9 @@ dsverr.exe: dsverr.F90 bio.mod qccmp.obj Makefile
 
 ssverr.exe: ssverr.F90 bio.mod qccmp.obj Makefile
 	$(FC) $(FCFLAGS) ssverr.F90 bio.obj qccmp.obj /Fe$@ $(LDFLAGS)
+
+dgesvj_test.exe: dgesvj_test.F90 bio.mod Makefile
+	$(FC) $(FCFLAGS) dgesvj_test.F90 bio.obj /Fe$@ $(LDFLAGS)
 
 bio.obj bio.mod: bio.F90 Makefile
 	$(FC) $(FCFLAGS) /c bio.F90

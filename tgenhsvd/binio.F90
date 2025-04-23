@@ -1,5 +1,4 @@
 MODULE BINIO
-  USE, INTRINSIC :: ISO_C_BINDING
   IMPLICIT NONE
 
   INTERFACE
@@ -38,6 +37,7 @@ CONTAINS
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   SUBROUTINE BOPEN_RO(FN, SZ, FD)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     CHARACTER(LEN=*,KIND=c_char), INTENT(IN) :: FN
     INTEGER, INTENT(OUT) :: SZ, FD
@@ -52,6 +52,7 @@ CONTAINS
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   SUBROUTINE BOPEN_RW(FN, SZ, FD)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     CHARACTER(LEN=*,KIND=c_char), INTENT(IN) :: FN
     INTEGER, INTENT(INOUT) :: SZ
@@ -68,6 +69,7 @@ CONTAINS
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   SUBROUTINE BOPEN_WO(FN, SZ, FD)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     CHARACTER(LEN=*,KIND=c_char), INTENT(IN) :: FN
     INTEGER, INTENT(OUT) :: SZ, FD
@@ -83,6 +85,7 @@ CONTAINS
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
   SUBROUTINE BCLOSE(FD)
+    USE, INTRINSIC :: ISO_C_BINDING
     IMPLICIT NONE
     INTEGER, INTENT(INOUT) :: FD
     INTEGER(KIND=c_int), EXTERNAL :: PVN_BCLOSE
