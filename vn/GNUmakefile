@@ -208,7 +208,6 @@ vn_variant.exe: vn_variant.c $(HDRS) $(MKFS)
 clean:
 	-$(RM) ../libvn$(DEBUG).a
 	-$(RM) *.optrpt
-	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
 	-$(RM) $(EXES)
 	-$(RM) $(MODS)

@@ -127,7 +127,6 @@ help:
 clean:
 	-$(RM) ../libqxblas$(WP)$(ABI)$(DEBUG).a
 	-$(RM) *.optrpt
-	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
 	-$(RM) *__genmod.mod
 	-$(RM) *__genmod.f90

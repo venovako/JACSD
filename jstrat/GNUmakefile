@@ -26,7 +26,6 @@ jstrat_f.o jstrat_f.mod: jstrat_f.F90 jstrat.h $(MKFS)
 clean:
 	-$(RM) ../libjstrat$(DEBUG).a
 	-$(RM) *.optrpt
-	-$(RM) *.opt.yaml
 	-$(RM) $(OBJS)
 	-$(RM) $(MODS)
 	-$(RM) *.dSYM

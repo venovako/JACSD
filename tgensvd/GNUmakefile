@@ -70,6 +70,5 @@ clean:
 	-$(RM) *.mod
 	-$(RM) *.o
 	-$(RM) *.optrpt
-	-$(RM) *.opt.yaml
 	-$(RM) *__genmod.*
 	-$(RM) *.dSYM
