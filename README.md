@@ -1,16 +1,16 @@
 # JACSD
 Some utilities for the Jacobi-type (G/H)SVD algorithms and beyond, plus a Cosine-Sine Decomposition tester.
 
-Available here (for now):
+Available here:
 * a multi-precision BLAS library (qxblas) \[1,2,5\],
 * an orthogonality checker (tortho) \[1,2,5\],
 * an SVD test data generator (tgensvd) \[5\],
 * a GSVD test data generator (tgengsvd) \[2\],
 * a HSVD test data generator (tgenhsvd) \[3\],
 * a skew-symmetric/Hermitian test data generator (tgenskew) \[4\],
-* a Jacobi strategies library (jstrat) \[1,2,5\],
+* a Jacobi strategies library (jstrat) \[1,2,5\] (see [libpvn](https://github.com/venovako/libpvn) repository for a better version),
 * a symmetric/Hermitian EVD test data generator (tgenevd) \[6\],
-* a utility library (vn) \[1,2,3\],
+* a utility library (vn) \[1,2,3\] (see [libpvn](https://github.com/venovako/libpvn) repository for a better version),
 * the first attempt of a shared-memory vectorized Jacobi-type SVD (see [VecJac](https://github.com/venovako/VecJac) repository for a better version),
 * and some testing code for the LAPACK CS (src).
 
@@ -30,7 +30,7 @@ Available here (for now):
 
 ### Prerequisites
 
-A recent 64-bit Linux (e.g., CentOS 7.9 with devtoolset-8) or macOS (e.g., Big Sur) is needed.
+A 64-bit Linux (e.g., CentOS 7.9 with devtoolset-8) or macOS (e.g., Big Sur) is needed.
 
 ### Make options
 
@@ -40,9 +40,9 @@ make [COMPILER=x64x|x200|x64|gnu] [MARCH=...] [NDEBUG=optimization_level] [ABI=i
 ```
 
 GNU Fortran versions 9 and above are *not* supported (though they might work)!
-Please take a look [here](https://gcc.gnu.org/gcc-9/changes.html) for the explanation regarding the MAX and MIN intrinsics.
+Please take a look [here](https://gcc.gnu.org/gcc-9/changes.html) for the explanation regarding the `MAX` and `MIN` intrinsics.
 Currently, only GNU Fortran *8* is fully supported with ``COMPILER=gnu``.
-On RHEL/CentOS 7 it is provided by, e.g., devtoolset-8.
+On RHEL/CentOS 7 it was provided by, e.g., devtoolset-8.
 
 By default, ``ABI=ilp64``, meaning that for Fortran it is assumed that ``INTEGER`` type is 8-byte-wide.
 The more common ``ABI=lp64`` is *not* tested and may not work.
