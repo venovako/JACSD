@@ -36,7 +36,7 @@ A 64-bit Linux (e.g., CentOS 7.9 with devtoolset-8) or macOS (e.g., Big Sur) is 
 
 Run ``make`` as follows:
 ```bash
-make [COMPILER=x64x|x200|gnu] [MARCH=...] [NDEBUG=0|1|2|3|...|g] [ABI=ilp64|lp64] [WP=...] [all|clean|help]
+make [COMPILER=x64x|x200|gnu|nvidia] [MARCH=...] [NDEBUG=0|1|2|3|...|g] [ABI=ilp64|lp64] [WP=...] [all|clean|help]
 ```
 
 GNU Fortran versions 9 and above are *not* supported (though they might work)!
