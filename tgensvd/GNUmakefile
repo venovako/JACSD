@@ -5,9 +5,11 @@ include ../$(COMPILER).mk
 MKFS=GNUmakefile ../$(COMPILER).mk
 
 LIBPVN=-L../../libpvn/src
-ifneq ($(ARCH),Darwin)
+ifeq ($(ARCH),Darwin)
+LIBPVN += -Wl,-rpath,../../libpvn/src
+else # !Darwin
 LIBPVN += -Wl,-rpath=../../libpvn/src
-endif # !Darwin
+endif # ?Darwin
 LIBPVN += -lpvn
 ifneq ($(COMPILER),gnu)
 LIBPVN += -lquadmath -lgcc_s
