@@ -9,7 +9,7 @@ MKFS=GNUmakefile ../$(COMPILER).mk
 all: dortho.exe zortho.exe sortho.exe cortho.exe
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|gnu|nvidia] [NDEBUG=0|1|2|3|...|g] [ABI=ilp64|lp64] [all|clean|help]"
 
 dortho.exe: dortho.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) dortho.F90 bio.o -o$@ $(LDFLAGS)

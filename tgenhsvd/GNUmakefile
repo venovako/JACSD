@@ -4,12 +4,21 @@ endif # !COMPILER
 include ../$(COMPILER).mk
 MKFS=GNUmakefile ../$(COMPILER).mk
 
+LIBPVN=-L../../libpvn/src
+ifneq ($(ARCH),Darwin)
+LIBPVN += -Wl,-rpath=../../libpvn/src
+endif # !Darwin
+LIBPVN += -lpvn
+ifneq ($(COMPILER),gnu)
+LIBPVN += -lquadmath -lgcc_s
+endif # !gnu
+
 .PHONY: all help clean
 
 all: dgenhsvd.exe zgenhsvd.exe derrhsvd.exe zerrhsvd.exe svalserr.exe gentxt.exe
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|gnu|nvidia] [NDEBUG=0|1|2|3|...|g] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
 
 dgenhsvd.exe: dgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod $(MKFS)
 	$(FC) $(FFLAGS) dgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
@@ -18,10 +27,10 @@ zgenhsvd.exe: zgenhsvd.F90 bio.mod seed.mod lamgen.mod indeff.mod datgen.mod $(M
 	$(FC) $(FFLAGS) zgenhsvd.F90 bio.o seed.o lamgen.o indeff.o datgen.o -o$@ -L.. -lqxblas$(WP)$(ABI)$(DEBUG) $(LDFLAGS)
 
 derrhsvd.exe: derrhsvd.F90 binio.mod $(MKFS)
-	$(FC) $(FFLAGS) derrhsvd.F90 binio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+	$(FC) $(FFLAGS) derrhsvd.F90 binio.o -o$@ $(LIBPVN) $(LDFLAGS)
 
 zerrhsvd.exe: zerrhsvd.F90 binio.mod $(MKFS)
-	$(FC) $(FFLAGS) zerrhsvd.F90 binio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+	$(FC) $(FFLAGS) zerrhsvd.F90 binio.o -o$@ $(LIBPVN) $(LDFLAGS)
 
 svalserr.exe: svalserr.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) svalserr.F90 bio.o -o$@ $(LDFLAGS)

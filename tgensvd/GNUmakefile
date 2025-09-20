@@ -4,12 +4,21 @@ endif # !COMPILER
 include ../$(COMPILER).mk
 MKFS=GNUmakefile ../$(COMPILER).mk
 
+LIBPVN=-L../../libpvn/src
+ifneq ($(ARCH),Darwin)
+LIBPVN += -Wl,-rpath=../../libpvn/src
+endif # !Darwin
+LIBPVN += -lpvn
+ifneq ($(COMPILER),gnu)
+LIBPVN += -lquadmath -lgcc_s
+endif # !gnu
+
 .PHONY: all help clean
 
 all: dgentxt.exe sgentxt.exe dgensvd.exe sgensvd.exe zgensvd.exe cgensvd.exe derrsvd.exe serrsvd.exe zerrsvd.exe cerrsvd.exe dsverr.exe ssverr.exe dgesvj_test.exe
 
 help:
-	@echo "gmake [COMPILER=x64x|x200|x64|gnu|nvidia] [NDEBUG=optimization_level] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
+	@echo "gmake [COMPILER=x64x|x200|gnu|nvidia] [NDEBUG=0|1|2|3|...|g] [ABI=ilp64|lp64] [WP=...] [all|clean|help]"
 
 dgentxt.exe: dgentxt.F90 $(MKFS)
 	$(FC) $(FFLAGS) dgentxt.F90 -o$@ $(LDFLAGS)
@@ -42,13 +51,13 @@ cerrsvd.exe: cerrsvd.F90 bio.mod $(MKFS)
 	$(FC) $(FFLAGS) cerrsvd.F90 bio.o -o$@ $(LDFLAGS)
 
 dsverr.exe: dsverr.F90 bio.mod qccmp.o $(MKFS)
-	$(FC) $(FFLAGS) dsverr.F90 bio.o qccmp.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+	$(FC) $(FFLAGS) dsverr.F90 bio.o qccmp.o -o$@ $(LIBPVN) $(LDFLAGS)
 
 ssverr.exe: ssverr.F90 bio.mod qccmp.o $(MKFS)
-	$(FC) $(FFLAGS) ssverr.F90 bio.o qccmp.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+	$(FC) $(FFLAGS) ssverr.F90 bio.o qccmp.o -o$@ $(LIBPVN) $(LDFLAGS)
 
 dgesvj_test.exe: dgesvj_test.F90 bio.mod $(MKFS)
-	$(FC) $(FFLAGS) dgesvj_test.F90 bio.o -o$@ -L../../libpvn/src -lpvn $(LDFLAGS)
+	$(FC) $(FFLAGS) dgesvj_test.F90 bio.o -o$@ $(LIBPVN) $(LDFLAGS)
 
 bio.o bio.mod: bio.F90 $(MKFS)
 	$(FC) $(FFLAGS) -c bio.F90
