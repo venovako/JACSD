@@ -82,8 +82,7 @@ ifeq ($(ARCH),Darwin)
 #-L${MKLROOT}/lib -Wl,-rpath,${MKLROOT}/lib -L${MKLROOT}/../../compiler/latest/mac/compiler/lib -Wl,-rpath,${MKLROOT}/../../compiler/latest/mac/compiler/lib -lmkl_intel_$(ABI) -lmkl_intel_thread -lmkl_core -liomp5
 LDFLAGS += ${MKLROOT}/lib/libmkl_intel_$(ABI).a ${MKLROOT}/lib/libmkl_intel_thread.a ${MKLROOT}/lib/libmkl_core.a ${MKLROOT}/../../compiler/latest/mac/compiler/lib/libiomp5.a
 else # Linux
-#-L${MKLROOT}/lib/intel64 -Wl,-rpath=${MKLROOT}/lib/intel64 -Wl,--no-as-needed -lmkl_gf_$(ABI) -lmkl_gnu_thread -lmkl_core -lgomp
-LDFLAGS += -Wl,--start-group ${MKLROOT}/lib/libmkl_gf_$(ABI).a ${MKLROOT}/lib/libmkl_gnu_thread.a ${MKLROOT}/lib/libmkl_core.a -Wl,--end-group #-lgomp
+LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath=${MKLROOT}/lib -Wl,--no-as-needed -lmkl_gf_$(ABI) -lmkl_gnu_thread -lmkl_core -lgomp
 LDFLAGS += $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 endif # ?Darwin
 else # !MKLROOT
