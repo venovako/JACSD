@@ -1,19 +1,19 @@
-SHELL=/bin/bash
-ARCH=$(shell uname)
+SHELL:=/bin/bash
+ARCH:=$(shell uname)
 ifndef ABI
-ABI=ilp64
+ABI:=ilp64
 endif # !ABI
 ifndef WP
-WP=16
+WP:=16
 endif # !WP
 ifdef NDEBUG
-DEBUG=
+DEBUG:=
 else # DEBUG
-DEBUG=g
+DEBUG:=g
 endif # ?NDEBUG
-RM=rm -rfv
-AR=ar
-ARFLAGS=rsv
+RM:=rm -rfv
+AR:=ar
+ARFLAGS:=rsv
 CPUFLAGS=-DUSE_GNU -DUSE_X64 -DQX_WP=$(WP) -fPIC -fexceptions -fasynchronous-unwind-tables -fno-omit-frame-pointer -fvect-cost-model=unlimited -fopenmp
 ifeq ($(ABI),lp64)
 CPUFLAGS += -DVN_INTEGER_KIND=4
@@ -27,18 +27,18 @@ FORFLAGS=-cpp $(CPUFLAGS) -ffree-line-length-none -fstack-arrays
 ifneq ($(ABI),lp64)
 FORFLAGS += -fdefault-integer-8
 endif # ilp64
-C18FLAGS=$(CPUFLAGS) -std=gnu18
+C18FLAGS:=$(CPUFLAGS) -std=gnu18
 ifeq ($(ARCH),Darwin)
 ifndef GNU
-GNU=-8
+GNU:=-8
 endif # !GNU
 endif # Darwin
-CC=gcc$(GNU)
-FC=gfortran$(GNU)
+CC:=gcc$(GNU)
+FC:=gfortran$(GNU)
 DBGFLAGS=-Wall -Wextra -Wno-deprecated
 FPUFLAGS=-ffp-contract=fast
 ifndef MARCH
-MARCH=native
+MARCH:=native
 endif # !MARCH
 ifeq ($(shell uname -m),ppc64le)
 OPTFLAGS=-mcpu=$(MARCH) -mpower8-fusion -mtraceback=full
@@ -51,22 +51,22 @@ endif # ?ppc64le
 ifdef NDEBUG
 OPTFLAGS += -O$(NDEBUG)
 DBGFLAGS += -DNDEBUG
-OPTFFLAGS=$(OPTFLAGS)
-OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wno-c-binding-type -Wcharacter-truncation -Wno-function-elimination -Wimplicit-procedure -Wrealloc-lhs-all
-DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types
+OPTFFLAGS:=$(OPTFLAGS)
+OPTCFLAGS:=$(OPTFLAGS)
+DBGFFLAGS:=$(DBGFLAGS) -Wno-compare-reals -Warray-temporaries -Wno-c-binding-type -Wcharacter-truncation -Wno-function-elimination -Wimplicit-procedure -Wrealloc-lhs-all
+DBGCFLAGS:=$(DBGFLAGS) -Wno-incompatible-pointer-types
 FPUFLAGS += -fno-math-errno
-FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS)
+FPUFFLAGS:=$(FPUFLAGS)
+FPUCFLAGS:=$(FPUFLAGS)
 else # DEBUG
 OPTFLAGS += -O$(DEBUG)
 DBGFLAGS += -$(DEBUG)
-OPTFFLAGS=$(OPTFLAGS)
-OPTCFLAGS=$(OPTFLAGS)
-DBGFFLAGS=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wno-c-binding-type -Wcharacter-truncation -Wno-function-elimination -Wimplicit-procedure -Wrealloc-lhs-all #-fcheck=all
-DBGCFLAGS=$(DBGFLAGS) -Wno-incompatible-pointer-types #-ftrapv
-FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS)
+OPTFFLAGS:=$(OPTFLAGS)
+OPTCFLAGS:=$(OPTFLAGS)
+DBGFFLAGS:=$(DBGFLAGS) -fcheck=array-temps -finit-local-zero -finit-real=snan -finit-derived -Wno-compare-reals -Warray-temporaries -Wno-c-binding-type -Wcharacter-truncation -Wno-function-elimination -Wimplicit-procedure -Wrealloc-lhs-all #-fcheck=all
+DBGCFLAGS:=$(DBGFLAGS) -Wno-incompatible-pointer-types #-ftrapv
+FPUFFLAGS:=$(FPUFLAGS)
+FPUCFLAGS:=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-I. -I../vn
 ifeq ($(ARCH),Linux)
@@ -87,10 +87,10 @@ LDFLAGS += $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi
 endif # ?Darwin
 else # !MKLROOT
 ifndef LAPACK
-LAPACK=$(HOME)/lapack-$(ABI)
+LAPACK:=$(HOME)/lapack-$(ABI)
 endif # !LAPACK
 LDFLAGS += -L$(LAPACK) -ltmglib -llapack -lrefblas
 endif # ?MKLROOT
 LDFLAGS += -lpthread -lm -ldl
-FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
-CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)
+FFLAGS:=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
+CFLAGS:=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)

@@ -1,11 +1,11 @@
 ifndef COMPILER
-COMPILER=x64x
+COMPILER:=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
-MKFS=GNUmakefile ../$(COMPILER).mk
+MKFS:=GNUmakefile ../$(COMPILER).mk
 
-OBJS=jstrat.o jstrat_f.o
-MODS=jstrat_f.mod
+OBJS:=jstrat.o jstrat_f.o
+MODS:=jstrat_f.mod
 
 .PHONY: all help clean
 

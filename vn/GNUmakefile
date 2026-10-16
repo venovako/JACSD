@@ -1,10 +1,10 @@
 ifndef COMPILER
-COMPILER=x64x
+COMPILER:=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
-MKFS=GNUmakefile ../$(COMPILER).mk
+MKFS:=GNUmakefile ../$(COMPILER).mk
 
-SRCC=         \
+SRCC:=        \
 vn_align.c    \
 vn_alloc.c    \
 vn_assert.c   \
@@ -25,7 +25,7 @@ vn_timer.c    \
 vn_types.c    \
 vn_variant.c
 
-SRCF=              \
+SRCF:=             \
 vn_alloc_f.F90     \
 vn_aux_f.F90       \
 vn_binio_f.F90     \
@@ -38,13 +38,13 @@ vn_sort_f.F90      \
 vn_timer_f.F90     \
 vn_types_f.F90
 
-SRC=$(SRCC) $(SRCF)
-OBJSC=$(SRCC:.c=.o)
-OBJSF=$(SRCF:.F90=.o)
-OBJS=$(OBJSC) $(OBJSF)
-HDRS=$(SRCC:.c=.h)
-MODS=$(SRCF:.F90=.mod)
-EXES=$(SRCC:.c=.exe)
+SRC:=$(SRCC) $(SRCF)
+OBJSC:=$(SRCC:.c=.o)
+OBJSF:=$(SRCF:.F90=.o)
+OBJS:=$(OBJSC) $(OBJSF)
+HDRS:=$(SRCC:.c=.h)
+MODS:=$(SRCF:.F90=.mod)
+EXES:=$(SRCC:.c=.exe)
 
 .PHONY: all test help clean
 

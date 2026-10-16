@@ -1,21 +1,21 @@
-SHELL=/bin/bash
-ARCH=$(shell uname)
+SHELL:=/bin/bash
+ARCH:=$(shell uname)
 ifndef ABI
-ABI=ilp64
+ABI:=ilp64
 endif # !ABI
 ifndef WP
-WP=8
+WP:=8
 endif # !WP
 ifdef NDEBUG
-DEBUG=
+DEBUG:=
 else # DEBUG
-DEBUG=g
+DEBUG:=g
 endif # ?NDEBUG
-RM=rm -rfv
-AR=ar
-ARFLAGS=rsv
+RM:=rm -rfv
+AR:=ar
+ARFLAGS:=rsv
 ifndef MARCH
-MARCH=native
+MARCH:=native
 endif # !MARCH
 CPUFLAGS=-DUSE_NVIDIA -DUSE_X64 -DQX_WP=$(WP) -m64 -mp -fpic -Mframe -Meh_frame -Minfo -tp=$(MARCH) -nvmalloc -traceback
 ifeq ($(ABI),lp64)
@@ -26,29 +26,29 @@ FORFLAGS=$(CPUFLAGS) -Mdclchk -Mlarge_arrays -Mrecursive -Mstack_arrays
 ifeq ($(ABI),ilp64)
 FORFLAGS += -i8
 endif # ilp64
-C18FLAGS=$(CPUFLAGS) -c18
-CC=nvc
-FC=nvfortran
-CXX=nvc++
-FPUFLAGS=-Kieee -Mfma -Mnodaz -Mnoflushz -Mnofpapprox -Mnofprelaxed -Mno-recip-div
+C18FLAGS:=$(CPUFLAGS) -c18
+CC:=nvc
+FC:=nvfortran
+CXX:=nvc++
+FPUFLAGS:=-Kieee -Mfma -Mnodaz -Mnoflushz -Mnofpapprox -Mnofprelaxed -Mno-recip-div
 ifdef NDEBUG
-OPTFLAGS=-O$(NDEBUG)
-OPTFFLAGS=$(OPTFLAGS)
-OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-DNDEBUG
-DBGFFLAGS=$(DBGFLAGS)
-DBGCFLAGS=$(DBGFLAGS) --diag_suppress set_but_not_used
-FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS)
+OPTFLAGS:=-O$(NDEBUG)
+OPTFFLAGS:=$(OPTFLAGS)
+OPTCFLAGS:=$(OPTFLAGS)
+DBGFLAGS:=-DNDEBUG
+DBGFFLAGS:=$(DBGFLAGS)
+DBGCFLAGS:=$(DBGFLAGS) --diag_suppress set_but_not_used
+FPUFFLAGS:=$(FPUFLAGS)
+FPUCFLAGS:=$(FPUFLAGS)
 else # DEBUG
-OPTFLAGS=-O0
-OPTFFLAGS=$(OPTFLAGS)
-OPTCFLAGS=$(OPTFLAGS)
-DBGFLAGS=-g -Mbounds -Mchkstk
-DBGFFLAGS=$(DBGFLAGS)
-DBGCFLAGS=$(DBGFLAGS)
-FPUFFLAGS=$(FPUFLAGS)
-FPUCFLAGS=$(FPUFLAGS)
+OPTFLAGS:=-O0
+OPTFFLAGS:=$(OPTFLAGS)
+OPTCFLAGS:=$(OPTFLAGS)
+DBGFLAGS:=-g -Mbounds -Mchkstk
+DBGFFLAGS:=$(DBGFLAGS)
+DBGCFLAGS:=$(DBGFLAGS)
+FPUFFLAGS:=$(FPUFLAGS)
+FPUCFLAGS:=$(FPUFLAGS)
 endif # ?NDEBUG
 LIBFLAGS=-I. -I../vn -D_GNU_SOURCE
 ifneq ($(ABI),lp64)
@@ -61,10 +61,10 @@ LDFLAGS += -L${MKLROOT}/lib -Wl,-rpath=${MKLROOT}/lib -lmkl_intel_$(ABI) -lmkl_s
 LDFLAGS += $(shell if [ -L /usr/lib64/libmemkind.so ]; then echo '-lmemkind'; fi)
 else # !MKLROOT
 ifndef LAPACK
-LAPACK=$(HOME)/lapack_$(ABI)
+LAPACK:=$(HOME)/lapack_$(ABI)
 endif # !LAPACK
 LDFLAGS += -L$(LAPACK) -ltmglib -llapack -lrefblas
 endif # ?MKLROOT
 LDFLAGS += -pgf90libs -lpthread -lm -ldl
-FFLAGS=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
-CFLAGS=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)
+FFLAGS:=$(OPTFFLAGS) $(DBGFFLAGS) $(LIBFLAGS) $(FORFLAGS) $(FPUFFLAGS)
+CFLAGS:=$(OPTCFLAGS) $(DBGCFLAGS) $(LIBFLAGS) $(C18FLAGS) $(FPUCFLAGS)

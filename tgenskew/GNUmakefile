@@ -1,8 +1,8 @@
 ifndef COMPILER
-COMPILER=x64x
+COMPILER:=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
-MKFS=GNUmakefile ../$(COMPILER).mk
+MKFS:=GNUmakefile ../$(COMPILER).mk
 
 .PHONY: all help clean
 

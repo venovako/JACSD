@@ -1,10 +1,10 @@
 ifndef COMPILER
-COMPILER=x64x
+COMPILER:=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
-MKFS=GNUmakefile ../$(COMPILER).mk
+MKFS:=GNUmakefile ../$(COMPILER).mk
 
-PVN=$(realpath ../../libpvn)
+PVN:=$(realpath ../../libpvn)
 LIBPVN=-L$(PVN)/src
 ifeq ($(ARCH),Darwin)
 LIBPVN += -Wl,-rpath,$(PVN)/src

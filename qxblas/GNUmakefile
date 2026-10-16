@@ -1,10 +1,10 @@
 ifndef COMPILER
-COMPILER=x64x
+COMPILER:=x64x
 endif # !COMPILER
 include ../$(COMPILER).mk
-MKFS=GNUmakefile ../$(COMPILER).mk
+MKFS:=GNUmakefile ../$(COMPILER).mk
 
-SOURCES=     \
+SOURCES:=    \
 iqamax.F90   \
 ixamax.F90   \
 qasum.F90    \
@@ -109,7 +109,7 @@ xtrmm.F90    \
 xtrmv.F90    \
 xtrsm.F90    \
 xtrsv.F90
-OBJS=$(SOURCES:.F90=.o)
+OBJS:=$(SOURCES:.F90=.o)
 
 .PHONY: all help prepare clean
 
